@@ -1,0 +1,27 @@
+﻿<dx:DXWindow  x:Class="sevenA.Shell"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+              xmlns:dxwui="http://schemas.devexpress.com/winfx/2008/xaml/windowsui"
+              xmlns:navigation="http://schemas.devexpress.com/winfx/2008/xaml/windowsui/navigation"
+              xmlns:ViewModel="clr-namespace:sevenA.Views"
+              Title="sevenA" Height="768" Width="1024"
+              WindowStartupLocation="CenterScreen" WindowState="Maximized"
+              dx:ThemeManager.ThemeName="MetropolisDark"
+              DataContext="{dxmvvm:ViewModelSource Type={x:Type ViewModel:ShellViewModel}}"
+              Icon="./Resources/Icons/Scatter Plot-96.png">
+    <Grid>
+        <dxwui:NavigationFrame AnimationType="SlideHorizontal" NavigationCacheMode="Required">
+            <dxmvvm:Interaction.Behaviors>
+                <navigation:FrameNavigationService />
+                <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding OnViewLoadedCommand}" />
+            </dxmvvm:Interaction.Behaviors>
+        </dxwui:NavigationFrame>
+    </Grid>
+</dx:DXWindow>
+
+
+
+
+

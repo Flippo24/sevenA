@@ -1,0 +1,305 @@
+﻿<UserControl x:Class="sevenA.Module.Analysis.Views.AnalysisView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviours="clr-namespace:sevenA.Core.Behaviours;assembly=sevenA.Core"
+             xmlns:viewModels="clr-namespace:sevenA.Module.Analysis.ViewModels"
+             xmlns:converters="clr-namespace:sevenA.Module.Analysis.Converters"
+             xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             mc:Ignorable="d" d:DesignHeight="1024" d:DesignWidth="768"
+             DataContext="{dxmvvm:ViewModelSource Type={x:Type viewModels:AnalysisViewModel}}">
+    <UserControl.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Poppins"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#8fff"/>
+            <Setter Property="Background" Value="#1fff"/>
+            <Setter Property="Padding" Value="5,0,0,0"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#faaa"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="Work Sans Light"/>
+        </Style>
+
+        <converters:LatestListValueConverter x:Key="LatestListValueConverter" />
+        <converters:AverageListValueConverter x:Key="AverageListValueConverter" />
+        <converters:LinearPredictionListValueConverter x:Key="LinearPredictionListValueConverter" />
+
+        <Style x:Key="RatiosListViewItemsStyle" TargetType="ListViewItem">
+            <Setter Property="Height" Value="400"/>
+            <Setter Property="Width" Value="900"/>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <Border Background="#3000" Margin="0,2" CornerRadius="4">
+                            <Grid Margin="10,5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Text="{Binding Path=Name}" 
+                                           Foreground="SteelBlue" FontWeight="Bold" FontSize="15">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect BlurRadius="1" ShadowDepth="1" Color="Black"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                                <Grid Grid.Row="1" Margin="10,5,10,15" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="500"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <dxg:GridControl x:Name="RatiosDataGrid" ItemsSource="{Binding Path=Data}" 
+                                                         Height="250" Width="250" HorizontalAlignment="Left"
+                                                         FontSize="11">
+                                            <dxg:GridControl.View>
+                                                <dxg:TableView ShowGroupPanel="False" AllowPerPixelScrolling="False" 
+                                                               AllowGrouping="False" AllowBestFit="False">
+                                                    <dxg:TableView.RowStyle>
+                                                        <Style TargetType="{x:Type dxg:RowControl}" >
+                                                            <Setter Property="Height" Value="20"/>
+                                                        </Style>
+                                                    </dxg:TableView.RowStyle>
+                                                    <dxg:TableView.FormatConditions>
+                                                        <dxg:FormatCondition Expression="[Item3] &lt; 0.0" FieldName="Item3">
+                                                            <dx:Format Foreground="Red"/>
+                                                        </dxg:FormatCondition>
+                                                        <dxg:FormatCondition Expression="[Item3] &gt; 0.0" FieldName="Item3">
+                                                            <dx:Format Foreground="Green" />
+                                                        </dxg:FormatCondition>
+                                                    </dxg:TableView.FormatConditions>
+                                                </dxg:TableView>
+                                            </dxg:GridControl.View>
+                                            <dxg:GridControl.Columns>
+                                                <dxg:GridColumn Header="Date" FieldName="Item1" ReadOnly="True" Width="70"/>
+                                                <dxg:GridColumn Header="Value" FieldName="Item2" Width="70" ReadOnly="True">
+                                                    <dxg:GridColumn.EditSettings>
+                                                        <dxe:TextEditSettings NullText="-" />
+                                                    </dxg:GridColumn.EditSettings>
+                                                </dxg:GridColumn>
+                                                <dxg:GridColumn Header="Change" FieldName="Item3" Width="70" ReadOnly="True">
+                                                    <dxg:GridColumn.EditSettings>
+                                                        <dxe:TextEditSettings NullText="-" DisplayFormat="{}{0:0.0}%" />
+                                                    </dxg:GridColumn.EditSettings>
+                                                </dxg:GridColumn>
+                                            </dxg:GridControl.Columns>
+                                        </dxg:GridControl>
+
+                                        <StackPanel Orientation="Horizontal" Margin="20,20,20,3">
+                                            <TextBlock Text="Latest: " FontSize="13" FontWeight="SemiBold" Foreground="DarkGoldenrod">
+                                                <TextBlock.Effect>
+                                                    <DropShadowEffect BlurRadius="1" ShadowDepth="1" Color="Black"/>
+                                                </TextBlock.Effect>
+                                            </TextBlock>
+                                            <TextBlock  Margin="5,0,0,0" FontSize="13" FontWeight="SemiBold" Foreground="DarkGoldenrod"
+                                                        Text="{Binding Path=ItemsSource, ElementName=RatiosDataGrid, Converter={StaticResource LatestListValueConverter}}">
+                                                <TextBlock.Effect>
+                                                    <DropShadowEffect BlurRadius="1" ShadowDepth="1" Color="Black" />
+                                                </TextBlock.Effect>
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                        <StackPanel Orientation="Horizontal" Margin="20,3">
+                                            <TextBlock Text="Weighted Average (4yr): " FontSize="13" FontWeight="SemiBold" Foreground="DarkGoldenrod">
+                                                <TextBlock.Effect>
+                                                    <DropShadowEffect BlurRadius="1" ShadowDepth="1" Color="Black"/>
+                                                </TextBlock.Effect>
+                                            </TextBlock>
+                                            <TextBlock  Margin="5,0,0,0" FontSize="13" FontWeight="SemiBold" Foreground="DarkGoldenrod"
+                                                        Text="{Binding Path=ItemsSource, ElementName=RatiosDataGrid, Converter={StaticResource AverageListValueConverter}, StringFormat={}{0:0.00}}">
+                                                <TextBlock.Effect>
+                                                    <DropShadowEffect BlurRadius="1" ShadowDepth="1" Color="Black" />
+                                                </TextBlock.Effect>
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                        <StackPanel Orientation="Horizontal" Margin="20,3">
+                                            <TextBlock Text="Predicted (yr): " FontSize="13" FontWeight="SemiBold" Foreground="DarkGoldenrod">
+                                                <TextBlock.Effect>
+                                                    <DropShadowEffect BlurRadius="1" ShadowDepth="1" Color="Black"/>
+                                                </TextBlock.Effect>
+                                            </TextBlock>
+                                            <TextBlock  Margin="5,0,0,0" FontSize="13" FontWeight="SemiBold" Foreground="DarkGoldenrod"
+                                                        Text="{Binding Path=ItemsSource, ElementName=RatiosDataGrid, Converter={StaticResource LinearPredictionListValueConverter}}">
+                                                <TextBlock.Effect>
+                                                    <DropShadowEffect BlurRadius="1" ShadowDepth="1" Color="Black" />
+                                                </TextBlock.Effect>
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                    </StackPanel>
+                                    <dxc:ChartControl Grid.Column="1" BorderThickness="0" AnimationMode="Disabled"
+                                                      Background="{x:Null}" DataSource="{Binding Path=Data}" CrosshairEnabled="False" 
+                                                      CustomDrawSeriesPoint="OnCustomDrawRatiosPoints" 
+                                                      Width="500" Height="300" SelectionMode="None">
+                                        <dxc:ChartControl.Diagram>
+                                            <dxc:XYDiagram2D >
+                                                <dxc:XYDiagram2D.DefaultPane>
+                                                    <dxc:Pane DomainBrush="Transparent" />
+                                                </dxc:XYDiagram2D.DefaultPane>
+                                                <dxc:XYDiagram2D.AxisY>
+                                                    <dxc:AxisY2D GridLinesVisible="False" Interlaced="False">
+                                                        <dxc:AxisY2D.Label>
+                                                            <dxc:AxisLabel FontSize="10" />
+                                                        </dxc:AxisY2D.Label>
+                                                        <dxc:AxisY2D.WholeRange>
+                                                            <dxc:Range dxc:AxisY2D.AlwaysShowZeroLevel="False" />
+                                                        </dxc:AxisY2D.WholeRange>
+                                                    </dxc:AxisY2D>
+                                                </dxc:XYDiagram2D.AxisY>
+                                                <dxc:XYDiagram2D.AxisX>
+                                                    <dxc:AxisX2D GridLinesVisible="False">
+                                                        <dxc:AxisX2D.Label>
+                                                            <dxc:AxisLabel FontSize="10"/>
+                                                        </dxc:AxisX2D.Label>
+                                                    </dxc:AxisX2D>
+                                                </dxc:XYDiagram2D.AxisX>
+                                                <dxc:XYDiagram2D.Series>
+                                                    <dxc:LineSeries2D Name="SerieX" 
+                                                                      ArgumentDataMember="Item1" ValueDataMember="Item2" Visible="True" 
+                                                                      LabelsVisibility="False" MarkerVisible="True" MarkerSize="7">
+                                                        <dxc:LineSeries2D.LineStyle>
+                                                            <dxc:LineStyle Thickness="3" />
+                                                        </dxc:LineSeries2D.LineStyle>
+                                                    </dxc:LineSeries2D>
+                                                </dxc:XYDiagram2D.Series>
+                                            </dxc:XYDiagram2D>
+                                        </dxc:ChartControl.Diagram>
+                                    </dxc:ChartControl>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid Margin="10,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Analysis" 
+                   FontSize="42" Foreground="White" Opacity="0.2"
+                   HorizontalAlignment="Left" VerticalAlignment="Top" 
+                   FontFamily="Delicious SmallCaps" />
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal"
+                    HorizontalAlignment="Right" VerticalAlignment="Center">
+            <TextBox Text="{Binding Symbol, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" 
+                     Width="250" CaretBrush="LightGray">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter" Command="{Binding SearchCommand}" />
+                </TextBox.InputBindings>
+                <i:Interaction.Behaviors>
+                    <behaviours:FocusBehaviour />
+                </i:Interaction.Behaviors>
+            </TextBox>
+            <Button Height="30" Padding="2" Margin="2,0,0,0" BorderThickness="0"
+                    Command="{Binding SearchCommand}">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <Rectangle Height="18" Width="18" Opacity="0.6"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Fill="White">
+                            <Rectangle.OpacityMask>
+                                <ImageBrush ImageSource="../Resources/Icons/Search-32.png" Stretch="UniformToFill"/>
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+        </StackPanel>
+
+        <TextBox Grid.Row="0" IsReadOnly="True" Text="{Binding StockName}" 
+                 FontSize="18" Width="Auto" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent" />
+
+        <dx:LoadingDecorator Grid.Row="1" SplashScreenLocation="CenterContainer"  
+                             SplashScreenDataContext="{Binding ProgressLoader}"
+                             IsSplashScreenShown="{Binding ProgressLoader.IsLoading}" OwnerLock="InputOnly">
+            <dx:LoadingDecorator.SplashScreenTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <dx:WaitIndicator DeferedVisibility="True" Content="{Binding Path=Text}" />
+                    </StackPanel>
+                </DataTemplate>
+            </dx:LoadingDecorator.SplashScreenTemplate>
+
+            <dx:DXTabControl Margin="0,5,0,0" >
+
+                <dx:DXTabItem Header="Income Statement">
+                    <ListView SelectionMode="Single" ItemsSource="{Binding IncomeStatement}"
+                              ItemContainerStyle="{StaticResource RatiosListViewItemsStyle}"
+                              ScrollViewer.CanContentScroll="False" />
+                </dx:DXTabItem>
+
+                <dx:DXTabItem Header="Balance Sheet">
+                    <ListView SelectionMode="Single" ItemsSource="{Binding BalanceSheet}"
+                              ItemContainerStyle="{StaticResource RatiosListViewItemsStyle}"
+                              ScrollViewer.CanContentScroll="False"/>
+                </dx:DXTabItem>
+
+                <dx:DXTabItem Header="CashFlow Statement">
+                    <ListView SelectionMode="Single" ItemsSource="{Binding CashFlowStatement}"
+                              ItemContainerStyle="{StaticResource RatiosListViewItemsStyle}"
+                              ScrollViewer.CanContentScroll="False"/>
+                </dx:DXTabItem>
+
+                <dx:DXTabItem Header="Financials">
+                    <ListView x:Name="RatiosListView" SelectionMode="Single" ItemsSource="{Binding RatiosFinancials}"
+                          ItemContainerStyle="{StaticResource RatiosListViewItemsStyle}"
+                          ScrollViewer.CanContentScroll="False"/>
+                </dx:DXTabItem>
+
+                <dx:DXTabItem Header="Profitability">
+                    <ListView SelectionMode="Single" ItemsSource="{Binding RatiosProfitability}"
+                          ItemContainerStyle="{StaticResource RatiosListViewItemsStyle}"
+                          ScrollViewer.CanContentScroll="False"/>
+                </dx:DXTabItem>
+
+                <dx:DXTabItem Header="CashFlow">
+                    <ListView SelectionMode="Single" ItemsSource="{Binding RatiosCashFlow}"
+                          ItemContainerStyle="{StaticResource RatiosListViewItemsStyle}"
+                          ScrollViewer.CanContentScroll="False"/>
+                </dx:DXTabItem>
+
+                <dx:DXTabItem Header="Health">
+                    <ListView SelectionMode="Single" ItemsSource="{Binding RatiosHealth}"
+                          ItemContainerStyle="{StaticResource RatiosListViewItemsStyle}"
+                          ScrollViewer.CanContentScroll="False"/>
+                </dx:DXTabItem>
+
+                <dx:DXTabItem Header="Liquidity">
+                    <ListView SelectionMode="Single" ItemsSource="{Binding RatiosLiquidity}"
+                          ItemContainerStyle="{StaticResource RatiosListViewItemsStyle}"
+                          ScrollViewer.CanContentScroll="False"/>
+                </dx:DXTabItem>
+
+                <dx:DXTabItem Header="Efficiency">
+                    <ListView SelectionMode="Single" ItemsSource="{Binding RatiosEfficiency}"
+                          ItemContainerStyle="{StaticResource RatiosListViewItemsStyle}"
+                          ScrollViewer.CanContentScroll="False"/>
+                </dx:DXTabItem>
+
+            </dx:DXTabControl>
+
+        </dx:LoadingDecorator>
+
+    </Grid>
+
+</UserControl>
