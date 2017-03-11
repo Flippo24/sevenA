@@ -1,1 +1,3 @@
 sevenA
+
+Stock valuation app
