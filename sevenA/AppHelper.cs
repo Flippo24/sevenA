@@ -7,7 +7,7 @@ namespace sevenA
     {
         public static string GetDownloadDirectory(string symbol)
         {
-            return Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Stocks" , symbol, "Downloads");
+            return Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Stocks", symbol, "Downloads");
         }
     }
 }

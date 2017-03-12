@@ -13,8 +13,7 @@
                 return Brushes.WhiteSmoke;
             }
 
-            double result;
-            if (!double.TryParse(value.ToString(), out result))
+            if (!double.TryParse(value.ToString(), out double result))
             {
                 return Brushes.WhiteSmoke;
             }

@@ -22,13 +22,12 @@
             var dict = new Dictionary<DateTime, double?>();
             foreach (var tuple in data)
             {
-                DateTime date;
                 if (DateTime.TryParseExact(
                     tuple.Item1,
                     "yyyy-MM",
                     CultureInfo.InvariantCulture,
                     DateTimeStyles.None,
-                    out date) && tuple.Item2.HasValue)
+                    out DateTime date) && tuple.Item2.HasValue)
                 {
                     dict.Add(date, tuple.Item2);
                 }

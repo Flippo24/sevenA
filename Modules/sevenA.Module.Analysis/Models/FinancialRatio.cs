@@ -55,17 +55,16 @@
                 try
                 {
                     // ReSharper disable once StyleCop.SA1305
-                    DateTime cDate;
                     return this.Data != null && this.Data.Any()
-                               ? this.Data.Last(
-                                   x =>
-                                   DateTime.TryParseExact(
-                                       x.Item1,
-                                       "yyyy-MM",
-                                       CultureInfo.InvariantCulture,
-                                       DateTimeStyles.None,
-                                       out cDate)).Item2
-                               : null;
+           ? this.Data.Last(
+               x =>
+               DateTime.TryParseExact(
+                   x.Item1,
+                   "yyyy-MM",
+                   CultureInfo.InvariantCulture,
+                   DateTimeStyles.None,
+                   out DateTime cDate)).Item2
+           : null;
                 }
                 catch
                 {
@@ -102,13 +101,12 @@
                 var convertedData = new List<Tuple<DateTime, double>>();
                 foreach (var tuple in this.Data)
                 {
-                    DateTime date;
                     if (DateTime.TryParseExact(
                         tuple.Item1,
                         "yyyy-MM",
                         CultureInfo.InvariantCulture,
                         DateTimeStyles.None,
-                        out date) && tuple.Item2.HasValue)
+                        out DateTime date) && tuple.Item2.HasValue)
                     {
                         convertedData.Add(Tuple.Create(date, tuple.Item2.Value));
                     }

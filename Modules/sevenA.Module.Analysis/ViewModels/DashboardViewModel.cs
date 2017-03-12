@@ -90,7 +90,7 @@
                 this._averageCashFlow = value;
                 this.RaisePropertyChanged(() => this.AverageCashFlow);
 
-                if (this.AllRatios.Any() && value != default(double))
+                if (this.AllRatios.Any() && Math.Abs(value - default(double)) > 1E-6)
                 {
                     this.CalculateValutionTask();
                 }
@@ -278,7 +278,7 @@
             {
                 this._initialGrowthRate = value;
                 this.RaisePropertyChanged(() => this.InitialGrowthRate);
-                if (this.AllRatios.Any() && value != default(double))
+                if (this.AllRatios.Any() && Math.Abs(value - default(double)) > 1E-6)
                 {
                     this.CalculateValutionTask();
                 }
@@ -560,7 +560,7 @@
             {
                 this._waccModified = value;
                 this.RaisePropertyChanged(() => this.WACCModified);
-                if (this.AllRatios.Any() && value != default(double))
+                if (this.AllRatios.Any() && Math.Abs(value - default(double)) > 1E-6)
                 {
                     this.CalculateValutionTask();
                 }
@@ -675,14 +675,13 @@
 
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingYahooHistorical, 0);
 
-                DateTime startDate;
 
                 DateTime.TryParseExact(
                     this.RatiosFinancials.First().Data.First().Item1,
                     "yyyy-MM",
                     CultureInfo.InvariantCulture,
                     DateTimeStyles.None,
-                    out startDate);
+                    out DateTime startDate);
 
                 if (startDate == default(DateTime))
                 {
@@ -780,14 +779,6 @@
                     this.RatiosProfitability.First(x => StringContains(x.Name, "Tax Rate"))
                         .Data.Where(x => !x.Item1.Equals("TTM"))
                         .ToList();
-
-                //var capex = this.CashFlowStatement.First(x => StringContains(x.Name, "Capital Expenditure"))
-                //                    .Data.Where(x => !x.Item1.Equals("TTM"))
-                //                    .ToList();
-
-                //var depreciation = this.CashFlowStatement.First(x => StringContains(x.Name, "Depreciation"))
-                //                    .Data.Where(x => !x.Item1.Equals("TTM"))
-                //                    .ToList();
 
                 FinancialRatio divYield = new FinancialRatio
                 {
@@ -1039,13 +1030,12 @@
 
         private bool IsValidDateTimeString(string dateTime)
         {
-            DateTime date;
             return DateTime.TryParseExact(
                 dateTime,
                 "yyyy-MM",
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
-                out date);
+                out DateTime date);
         }
 
         private void PrepareCurrentIndicators()

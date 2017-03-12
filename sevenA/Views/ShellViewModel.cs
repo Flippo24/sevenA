@@ -1,6 +1,5 @@
 ﻿using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
-using sevenA.Module.Analysis.Views;
 
 namespace sevenA.Views
 {

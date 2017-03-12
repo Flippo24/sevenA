@@ -80,7 +80,6 @@
     <Compile Include="AppHelper.cs" />
     <Compile Include="Models\MarketPoint.cs" />
     <Compile Include="Models\Stock.cs" />
-    <Compile Include="UIBootstrapper.cs" />
     <Compile Include="Views\ShellViewModel.cs" />
     <Page Include="Resources\Shared.xaml">
       <SubType>Designer</SubType>

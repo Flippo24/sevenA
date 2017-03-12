@@ -103,7 +103,7 @@
 
                                     result.Close = double.Parse(values.ElementAt(1));
                                 }
-                                catch 
+                                catch
                                 {
                                     result.Date = DateTime.ParseExact(
                                         values.ElementAt(1).Replace("\"", string.Empty),
