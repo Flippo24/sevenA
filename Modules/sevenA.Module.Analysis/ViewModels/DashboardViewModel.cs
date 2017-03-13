@@ -832,6 +832,12 @@
 
                 this.ProgressLoader.UpdateProgress(MessageConstants.Analysing, 60);
 
+                if (!this.StockData.Any())
+                {
+                    return;
+                }
+
+
                 for (int i = 0; i < dividends.Count; i++)
                 {
                     try
