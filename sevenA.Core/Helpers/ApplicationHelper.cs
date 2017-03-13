@@ -11,8 +11,8 @@
 
         public static ApplicationHelper Instance => _instance ?? new ApplicationHelper();
 
-        public readonly double RiskFreeRateSG = 2.4;
+        public readonly double RiskFreeRateSG = 2.31;
         public readonly double RiskFreeRatePT = 4.0;
-        public readonly double RiskFreeRate = -0.2;
+        public readonly double RiskFreeRate = 1.219;
     }
 }

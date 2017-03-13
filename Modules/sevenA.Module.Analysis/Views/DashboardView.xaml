@@ -95,36 +95,6 @@
                 </Button.ContentTemplate>
             </Button>
 
-            <Button
-                Margin="20,0,5,4"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                VerticalContentAlignment="Center"
-                Command="{Binding AddFavoriteCommand}"
-                ToolTip="Favorites">
-                <Button.Template>
-                    <ControlTemplate>
-                        <Image
-                            x:Name="starImage"
-                            Width="24"
-                            Height="24"
-                            Source="../Resources/Icons/Star Filled-48.png" />
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="starImage" Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect
-                                            BlurRadius="15"
-                                            ShadowDepth="0"
-                                            Color="White" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
-
         </StackPanel>
 
         <TextBox
@@ -254,7 +224,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Top"
                             Header="Valuation"
-                            ItemSpace="10"
+                            ItemSpace="0"
                             Orientation="Vertical"
                             View="GroupBox">
                             <dxlc:LayoutGroup
