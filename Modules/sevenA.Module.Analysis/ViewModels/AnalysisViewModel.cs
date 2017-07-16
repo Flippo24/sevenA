@@ -7,10 +7,10 @@
     using DevExpress.Mvvm;
     using DevExpress.Mvvm.DataAnnotations;
 
-    using sevenA.Core.Elements;
-    using sevenA.Module.Analysis.Constants;
-    using sevenA.Module.Analysis.Enums;
-    using sevenA.Module.Analysis.Models;
+    using Core.Elements;
+    using Constants;
+    using Enums;
+    using Models;
 
     using SevenA.Module.Analysis.Services;
 

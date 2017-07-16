@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace sevenA.Properties {
+namespace sevenA.Module.Analysis.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -20,6 +20,19 @@ namespace sevenA.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.google.com/finance/getprices")]
+        public string GET_PRICES_METHOD_URI_BEGINNING {
+            get {
+                return ((string)(this["GET_PRICES_METHOD_URI_BEGINNING"]));
+            }
+            set {
+                this["GET_PRICES_METHOD_URI_BEGINNING"] = value;
             }
         }
     }
