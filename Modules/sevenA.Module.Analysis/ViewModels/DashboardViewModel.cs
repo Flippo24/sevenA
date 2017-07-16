@@ -11,13 +11,13 @@
     using DevExpress.Mvvm;
     using DevExpress.Mvvm.DataAnnotations;
 
-    using sevenA.Core.Elements;
-    using sevenA.Core.Helpers;
-    using sevenA.Core.Stats;
-    using sevenA.Module.Analysis.Constants;
-    using sevenA.Module.Analysis.Enums;
-    using sevenA.Module.Analysis.Models;
-    using sevenA.Module.Analysis.Services;
+    using Core.Elements;
+    using Core.Helpers;
+    using Core.Stats;
+    using Constants;
+    using Enums;
+    using Models;
+    using Services;
 
     using SevenA.Module.Analysis.Services;
 
@@ -80,10 +80,7 @@
 
         public double AverageCashFlow
         {
-            get
-            {
-                return this._averageCashFlow;
-            }
+            get => this._averageCashFlow;
 
             set
             {
@@ -269,10 +266,7 @@
 
         public double InitialGrowthRate
         {
-            get
-            {
-                return this._initialGrowthRate;
-            }
+            get => this._initialGrowthRate;
 
             set
             {
@@ -551,10 +545,7 @@
 
         public double WACCModified
         {
-            get
-            {
-                return this._waccModified;
-            }
+            get => this._waccModified;
 
             set
             {

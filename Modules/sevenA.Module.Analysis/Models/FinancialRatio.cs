@@ -9,7 +9,7 @@
 
     using Enums;
 
-    using sevenA.Core.Stats;
+    using Core.Stats;
 
     public class FinancialRatio : BindableBase
     {
@@ -35,17 +35,11 @@
 
         public double? DeltaLongTerm
         {
-            get
-            {
-                return this._deltaLongTerm.HasValue && !double.IsNaN(this._deltaLongTerm.Value)
-                           ? this._deltaLongTerm
-                           : null;
-            }
+            get => this._deltaLongTerm.HasValue && !double.IsNaN(this._deltaLongTerm.Value)
+                ? this._deltaLongTerm
+                : null;
 
-            set
-            {
-                this._deltaLongTerm = value;
-            }
+            set => this._deltaLongTerm = value;
         }
 
         public double? Latest
@@ -77,17 +71,11 @@
 
         public double? RegressionCoef
         {
-            get
-            {
-                return this._regressionCoef.HasValue && !double.IsNaN(this._regressionCoef.Value)
-                           ? this._regressionCoef
-                           : null;
-            }
+            get => this._regressionCoef.HasValue && !double.IsNaN(this._regressionCoef.Value)
+                ? this._regressionCoef
+                : null;
 
-            set
-            {
-                this._regressionCoef = value;
-            }
+            set => this._regressionCoef = value;
         }
 
         public FinancialRatioSectionEnum Section { get; set; }

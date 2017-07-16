@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sevenA", "sevenA\sevenA.csproj", "{69B0F37D-D6FE-468B-A0B6-4A02BE1B3221}"
 EndProject
@@ -10,8 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sevenA.Resources", "sevenA.Resources\sevenA.Resources.csproj", "{DA75F35E-AD2F-4C21-9C66-4D207A1F9950}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{B558FE4C-57EC-487F-B9EC-5A03576E849E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sevenA.Module.Portfolios", "Modules\sevenA.Module.Portfolios\sevenA.Module.Portfolios.csproj", "{01271628-5237-4842-BBB9-4410E6599715}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sevenA.Core", "sevenA.Core\sevenA.Core.csproj", "{C3E20753-3B41-4779-A22F-6544FC7BDD57}"
 EndProject
@@ -35,10 +33,6 @@ Global
 		{DA75F35E-AD2F-4C21-9C66-4D207A1F9950}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA75F35E-AD2F-4C21-9C66-4D207A1F9950}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA75F35E-AD2F-4C21-9C66-4D207A1F9950}.Release|Any CPU.Build.0 = Release|Any CPU
-		{01271628-5237-4842-BBB9-4410E6599715}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{01271628-5237-4842-BBB9-4410E6599715}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{01271628-5237-4842-BBB9-4410E6599715}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{01271628-5237-4842-BBB9-4410E6599715}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C3E20753-3B41-4779-A22F-6544FC7BDD57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C3E20753-3B41-4779-A22F-6544FC7BDD57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3E20753-3B41-4779-A22F-6544FC7BDD57}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -52,7 +46,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{01271628-5237-4842-BBB9-4410E6599715} = {B558FE4C-57EC-487F-B9EC-5A03576E849E}
 		{33CD9F28-039D-4145-AFFB-96180FCAF89A} = {B558FE4C-57EC-487F-B9EC-5A03576E849E}
 	EndGlobalSection
 EndGlobal

@@ -27,52 +27,52 @@ namespace sevenA.Models
 
         public string Name
         {
-            get { return this._name; }
-            set { this.SetProperty(ref this._name, value); }
+            get => this._name;
+            set => this.SetProperty(ref this._name, value);
         }
 
         public string Symbol
         {
-            get { return this._symbol; }
-            set { this.SetProperty(ref this._symbol, value); }
+            get => this._symbol;
+            set => this.SetProperty(ref this._symbol, value);
         }
 
         public double LastPrice
         {
-            get { return this._lastPrice; }
-            set { this.SetProperty(ref this._lastPrice, value); }
+            get => this._lastPrice;
+            set => this.SetProperty(ref this._lastPrice, value);
         }
 
         public long LastVolume
         {
-            get { return this._lastVolume; }
-            set { this.SetProperty(ref this._lastVolume, value); }
+            get => this._lastVolume;
+            set => this.SetProperty(ref this._lastVolume, value);
         }
 
         public double High52
         {
-            get { return this._high52; }
-            set { this.SetProperty(ref this._high52, value); }
+            get => this._high52;
+            set => this.SetProperty(ref this._high52, value);
         }
 
         public double Low52
         {
-            get { return this._low52; }
-            set { this.SetProperty(ref this._low52, value); }
+            get => this._low52;
+            set => this.SetProperty(ref this._low52, value);
         }
 
         public ObservableCollection<MarketPoint> MarketData { get; set; }
 
         public bool IsDownloading
         {
-            get { return this._isDownloading; }
-            private set { this.SetProperty(ref this._isDownloading, value); }
+            get => this._isDownloading;
+            private set => this.SetProperty(ref this._isDownloading, value);
         }
 
         public bool? IsDownloadSuccess
         {
-            get { return this._isDownloadSuccess; }
-            set { this.SetProperty(ref this._isDownloadSuccess, value); }
+            get => this._isDownloadSuccess;
+            set => this.SetProperty(ref this._isDownloadSuccess, value);
         }
 
         public void Download()

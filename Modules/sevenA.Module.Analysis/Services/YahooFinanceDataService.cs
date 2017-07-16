@@ -7,8 +7,8 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using sevenA.Core.Elements;
-    using sevenA.Module.Analysis.Models;
+    using Core.Elements;
+    using Models;
 
     public class YahooFinanceDataService
     {

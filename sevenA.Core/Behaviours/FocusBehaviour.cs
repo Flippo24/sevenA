@@ -30,8 +30,8 @@ namespace sevenA.Core.Behaviours
 
         public bool IsFocused
         {
-            get { return (bool)this.GetValue(IsFocusedProperty); }
-            set { this.SetValue(IsFocusedProperty, value); }
+            get => (bool)this.GetValue(IsFocusedProperty);
+            set => this.SetValue(IsFocusedProperty, value);
         }
     }
 }
