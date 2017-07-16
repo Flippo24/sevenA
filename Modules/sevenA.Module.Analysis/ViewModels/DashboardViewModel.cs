@@ -30,7 +30,7 @@
 
         private readonly ValuationService _valuationService;
 
-        private readonly YahooFinanceDataService _yahooFinanceDataService;
+        private readonly GoogleFinanceDataService _googleFinanceDataService;
 
         private double _averageCashFlow;
 
@@ -47,7 +47,7 @@
         public DashboardViewModel()
         {
             this._morningStarDataService = MorningStarDataService.Instance;
-            this._yahooFinanceDataService = YahooFinanceDataService.Instance;
+            this._googleFinanceDataService = GoogleFinanceDataService.Instance;
             this._valuationService = ValuationService.Instance;
             this.Favorites = new ObservableCollection<string>();
             this.ProgressLoader = new ProgressLoader();
@@ -681,9 +681,9 @@
 
                 var prices =
                     await
-                    this._yahooFinanceDataService.GetHistoricalDataAsync(
+                    this._googleFinanceDataService.GetHistoricalDataAsync(
                         this._cancellationTokenSource.Token,
-                        this._yahooFinanceDataService.GetYahooSymbol(this.Symbol),
+                        this._googleFinanceDataService.GetGoogleFinanceSymbol(this.Symbol),
                         startDate);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingYahooHistorical, 70);
                 this.StockData = new ObservableCollection<StockData>(prices);
@@ -691,9 +691,9 @@
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingYahooLatest, 0);
                 this.LatestPrice =
                     await
-                    this._yahooFinanceDataService.GetLatestAsync(
+                    this._googleFinanceDataService.GetLatestAsync(
                         this._cancellationTokenSource.Token,
-                        this._yahooFinanceDataService.GetYahooSymbol(this.Symbol));
+                        this._googleFinanceDataService.GetGoogleFinanceSymbol(this.Symbol));
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingYahooLatest, 100);
 
                 this.PrepareCurrentIndicators();
@@ -755,9 +755,13 @@
                         .Data.Where(x => !x.Item1.Equals("TTM"))
                         .ToList();
 
-                var shortTermDebt = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, "Short-term debt"))
+                var shortTermDebtText = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, "Short-term debt")) != null
+                    ? "Short-term debt"
+                    : "Short-term borrowing";
+
+                var shortTermDebt = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, shortTermDebtText))
                                     != null
-                                        ? this.BalanceSheet.First(x => StringContains(x.Name, "Short-term debt"))
+                                        ? this.BalanceSheet.First(x => StringContains(x.Name, shortTermDebtText))
                                               .Data.Where(x => !x.Item1.Equals("TTM"))
                                               .ToList()
                                         : new List<Tuple<string, double?, double?>>();
@@ -939,8 +943,12 @@
                     .Data.Last(x => !x.Item1.Equals("TTM"))
                     .Item2.GetValueOrDefault();
 
+            var totalCashText = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, "Total Cash")) != null
+                ? "Total Cash"
+                : "Cash and cash equivalents";
+
             this._totalCash =
-                this.BalanceSheet.First(x => StringContains(x.Name, "Total Cash"))
+                this.BalanceSheet.First(x => StringContains(x.Name, totalCashText))
                     .Data.Last(x => !x.Item1.Equals("TTM"))
                     .Item2.GetValueOrDefault();
 
