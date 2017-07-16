@@ -664,7 +664,7 @@
                 this.AllRatios.AddRange(financials);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingFinancials, 100);
 
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingYahooHistorical, 0);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 0);
 
 
                 DateTime.TryParseExact(
@@ -685,16 +685,16 @@
                         this._cancellationTokenSource.Token,
                         this._googleFinanceDataService.GetGoogleFinanceSymbol(this.Symbol),
                         startDate);
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingYahooHistorical, 70);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 70);
                 this.StockData = new ObservableCollection<StockData>(prices);
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingYahooHistorical, 100);
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingYahooLatest, 0);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 100);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleLatest, 0);
                 this.LatestPrice =
                     await
                     this._googleFinanceDataService.GetLatestAsync(
                         this._cancellationTokenSource.Token,
                         this._googleFinanceDataService.GetGoogleFinanceSymbol(this.Symbol));
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingYahooLatest, 100);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleLatest, 100);
 
                 this.PrepareCurrentIndicators();
                 this.AddComposedIndicators();
