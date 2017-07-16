@@ -29,11 +29,6 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="BorderThickness" Value="0" />
         </Style>
-        <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#faaa" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="FontFamily" Value="Work Sans Light" />
-        </Style>
 
     </UserControl.Resources>
     <dxmvvm:Interaction.Behaviors>

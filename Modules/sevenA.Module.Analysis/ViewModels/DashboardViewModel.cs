@@ -620,8 +620,8 @@
                 this.Clear();
 
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingRatios, 0);
-                var results =
-                    await
+
+                var results = await
                     this._morningStarDataService.GetKeyRatiosAsync(this._cancellationTokenSource.Token, this.Symbol);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingRatios, 60);
                 this.AllRatios = new ObservableCollection<FinancialRatio>(results.ToList());
