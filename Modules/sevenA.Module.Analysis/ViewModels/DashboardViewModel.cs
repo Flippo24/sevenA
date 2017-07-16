@@ -530,7 +530,7 @@
             }
         }
 
-        public double WACC
+        public double? WACC
         {
             get
             {
@@ -744,7 +744,7 @@
                         ? this.IncomeStatement.First(x => StringContains(x.Name, "Interest Expense"))
                               .Data.Where(x => !x.Item1.Equals("TTM"))
                               .ToList()
-                        : new List<Tuple<string, double?, double?>>();
+                        : GetDefaultData();
 
                 var peData =
                     this.RatiosFinancials.First(x => StringContains(x.Name, "Earnings Per Share"))
@@ -764,11 +764,12 @@
                                         ? this.BalanceSheet.First(x => StringContains(x.Name, shortTermDebtText))
                                               .Data.Where(x => !x.Item1.Equals("TTM"))
                                               .ToList()
-                                        : new List<Tuple<string, double?, double?>>();
-                var longTermDebt =
-                    this.BalanceSheet.First(x => StringContains(x.Name, "Long-term debt"))
-                        .Data.Where(x => !x.Item1.Equals("TTM"))
-                        .ToList();
+                                        : GetDefaultData();
+
+                var longTermDebt = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, "Long-term debt")) != null
+                        ? this.BalanceSheet.First(x => StringContains(x.Name, "Long-term debt")).Data
+                            .Where(x => !x.Item1.Equals("TTM")).ToList()
+                        : GetDefaultData();
 
                 var taxRate =
                     this.RatiosProfitability.First(x => StringContains(x.Name, "Tax Rate"))
@@ -909,7 +910,7 @@
 
                 this.COE = coe.Latest.GetValueOrDefault();
                 this.COD = cod.Latest.GetValueOrDefault();
-                this.WACC = wacc.Data.Last(x => x.Item2.HasValue).Item2.GetValueOrDefault();
+                this.WACC = wacc.Data.Last(x => x.Item2.HasValue && x.Item2.Value > 0)?.Item2.GetValueOrDefault();
 
                 this.ProgressLoader.UpdateProgress(MessageConstants.Analysing, 70);
             }
@@ -935,7 +936,7 @@
             this._initialGrowthRate =
                 this.CashFlowStatement.First(x => StringContains(x.Name, "Free cash")).DeltaLongTerm.GetValueOrDefault();
 
-            this._waccModified = this.WACC;
+            this._waccModified = this.WACC.GetValueOrDefault();
             this.RaisePropertyChanged(() => this.WACCModified);
 
             this._nShares =
@@ -1095,6 +1096,24 @@
                     .Data.Last(x => !x.Item1.Equals("TTM"))
                     .Item2.GetValueOrDefault();
             this.ProgressLoader.UpdateProgress(MessageConstants.Analysing, 50);
+        }
+
+        private List<Tuple<string, double?, double?>> GetDefaultData()
+        {
+            try
+            {
+                var dates = this.RatiosFinancials.First(x => x.Name.Contains("Shares")).Data.Select(x => x.Item1)
+                    .ToArray();
+
+                var data = Enumerable.Range(0, this.RatiosFinancials.First(x => x.Name.Contains("Shares")).Data.Count)
+                    .Select(i => Tuple.Create(dates[i], (double?) 0d, (double?) 0d));
+
+                return data.ToList();
+            }
+            catch
+            {
+                return new List<Tuple<string, double?, double?>>();
+            }
         }
     }
 }

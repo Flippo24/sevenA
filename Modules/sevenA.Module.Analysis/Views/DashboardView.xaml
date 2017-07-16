@@ -138,7 +138,6 @@
                 <dxlc:LayoutGroup
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    dxlc:LayoutControl.AllowVerticalSizing="True"
                     ItemSpace="5"
                     Orientation="Horizontal">
                     <dxlc:LayoutGroup
