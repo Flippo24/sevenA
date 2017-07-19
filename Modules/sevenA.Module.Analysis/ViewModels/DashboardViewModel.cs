@@ -120,6 +120,13 @@
             }
         }
 
+        public double MarketCap
+        {
+            get { return this.GetProperty(() => this.MarketCap); }
+
+            set { this.SetProperty(() => this.MarketCap, value); }
+        }
+
         public ObservableCollection<FinancialRatio> CashFlowStatement
         {
             get
@@ -302,6 +309,7 @@
             private set
             {
                 this.SetProperty(() => this.MaxAverageCashFlow, value);
+                RaisePropertiesChanged(() => FreeCashFlowSmallStep, () => FreeCashFlowBigStep);
             }
         }
 
@@ -317,8 +325,13 @@
             private set
             {
                 this.SetProperty(() => this.MinAverageCashFlow, value);
+                RaisePropertiesChanged(() => FreeCashFlowSmallStep, () => FreeCashFlowBigStep);
             }
         }
+
+        public double FreeCashFlowSmallStep => Math.Abs(MaxAverageCashFlow - MinAverageCashFlow) / 20;
+
+        public double FreeCashFlowBigStep => Math.Abs(MaxAverageCashFlow - MinAverageCashFlow) / 5;
 
         public double NetMargin
         {
@@ -689,11 +702,15 @@
                 this.StockData = new ObservableCollection<StockData>(prices);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 100);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleLatest, 0);
-                this.LatestPrice =
-                    await
+                this.LatestPrice = await
                     this._googleFinanceDataService.GetLatestAsync(
                         this._cancellationTokenSource.Token,
                         this._googleFinanceDataService.GetGoogleFinanceSymbol(this.Symbol));
+                if (this.LatestPrice.Close == 0)
+                {
+                    this.LatestPrice = prices.FirstOrDefault();
+                }
+
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleLatest, 100);
 
                 this.PrepareCurrentIndicators();
@@ -930,8 +947,17 @@
 
             this._averageCashFlow = Stats.SimpleAverage(freeCashFlow.Select(x => x.Item2.GetValueOrDefault()), 3);
             this.RaisePropertyChanged(() => this.AverageCashFlow);
-            this.MinAverageCashFlow = this._averageCashFlow * 0.1;
-            this.MaxAverageCashFlow = this._averageCashFlow > 0 ? this._averageCashFlow * 3.0 : 300;
+            this.MinAverageCashFlow = freeCashFlow.Select(x => x.Item2.GetValueOrDefault()).Min();
+            if (this.MinAverageCashFlow == this._averageCashFlow)
+            {
+                this.MinAverageCashFlow = this.AverageCashFlow > 0 ? this.AverageCashFlow * 0.1 : -100;
+            }
+
+            this.MaxAverageCashFlow = freeCashFlow.Select(x => x.Item2.GetValueOrDefault()).Max();
+            if (this.MaxAverageCashFlow == this._averageCashFlow)
+            {
+                this.MinAverageCashFlow = this.AverageCashFlow > 0 ? this.AverageCashFlow * 3 : 100;
+            }
 
             this._initialGrowthRate =
                 this.CashFlowStatement.First(x => StringContains(x.Name, "Free cash")).DeltaLongTerm.GetValueOrDefault();
@@ -943,6 +969,8 @@
                 this.RatiosFinancials.First(x => StringContains(x.Name, "Shares"))
                     .Data.Last(x => !x.Item1.Equals("TTM"))
                     .Item2.GetValueOrDefault();
+
+            this.MarketCap = this.LatestPrice.Close * _nShares;
 
             var totalCashText = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, "Total Cash")) != null
                 ? "Total Cash"
@@ -1001,6 +1029,7 @@
 
             this.StockName = string.Empty;
             this.LatestPrice = null;
+            this.MarketCap = 0;
             this.PE = 0;
             this.EPS = 0;
             this.DividendYield = 0;
@@ -1106,7 +1135,7 @@
                     .ToArray();
 
                 var data = Enumerable.Range(0, this.RatiosFinancials.First(x => x.Name.Contains("Shares")).Data.Count)
-                    .Select(i => Tuple.Create(dates[i], (double?) 0d, (double?) 0d));
+                    .Select(i => Tuple.Create(dates[i], (double?)0d, (double?)0d));
 
                 return data.ToList();
             }
