@@ -1,9 +1,10 @@
-﻿namespace sevenA.Module.Analysis.ViewModels
+﻿using System.Threading.Tasks;
+
+namespace sevenA.Module.Analysis.ViewModels
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Threading;
@@ -36,8 +37,6 @@
 
         private double _initialGrowthRate;
 
-        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation",
-            Justification = "Reviewed. Suppression is OK here.")]
         private double _nShares;
 
         private double _totalCash;
@@ -715,6 +714,7 @@
 
                 this.PrepareCurrentIndicators();
                 this.AddComposedIndicators();
+
                 this.CalculateValuations();
             }
             catch
@@ -959,8 +959,7 @@
                 this.MinAverageCashFlow = this.AverageCashFlow > 0 ? this.AverageCashFlow * 3 : 100;
             }
 
-            this._initialGrowthRate =
-                this.CashFlowStatement.First(x => StringContains(x.Name, "Free cash")).DeltaLongTerm.GetValueOrDefault();
+            this._initialGrowthRate = 0d;
 
             this._waccModified = this.WACC.GetValueOrDefault();
             this.RaisePropertyChanged(() => this.WACCModified);
