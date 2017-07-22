@@ -41,15 +41,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock
-            Grid.Row="0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            FontFamily="SketchFlow Print"
-            FontSize="26"
-            Foreground="Teal"
-            Text="stock analysis" />
-
         <StackPanel
             Grid.Row="0"
             HorizontalAlignment="Right"
@@ -96,7 +87,7 @@
             Grid.Row="0"
             Width="Auto"
             Height="50"
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Left"
             VerticalAlignment="Center"
             Background="Transparent"
             FontFamily="Lato Black"
