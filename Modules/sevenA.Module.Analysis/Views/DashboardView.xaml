@@ -159,14 +159,14 @@
                             <dxe:TextEdit EditValue="{Binding LatestPrice.Close}" FontSize="20" />
                         </dxlc:LayoutItem>
                         <dxlc:LayoutGroup ItemSpace="10" Orientation="Horizontal">
+                            <dxlc:LayoutItem AddColonToLabel="True" Label="Market Cap">
+                                <dxe:TextEdit DisplayFormatString="{}{0:0.0}" EditValue="{Binding MarketCap}" />
+                            </dxlc:LayoutItem>
                             <dxlc:LayoutItem AddColonToLabel="True" Label="PE">
                                 <dxe:TextEdit DisplayFormatString="{}{0:0.00}" EditValue="{Binding PE}" />
                             </dxlc:LayoutItem>
                             <dxlc:LayoutItem AddColonToLabel="True" Label="EPS">
                                 <dxe:TextEdit EditValue="{Binding EPS}" />
-                            </dxlc:LayoutItem>
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="Dividend Yield">
-                                <dxe:TextEdit DisplayFormatString="{}{0:0.00}" EditValue="{Binding DividendYield}" />
                             </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
                         <dxlc:LayoutGroup ItemSpace="10" Orientation="Horizontal">
@@ -273,11 +273,11 @@
                                         <dxe:TrackBarEdit
                                             x:Name="Trackbareditfcf"
                                             Grid.Column="1"
-                                            LargeStep="10"
+                                            LargeStep="{Binding FreeCashFlowBigStep}"
                                             Maximum="{Binding MaxAverageCashFlow, StringFormat=0.00}"
                                             Minimum="{Binding MinAverageCashFlow, StringFormat=0.00}"
                                             ShowBorder="False"
-                                            SmallStep="5"
+                                            SmallStep="{Binding FreeCashFlowSmallStep}"
                                             Value="{Binding AverageCashFlow, Mode=TwoWay}" />
                                         <TextBlock
                                             Grid.Column="2"
