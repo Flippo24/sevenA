@@ -31,7 +31,7 @@ namespace sevenA.Module.Analysis.ViewModels
 
         private readonly ValuationService _valuationService;
 
-        private readonly GoogleFinanceDataService _googleFinanceDataService;
+        private readonly YahooFinanceDataService _yahooFinanceDataService;
 
         private double _averageCashFlow;
 
@@ -46,7 +46,7 @@ namespace sevenA.Module.Analysis.ViewModels
         public DashboardViewModel()
         {
             this._morningStarDataService = MorningStarDataService.Instance;
-            this._googleFinanceDataService = GoogleFinanceDataService.Instance;
+            this._yahooFinanceDataService = YahooFinanceDataService.Instance;
             this._valuationService = ValuationService.Instance;
             this.Favorites = new ObservableCollection<string>();
             this.ProgressLoader = new ProgressLoader();
@@ -691,24 +691,14 @@ namespace sevenA.Module.Analysis.ViewModels
                     startDate = DateTime.Now.AddYears(-10);
                 }
 
-                var prices =
-                    await
-                    this._googleFinanceDataService.GetHistoricalDataAsync(
-                        this._cancellationTokenSource.Token,
-                        this._googleFinanceDataService.GetGoogleFinanceSymbol(this.Symbol),
-                        startDate);
+                var prices = await this._yahooFinanceDataService.GetHistoricalDataAsync(
+                                 this._yahooFinanceDataService.GetYahooFinanceSymbol(this.Symbol),
+                                 startDate);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 70);
                 this.StockData = new ObservableCollection<StockData>(prices);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 100);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleLatest, 0);
-                this.LatestPrice = await
-                    this._googleFinanceDataService.GetLatestAsync(
-                        this._cancellationTokenSource.Token,
-                        this._googleFinanceDataService.GetGoogleFinanceSymbol(this.Symbol));
-                if (this.LatestPrice.Close == 0)
-                {
-                    this.LatestPrice = prices.FirstOrDefault();
-                }
+                this.LatestPrice = prices.LastOrDefault();
 
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleLatest, 100);
 
