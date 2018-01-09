@@ -11,9 +11,12 @@
 
     public class YahooFinanceDataService
     {
-        private static YahooFinanceDataService instance;
+        static YahooFinanceDataService()
+        {
+            Instance = new YahooFinanceDataService();
+        }
 
-        public static YahooFinanceDataService Instance => instance ?? new YahooFinanceDataService();
+        public static YahooFinanceDataService Instance { get; }
 
         public string GetYahooFinanceSymbol(string morningStarSymbol)
         {

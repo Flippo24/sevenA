@@ -98,7 +98,6 @@
     <Compile Include="Converters\LinearPredictionListValueConverter.cs" />
     <Compile Include="Converters\AverageListValueConverter.cs" />
     <Compile Include="Converters\LatestListValueConverter.cs" />
-    <Compile Include="Converters\ValueToBrushConverter.cs" />
     <Compile Include="Enums\FinancialRatioSectionEnum.cs" />
     <Compile Include="Models\StockData.cs" />
     <Compile Include="Models\FinancialRatio.cs" />
@@ -108,9 +107,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Services\DownloadURIBuilder.cs" />
     <Compile Include="Services\ValuationService.cs" />
-    <Compile Include="Services\GoogleFinanceDataService.cs" />
     <Compile Include="Services\MorningStarDataService.cs" />
     <Compile Include="Services\YahooFinanceDataService.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />

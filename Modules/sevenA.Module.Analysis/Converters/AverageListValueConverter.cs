@@ -12,9 +12,7 @@
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var data = value as List<Tuple<string, double?, double?>>;
-
-            if (data == null)
+            if (!(value is List<Tuple<string, double?, double?>> data))
             {
                 return null;
             }
@@ -22,12 +20,7 @@
             var dict = new Dictionary<DateTime, double?>();
             foreach (var tuple in data)
             {
-                if (DateTime.TryParseExact(
-                    tuple.Item1,
-                    "yyyy-MM",
-                    CultureInfo.InvariantCulture,
-                    DateTimeStyles.None,
-                    out DateTime date) && tuple.Item2.HasValue)
+                if (DateTime.TryParseExact(tuple.Item1, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date) && tuple.Item2.HasValue)
                 {
                     dict.Add(date, tuple.Item2);
                 }

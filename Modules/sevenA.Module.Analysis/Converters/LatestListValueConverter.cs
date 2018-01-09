@@ -9,9 +9,7 @@
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            var data = value as List<Tuple<string, double?, double?>>;
-
-            return data != null && data.Any() && data.Any(x => x.Item2 != null) ? data.Last(x => x.Item2 != null).Item2 : null;
+            return value is List<Tuple<string, double?, double?>> data && data.Any() && data.Any(x => x.Item2 != null) ? data.Last(x => x.Item2 != null).Item2 : null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

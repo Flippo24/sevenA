@@ -5,11 +5,11 @@
     using System.Globalization;
     using System.Linq;
 
+    using Core.Stats;
+
     using DevExpress.Mvvm;
 
     using Enums;
-
-    using Core.Stats;
 
     public class FinancialRatio : BindableBase
     {
@@ -52,12 +52,7 @@
                     return this.Data != null && this.Data.Any()
            ? this.Data.Last(
                x =>
-               DateTime.TryParseExact(
-                   x.Item1,
-                   "yyyy-MM",
-                   CultureInfo.InvariantCulture,
-                   DateTimeStyles.None,
-                   out DateTime cDate)).Item2
+               DateTime.TryParseExact(x.Item1, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime _)).Item2
            : null;
                 }
                 catch
@@ -89,12 +84,7 @@
                 var convertedData = new List<Tuple<DateTime, double>>();
                 foreach (var tuple in this.Data)
                 {
-                    if (DateTime.TryParseExact(
-                        tuple.Item1,
-                        "yyyy-MM",
-                        CultureInfo.InvariantCulture,
-                        DateTimeStyles.None,
-                        out DateTime date) && tuple.Item2.HasValue)
+                    if (DateTime.TryParseExact(tuple.Item1, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date) && tuple.Item2.HasValue)
                     {
                         convertedData.Add(Tuple.Create(date, tuple.Item2.Value));
                     }
