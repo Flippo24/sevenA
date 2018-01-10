@@ -4,12 +4,15 @@
     using System.Linq;
     using System.Threading;
 
+    using Constants;
+
+    using Core.Elements;
+
     using DevExpress.Mvvm;
     using DevExpress.Mvvm.DataAnnotations;
 
-    using Core.Elements;
-    using Constants;
     using Enums;
+
     using Models;
 
     using SevenA.Module.Analysis.Services;
@@ -119,8 +122,6 @@
 
             this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingFinancials, 100);
             this.ProgressLoader.IsLoading = false;
-
-            // var prices = await this._yahooFinanceDataService.GetHistoricalDataAsync(this._cancellationTokenSource.Token, "B2F.SI", DateTime.Now.AddYears(-5));
         }
     }
 }

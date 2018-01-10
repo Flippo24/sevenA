@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
-
+﻿// ReSharper disable CompareOfFloatsByEqualityOperator
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ClassNeverInstantiated.Global
 namespace sevenA.Module.Analysis.ViewModels
 {
     using System;
@@ -9,15 +10,19 @@ namespace sevenA.Module.Analysis.ViewModels
     using System.Linq;
     using System.Threading;
 
-    using DevExpress.Mvvm;
-    using DevExpress.Mvvm.DataAnnotations;
+    using Constants;
 
     using Core.Elements;
     using Core.Helpers;
     using Core.Stats;
-    using Constants;
+
+    using DevExpress.Mvvm;
+    using DevExpress.Mvvm.DataAnnotations;
+
     using Enums;
+
     using Models;
+
     using Services;
 
     using SevenA.Module.Analysis.Services;
@@ -37,7 +42,7 @@ namespace sevenA.Module.Analysis.ViewModels
 
         private double _initialGrowthRate;
 
-        private double _nShares;
+        private double _numberOfShares;
 
         private double _totalCash;
 
@@ -603,7 +608,10 @@ namespace sevenA.Module.Analysis.ViewModels
         [Command]
         public void AddFavorite()
         {
-            if (string.IsNullOrEmpty(this.Symbol)) return;
+            if (string.IsNullOrEmpty(this.Symbol))
+            {
+                return;
+            }
 
             if (!this.Favorites.Contains(this.Symbol))
             {
@@ -678,13 +686,7 @@ namespace sevenA.Module.Analysis.ViewModels
 
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 0);
 
-
-                DateTime.TryParseExact(
-                    this.RatiosFinancials.First().Data.First().Item1,
-                    "yyyy-MM",
-                    CultureInfo.InvariantCulture,
-                    DateTimeStyles.None,
-                    out DateTime startDate);
+                DateTime.TryParseExact(this.RatiosFinancials.First().Data.First().Item1, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime startDate);
 
                 if (startDate == default(DateTime))
                 {
@@ -753,11 +755,11 @@ namespace sevenA.Module.Analysis.ViewModels
                               .ToList()
                         : GetDefaultData();
 
-                var peData =
+                var earningPerShareData =
                     this.RatiosFinancials.First(x => StringContains(x.Name, "Earnings Per Share"))
                         .Data.Where(x => !x.Item1.Equals("TTM"))
                         .ToList();
-                var bvData =
+                var bookValueData =
                     this.RatiosFinancials.First(x => StringContains(x.Name, "Book Value"))
                         .Data.Where(x => !x.Item1.Equals("TTM"))
                         .ToList();
@@ -840,7 +842,6 @@ namespace sevenA.Module.Analysis.ViewModels
                     return;
                 }
 
-
                 for (int i = 0; i < dividends.Count; i++)
                 {
                     try
@@ -885,21 +886,16 @@ namespace sevenA.Module.Analysis.ViewModels
                                      / (equity + longTermDebt[i].Item2.GetValueOrDefault()
                                         + shortTermDebt[i].Item2.GetValueOrDefault());
                         var waccValue = ratio1 * coe.Data[i].Item2.GetValueOrDefault()
-                                        + ratio2 * cod.Data[i].Item2.GetValueOrDefault()
-                                        * (1.0 - taxRate[i].Item2.GetValueOrDefault() / 100.0);
+                                        + ratio2 * cod.Data[i].Item2.GetValueOrDefault() * (1.0 - taxRate[i].Item2.GetValueOrDefault() / 100.0);
                         wacc.Data[i] = Tuple.Create(
                             longTermDebt[i].Item1,
                             this.FilterInfinityNaN(waccValue),
                             longTermDebt[i].Item3);
 
-                        var peValue = price / peData[i].Item2.GetValueOrDefault();
-                        pe.Data[i] = Tuple.Create(shares[i].Item1, this.FilterInfinityNaN(peValue), shares[i].Item3);
-                        var pbvValue = price / bvData[i].Item2.GetValueOrDefault();
+                        var priceEarningValue = price / earningPerShareData[i].Item2.GetValueOrDefault();
+                        pe.Data[i] = Tuple.Create(shares[i].Item1, this.FilterInfinityNaN(priceEarningValue), shares[i].Item3);
+                        var pbvValue = price / bookValueData[i].Item2.GetValueOrDefault();
                         pbv.Data[i] = Tuple.Create(shares[i].Item1, this.FilterInfinityNaN(pbvValue), shares[i].Item3);
-
-                        //reinvestment.Data[i] = Tuple.Create(
-                        //    shares[i].Item1, 
-                        //    this.FilterInfinityNaN(Math.Abs(capex[i].Item3.GetValueOrDefault()) - depreciation[i].Item3), shares[i].Item3);
                     }
                     catch (Exception)
                     {
@@ -931,9 +927,7 @@ namespace sevenA.Module.Analysis.ViewModels
         {
             this.ProgressLoader.UpdateProgress(MessageConstants.Analysing, 80);
 
-            var freeCashFlow =
-                this.CashFlowStatement.First(x => StringContains(x.Name, "Free cash"))
-                    .Data.OrderByDescending(x => x.Item1);
+            var freeCashFlow = this.CashFlowStatement.First(x => StringContains(x.Name, "Free cash")).Data.OrderByDescending(x => x.Item1).ToArray();
 
             this._averageCashFlow = Stats.SimpleAverage(freeCashFlow.Select(x => x.Item2.GetValueOrDefault()), 3);
             this.RaisePropertyChanged(() => this.AverageCashFlow);
@@ -954,12 +948,12 @@ namespace sevenA.Module.Analysis.ViewModels
             this._waccModified = this.WACC.GetValueOrDefault();
             this.RaisePropertyChanged(() => this.WACCModified);
 
-            this._nShares =
+            this._numberOfShares =
                 this.RatiosFinancials.First(x => StringContains(x.Name, "Shares"))
                     .Data.Last(x => !x.Item1.Equals("TTM"))
                     .Item2.GetValueOrDefault();
 
-            this.MarketCap = this.LatestPrice.Close * _nShares;
+            this.MarketCap = this.LatestPrice.Close * this._numberOfShares;
 
             var totalCashText = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, "Total Cash")) != null
                 ? "Total Cash"
@@ -978,28 +972,28 @@ namespace sevenA.Module.Analysis.ViewModels
         private void CalculateValutionTask()
         {
             this.SlowGrowth = this._valuationService.GetDcfTwoStages(
-                this._nShares,
+                this._numberOfShares,
                 this.AverageCashFlow,
                 this.InitialGrowthRate - 5.0,
                 this.YearsTillTerminal,
                 ApplicationHelper.Instance.RiskFreeRate + 2.0,
-                this.WACCModified) + this._totalCash / this._nShares;
+                this.WACCModified) + (this._totalCash / this._numberOfShares);
 
             this.CurrentGrowth = this._valuationService.GetDcfTwoStages(
-                this._nShares,
+                this._numberOfShares,
                 this.AverageCashFlow,
                 this.InitialGrowthRate,
                 this.YearsTillTerminal,
                 ApplicationHelper.Instance.RiskFreeRate + 2.0,
-                this.WACCModified) + this._totalCash / this._nShares;
+                this.WACCModified) + (this._totalCash / this._numberOfShares);
 
             this.FastGrowth = this._valuationService.GetDcfTwoStages(
-                this._nShares,
+                this._numberOfShares,
                 this.AverageCashFlow,
                 this.InitialGrowthRate + 5.0,
                 this.YearsTillTerminal,
                 ApplicationHelper.Instance.RiskFreeRate + 2.0,
-                this.WACCModified) + this._totalCash / this._nShares;
+                this.WACCModified) + (this._totalCash / this._numberOfShares);
         }
 
         private void Clear()
@@ -1041,7 +1035,7 @@ namespace sevenA.Module.Analysis.ViewModels
             this.FastGrowth = 0;
             this.AverageCashFlow = 0;
 
-            this._nShares = 0;
+            this._numberOfShares = 0;
             this._totalCash = 0;
         }
 
@@ -1054,12 +1048,7 @@ namespace sevenA.Module.Analysis.ViewModels
 
         private bool IsValidDateTimeString(string dateTime)
         {
-            return DateTime.TryParseExact(
-                dateTime,
-                "yyyy-MM",
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.None,
-                out DateTime date);
+            return DateTime.TryParseExact(dateTime, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime _);
         }
 
         private void PrepareCurrentIndicators()

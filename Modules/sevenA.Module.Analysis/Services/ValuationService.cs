@@ -5,14 +5,12 @@
 
     public class ValuationService
     {
-        private static ValuationService instance;
-
-        private ValuationService()
+        static ValuationService()
         {
-            instance = this;
+            Instance = new ValuationService();
         }
 
-        public static ValuationService Instance => instance ?? new ValuationService();
+        public static ValuationService Instance { get; }
 
         // ReSharper disable once StyleCop.SA1305
         public double GetStableGrowthValuation(double nShares, double cashFlow0, double terminalGrowth, double wacc)

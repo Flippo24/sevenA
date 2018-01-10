@@ -16,14 +16,12 @@
 
     public class MorningStarDataService
     {
-        private static MorningStarDataService instance;
-
-        protected MorningStarDataService()
+        static MorningStarDataService()
         {
-            instance = this;
+            Instance = new MorningStarDataService();
         }
 
-        public static MorningStarDataService Instance => instance ?? new MorningStarDataService();
+        public static MorningStarDataService Instance { get; }
 
         public Task<List<FinancialRatio>> GetFinancialsAsync(CancellationToken token, string symbol)
         {
@@ -188,6 +186,7 @@
         {
             for (int lineNumber = fromLine; lineNumber <= toLine; lineNumber++)
             {
+                // ReSharper disable once PossibleMultipleEnumeration
                 var ratio = allLines.ElementAt(lineNumber);
 
                 using (var csvParser = new TextFieldParser(new StringReader(ratio)) { Delimiters = new[] { "," } })
