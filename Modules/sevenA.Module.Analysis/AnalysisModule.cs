@@ -22,7 +22,7 @@
 
         public void Initialize()
         {
-            this._regionManager.RegisterViewWithRegion(Regions.Main, typeof(AnalysisView));
+            this._regionManager.RegisterViewWithRegion(Regions.Main, typeof(DashboardView));
         }
     }
 }
