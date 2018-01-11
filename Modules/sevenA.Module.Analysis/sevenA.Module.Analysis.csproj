@@ -111,6 +111,9 @@
     <Compile Include="Services\MorningStarDataService.cs" />
     <Compile Include="Services\YahooFinanceDataService.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
+    <Compile Include="Views\GeneralInfoView.xaml.cs">
+      <DependentUpon>GeneralInfoView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DashboardView.xaml.cs">
       <DependentUpon>DashboardView.xaml</DependentUpon>
     </Compile>
@@ -127,6 +130,14 @@
     <Resource Include="Resources\Icons\Star Filled-48.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Resources\Shared.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\GeneralInfoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\DashboardView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

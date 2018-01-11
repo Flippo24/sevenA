@@ -12,24 +12,19 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:sevenA.Module.Analysis.ViewModels"
+             xmlns:views="clr-namespace:sevenA.Module.Analysis.Views"
              d:DesignHeight="1024"
              d:DesignWidth="768"
              DataContext="{dxmvvm:ViewModelSource Type={x:Type viewModels:DashboardViewModel}}"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <Style TargetType="TextBox">
-            <Setter Property="FontFamily" Value="Poppins" />
-            <Setter Property="FontSize" Value="13" />
-            <Setter Property="Foreground" Value="#8fff" />
-            <Setter Property="Background" Value="#1fff" />
-            <Setter Property="Padding" Value="5,0,0,0" />
-            <Setter Property="Height" Value="30" />
-            <Setter Property="Width" Value="100" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="BorderThickness" Value="0" />
-        </Style>
-
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Shared.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
+
     <dxmvvm:Interaction.Behaviors>
         <dx:DXMessageBoxService />
     </dxmvvm:Interaction.Behaviors>
@@ -129,110 +124,7 @@
                                       ItemSpace="5"
                                       Orientation="Vertical">
 
-                        <dxlc:LayoutGroup x:Name="GeneralInfo"
-                                          HorizontalAlignment="Stretch"
-                                          VerticalAlignment="Stretch"
-                                          ItemSpace="1"
-                                          Orientation="Vertical"
-                                          TextElement.FontFamily="Roboto Condensed"
-                                          TextElement.FontSize="12">
-                            <dxlc:LayoutGroup.Resources>
-                                <Style TargetType="dxe:TextEdit">
-                                    <Setter Property="IsReadOnly" Value="True" />
-                                    <Setter Property="HorizontalAlignment" Value="Left" />
-                                    <Setter Property="Margin" Value="10,0,0,0" />
-                                    <Setter Property="ShowBorder" Value="False" />
-                                    <Setter Property="Foreground" Value="DarkGoldenrod" />
-                                </Style>
-                            </dxlc:LayoutGroup.Resources>
-                            <dxlc:LayoutItem Margin="0,0,0,10"
-                                             AddColonToLabel="True"
-                                             Label="Last Price">
-                                <dxe:TextEdit EditValue="{Binding LatestPrice.Close}"
-                                              FontSize="20" />
-                            </dxlc:LayoutItem>
-                            <dxlc:LayoutGroup ItemSpace="10"
-                                              Orientation="Horizontal">
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="Market Cap">
-                                    <dxe:TextEdit DisplayFormatString="{}{0:0.0}"
-                                                  EditValue="{Binding MarketCap}" />
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="PE">
-                                    <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
-                                                  EditValue="{Binding PE}" />
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="EPS">
-                                    <dxe:TextEdit EditValue="{Binding EPS}" />
-                                </dxlc:LayoutItem>
-                            </dxlc:LayoutGroup>
-                            <dxlc:LayoutGroup ItemSpace="10"
-                                              Orientation="Horizontal">
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="Book Value">
-                                    <dxe:TextEdit EditValue="{Binding BookValue}" />
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="Working Capital">
-                                    <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
-                                                  EditValue="{Binding WorkingCapitalPS}" />
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="Free Cashflow">
-                                    <dxe:TextEdit EditValue="{Binding FreeCashFlowPS}" />
-                                </dxlc:LayoutItem>
-                            </dxlc:LayoutGroup>
-                            <dxlc:LayoutGroup ItemSpace="10"
-                                              Orientation="Horizontal">
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="Gross Margin">
-                                    <dxe:TextEdit EditValue="{Binding GrossMargin}" />
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="Operating Margin">
-                                    <dxe:TextEdit EditValue="{Binding OperatingMargin}" />
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="Net Margin">
-                                    <dxe:TextEdit EditValue="{Binding NetMargin}" />
-                                </dxlc:LayoutItem>
-                            </dxlc:LayoutGroup>
-                            <dxlc:LayoutGroup ItemSpace="10"
-                                              Orientation="Horizontal">
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="ROA">
-                                    <dxe:TextEdit EditValue="{Binding ROA}" />
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="ROE">
-                                    <dxe:TextEdit EditValue="{Binding ROE}" />
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="ROIC">
-                                    <dxe:TextEdit EditValue="{Binding ROIC}" />
-                                </dxlc:LayoutItem>
-                            </dxlc:LayoutGroup>
-                            <dxlc:LayoutGroup ItemSpace="10"
-                                              Orientation="Horizontal">
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="COD">
-                                    <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
-                                                  EditValue="{Binding COD}" />
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="COE">
-                                    <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
-                                                  EditValue="{Binding COE}" />
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem AddColonToLabel="True"
-                                                 Label="WACC">
-                                    <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
-                                                  EditValue="{Binding WACC}" />
-                                </dxlc:LayoutItem>
-                            </dxlc:LayoutGroup>
-                        </dxlc:LayoutGroup>
+                        <views:GeneralInfoView />
 
                         <dxlc:LayoutGroup x:Name="FinancialsGrid"
                                           HorizontalAlignment="Stretch"

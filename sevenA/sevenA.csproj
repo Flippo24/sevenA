@@ -85,10 +85,6 @@
     <Compile Include="Models\MarketPoint.cs" />
     <Compile Include="Models\Stock.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Page Include="Resources\Shared.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Shell.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
