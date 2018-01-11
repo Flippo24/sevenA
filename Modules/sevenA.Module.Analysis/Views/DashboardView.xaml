@@ -1,22 +1,21 @@
-﻿<UserControl
-    x:Class="sevenA.Module.Analysis.Views.DashboardView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviours="clr-namespace:sevenA.Core.Behaviours;assembly=sevenA.Core"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
-    xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts"
-    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
-    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
-    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
-    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="clr-namespace:sevenA.Module.Analysis.ViewModels"
-    d:DesignHeight="1024"
-    d:DesignWidth="768"
-    DataContext="{dxmvvm:ViewModelSource Type={x:Type viewModels:DashboardViewModel}}"
-    mc:Ignorable="d">
+﻿<UserControl x:Class="sevenA.Module.Analysis.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:behaviours="clr-namespace:sevenA.Core.Behaviours;assembly=sevenA.Core"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:sevenA.Module.Analysis.ViewModels"
+             d:DesignHeight="1024"
+             d:DesignWidth="768"
+             DataContext="{dxmvvm:ViewModelSource Type={x:Type viewModels:DashboardViewModel}}"
+             mc:Ignorable="d">
     <UserControl.Resources>
         <Style TargetType="TextBox">
             <Setter Property="FontFamily" Value="Poppins" />
@@ -41,40 +40,38 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel
-            Grid.Row="0"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Center"
-            Orientation="Horizontal">
-            <TextBox
-                Width="250"
-                CaretBrush="LightGray"
-                CharacterCasing="Upper"
-                Text="{Binding Symbol, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
+        <StackPanel Grid.Row="0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+            <TextBox Width="250"
+                     CaretBrush="LightGray"
+                     CharacterCasing="Upper"
+                     Text="{Binding Symbol, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.InputBindings>
-                    <KeyBinding Key="Enter" Command="{Binding SearchCommand}" />
+                    <KeyBinding Key="Enter"
+                                Command="{Binding SearchCommand}" />
                 </TextBox.InputBindings>
                 <i:Interaction.Behaviors>
                     <behaviours:FocusBehaviour />
                 </i:Interaction.Behaviors>
             </TextBox>
-            <Button
-                Height="30"
-                Margin="2,0,0,0"
-                Padding="2"
-                BorderThickness="0"
-                Command="{Binding SearchCommand}">
+            <Button Height="30"
+                    Margin="2,0,0,0"
+                    Padding="2"
+                    BorderThickness="0"
+                    Command="{Binding SearchCommand}">
                 <Button.ContentTemplate>
                     <DataTemplate>
-                        <Rectangle
-                            Width="18"
-                            Height="18"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Fill="White"
-                            Opacity="0.6">
+                        <Rectangle Width="18"
+                                   Height="18"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Fill="White"
+                                   Opacity="0.6">
                             <Rectangle.OpacityMask>
-                                <ImageBrush ImageSource="../Resources/Icons/Search-32.png" Stretch="UniformToFill" />
+                                <ImageBrush ImageSource="../Resources/Icons/Search-32.png"
+                                            Stretch="UniformToFill" />
                             </Rectangle.OpacityMask>
                         </Rectangle>
                     </DataTemplate>
@@ -83,57 +80,55 @@
 
         </StackPanel>
 
-        <TextBox
-            Grid.Row="0"
-            Width="Auto"
-            Height="50"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Center"
-            Background="Transparent"
-            FontFamily="Lato Black"
-            FontSize="30"
-            Foreground="White"
-            IsReadOnly="True"
-            Text="{Binding StockName}">
+        <TextBox Grid.Row="0"
+                 Width="Auto"
+                 Height="50"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 Background="Transparent"
+                 FontFamily="Lato Black"
+                 FontSize="30"
+                 Foreground="White"
+                 IsReadOnly="True"
+                 Text="{Binding StockName}">
             <TextBox.Effect>
-                <DropShadowEffect BlurRadius="2" ShadowDepth="2" />
+                <DropShadowEffect BlurRadius="2"
+                                  ShadowDepth="2" />
             </TextBox.Effect>
         </TextBox>
 
-        <dx:LoadingDecorator
-            Grid.Row="1"
-            IsSplashScreenShown="{Binding ProgressLoader.IsLoading}"
-            OwnerLock="InputOnly"
-            SplashScreenDataContext="{Binding ProgressLoader}"
-            SplashScreenLocation="CenterContainer">
+        <dx:LoadingDecorator Grid.Row="1"
+                             IsSplashScreenShown="{Binding ProgressLoader.IsLoading}"
+                             OwnerLock="InputOnly"
+                             SplashScreenDataContext="{Binding ProgressLoader}"
+                             SplashScreenLocation="CenterContainer">
             <dx:LoadingDecorator.SplashScreenTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <dx:WaitIndicator Content="{Binding Path=Text}" DeferedVisibility="True" />
-                        <ProgressBar
-                            Width="200"
-                            Height="10"
-                            Maximum="100"
-                            Minimum="0"
-                            Value="{Binding Path=Progress}" />
+                        <dx:WaitIndicator Content="{Binding Path=Text}"
+                                          DeferedVisibility="True" />
+                        <ProgressBar Width="200"
+                                     Height="10"
+                                     Maximum="100"
+                                     Minimum="0"
+                                     Value="{Binding Path=Progress}" />
                     </StackPanel>
                 </DataTemplate>
             </dx:LoadingDecorator.SplashScreenTemplate>
 
-            <dxlc:LayoutControl ItemSpace="5" Orientation="Vertical">
-                <dxlc:LayoutGroup
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    ItemSpace="5"
-                    Orientation="Horizontal">
-                    <dxlc:LayoutGroup
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        dxlc:LayoutControl.AllowHorizontalSizing="True"
-                        ItemSpace="1"
-                        Orientation="Vertical"
-                        TextElement.FontFamily="Roboto Condensed"
-                        TextElement.FontSize="12">
+            <dxlc:LayoutControl ItemSpace="5"
+                                Orientation="Vertical">
+                <dxlc:LayoutGroup HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  ItemSpace="5"
+                                  Orientation="Horizontal">
+                    <dxlc:LayoutGroup HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      dxlc:LayoutControl.AllowHorizontalSizing="True"
+                                      ItemSpace="1"
+                                      Orientation="Vertical"
+                                      TextElement.FontFamily="Roboto Condensed"
+                                      TextElement.FontSize="12">
                         <dxlc:LayoutGroup.Resources>
                             <Style TargetType="dxe:TextEdit">
                                 <Setter Property="IsReadOnly" Value="True" />
@@ -143,108 +138,130 @@
                                 <Setter Property="Foreground" Value="DarkGoldenrod" />
                             </Style>
                         </dxlc:LayoutGroup.Resources>
-                        <dxlc:LayoutItem
-                            Margin="0,0,0,10"
-                            AddColonToLabel="True"
-                            Label="Last Price">
-                            <dxe:TextEdit EditValue="{Binding LatestPrice.Close}" FontSize="20" />
+                        <dxlc:LayoutItem Margin="0,0,0,10"
+                                         AddColonToLabel="True"
+                                         Label="Last Price">
+                            <dxe:TextEdit EditValue="{Binding LatestPrice.Close}"
+                                          FontSize="20" />
                         </dxlc:LayoutItem>
-                        <dxlc:LayoutGroup ItemSpace="10" Orientation="Horizontal">
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="Market Cap">
-                                <dxe:TextEdit DisplayFormatString="{}{0:0.0}" EditValue="{Binding MarketCap}" />
+                        <dxlc:LayoutGroup ItemSpace="10"
+                                          Orientation="Horizontal">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="Market Cap">
+                                <dxe:TextEdit DisplayFormatString="{}{0:0.0}"
+                                              EditValue="{Binding MarketCap}" />
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="PE">
-                                <dxe:TextEdit DisplayFormatString="{}{0:0.00}" EditValue="{Binding PE}" />
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="PE">
+                                <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
+                                              EditValue="{Binding PE}" />
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="EPS">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="EPS">
                                 <dxe:TextEdit EditValue="{Binding EPS}" />
                             </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
-                        <dxlc:LayoutGroup ItemSpace="10" Orientation="Horizontal">
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="Book Value">
+                        <dxlc:LayoutGroup ItemSpace="10"
+                                          Orientation="Horizontal">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="Book Value">
                                 <dxe:TextEdit EditValue="{Binding BookValue}" />
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="Working Capital">
-                                <dxe:TextEdit DisplayFormatString="{}{0:0.00}" EditValue="{Binding WorkingCapitalPS}" />
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="Working Capital">
+                                <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
+                                              EditValue="{Binding WorkingCapitalPS}" />
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="Free Cashflow">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="Free Cashflow">
                                 <dxe:TextEdit EditValue="{Binding FreeCashFlowPS}" />
                             </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
-                        <dxlc:LayoutGroup ItemSpace="10" Orientation="Horizontal">
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="Gross Margin">
+                        <dxlc:LayoutGroup ItemSpace="10"
+                                          Orientation="Horizontal">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="Gross Margin">
                                 <dxe:TextEdit EditValue="{Binding GrossMargin}" />
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="Operating Margin">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="Operating Margin">
                                 <dxe:TextEdit EditValue="{Binding OperatingMargin}" />
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="Net Margin">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="Net Margin">
                                 <dxe:TextEdit EditValue="{Binding NetMargin}" />
                             </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
-                        <dxlc:LayoutGroup ItemSpace="10" Orientation="Horizontal">
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="ROA">
+                        <dxlc:LayoutGroup ItemSpace="10"
+                                          Orientation="Horizontal">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="ROA">
                                 <dxe:TextEdit EditValue="{Binding ROA}" />
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="ROE">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="ROE">
                                 <dxe:TextEdit EditValue="{Binding ROE}" />
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="ROIC">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="ROIC">
                                 <dxe:TextEdit EditValue="{Binding ROIC}" />
                             </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
-                        <dxlc:LayoutGroup ItemSpace="10" Orientation="Horizontal">
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="COD">
-                                <dxe:TextEdit DisplayFormatString="{}{0:0.00}" EditValue="{Binding COD}" />
+                        <dxlc:LayoutGroup ItemSpace="10"
+                                          Orientation="Horizontal">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="COD">
+                                <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
+                                              EditValue="{Binding COD}" />
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="COE">
-                                <dxe:TextEdit DisplayFormatString="{}{0:0.00}" EditValue="{Binding COE}" />
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="COE">
+                                <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
+                                              EditValue="{Binding COE}" />
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem AddColonToLabel="True" Label="WACC">
-                                <dxe:TextEdit DisplayFormatString="{}{0:0.00}" EditValue="{Binding WACC}" />
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="WACC">
+                                <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
+                                              EditValue="{Binding WACC}" />
                             </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
-                        <dxlc:LayoutGroup
-                            Margin="0,20,0,0"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Top"
-                            Header="Valuation"
-                            ItemSpace="0"
-                            Orientation="Vertical"
-                            View="GroupBox">
-                            <dxlc:LayoutGroup
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                ItemSpace="10"
-                                Orientation="Horizontal">
-                                <dxlc:LayoutItem AddColonToLabel="True" Label="Slow Growth (-5%)">
-                                    <dxe:TextEdit
-                                        DisplayFormatString="{}{0:0.00}"
-                                        EditValue="{Binding SlowGrowth}"
-                                        FontSize="16" />
+                        <dxlc:LayoutGroup Margin="0,20,0,0"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Top"
+                                          Header="Valuation"
+                                          ItemSpace="0"
+                                          Orientation="Vertical"
+                                          View="GroupBox">
+                            <dxlc:LayoutGroup HorizontalAlignment="Stretch"
+                                              VerticalAlignment="Stretch"
+                                              ItemSpace="10"
+                                              Orientation="Horizontal">
+                                <dxlc:LayoutItem AddColonToLabel="True"
+                                                 Label="Slow Growth (-5%)">
+                                    <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
+                                                  EditValue="{Binding SlowGrowth}"
+                                                  FontSize="16" />
                                 </dxlc:LayoutItem>
-                                <dxlc:LayoutItem AddColonToLabel="True" Label="Current Growth">
-                                    <dxe:TextEdit
-                                        DisplayFormatString="{}{0:0.00}"
-                                        EditValue="{Binding CurrentGrowth}"
-                                        FontSize="16" />
+                                <dxlc:LayoutItem AddColonToLabel="True"
+                                                 Label="Current Growth">
+                                    <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
+                                                  EditValue="{Binding CurrentGrowth}"
+                                                  FontSize="16" />
                                 </dxlc:LayoutItem>
-                                <dxlc:LayoutItem AddColonToLabel="True" Label="Fast Growth (+5%)">
-                                    <dxe:TextEdit
-                                        DisplayFormatString="{}{0:0.00}"
-                                        EditValue="{Binding FastGrowth}"
-                                        FontSize="16" />
+                                <dxlc:LayoutItem AddColonToLabel="True"
+                                                 Label="Fast Growth (+5%)">
+                                    <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
+                                                  EditValue="{Binding FastGrowth}"
+                                                  FontSize="16" />
                                 </dxlc:LayoutItem>
                             </dxlc:LayoutGroup>
-                            <dxlc:LayoutItem
-                                Margin="0,20,0,0"
-                                AddColonToLabel="True"
-                                Label="Current FCF"
-                                LabelVerticalAlignment="Top">
-                                <Grid
-                                    Margin="30,0"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch">
+                            <dxlc:LayoutItem Margin="0,20,0,0"
+                                             AddColonToLabel="True"
+                                             Label="Current FCF"
+                                             LabelVerticalAlignment="Top">
+                                <Grid Margin="30,0"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
                                         <RowDefinition />
@@ -255,42 +272,36 @@
                                             <ColumnDefinition />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock
-                                            Grid.Column="0"
-                                            Margin="0,0,5,0"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center"
-                                            Text="{Binding ElementName=Trackbareditfcf, Path=Minimum}" />
-                                        <dxe:TrackBarEdit
-                                            x:Name="Trackbareditfcf"
-                                            Grid.Column="1"
-                                            LargeStep="{Binding FreeCashFlowBigStep}"
-                                            Maximum="{Binding MaxAverageCashFlow, StringFormat=0.00}"
-                                            Minimum="{Binding MinAverageCashFlow, StringFormat=0.00}"
-                                            ShowBorder="False"
-                                            SmallStep="{Binding FreeCashFlowSmallStep}"
-                                            Value="{Binding AverageCashFlow, Mode=TwoWay}" />
-                                        <TextBlock
-                                            Grid.Column="2"
-                                            Margin="5,0,0,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Text="{Binding ElementName=Trackbareditfcf, Path=Maximum}" />
+                                        <TextBlock Grid.Column="0"
+                                                   Margin="0,0,5,0"
+                                                   HorizontalAlignment="Right"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding ElementName=Trackbareditfcf, Path=Minimum}" />
+                                        <dxe:TrackBarEdit x:Name="Trackbareditfcf"
+                                                          Grid.Column="1"
+                                                          LargeStep="{Binding FreeCashFlowBigStep}"
+                                                          Maximum="{Binding MaxAverageCashFlow, StringFormat=0.00}"
+                                                          Minimum="{Binding MinAverageCashFlow, StringFormat=0.00}"
+                                                          ShowBorder="False"
+                                                          SmallStep="{Binding FreeCashFlowSmallStep}"
+                                                          Value="{Binding AverageCashFlow, Mode=TwoWay}" />
+                                        <TextBlock Grid.Column="2"
+                                                   Margin="5,0,0,0"
+                                                   HorizontalAlignment="Left"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding ElementName=Trackbareditfcf, Path=Maximum}" />
                                     </Grid>
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        HorizontalAlignment="Center"
-                                        Text="{Binding ElementName=Trackbareditfcf, Path=Value, StringFormat={}{0:0.0}}" />
+                                    <TextBlock Grid.Row="1"
+                                               HorizontalAlignment="Center"
+                                               Text="{Binding ElementName=Trackbareditfcf, Path=Value, StringFormat={}{0:0.0}}" />
                                 </Grid>
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem
-                                AddColonToLabel="True"
-                                Label="FCF Growth Rate"
-                                LabelVerticalAlignment="Top">
-                                <Grid
-                                    Margin="30,0"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="FCF Growth Rate"
+                                             LabelVerticalAlignment="Top">
+                                <Grid Margin="30,0"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
                                         <RowDefinition />
@@ -301,42 +312,36 @@
                                             <ColumnDefinition />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock
-                                            Grid.Column="0"
-                                            Margin="0,0,5,0"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center"
-                                            Text="{Binding ElementName=Trackbaredit, Path=Minimum}" />
-                                        <dxe:TrackBarEdit
-                                            x:Name="Trackbaredit"
-                                            Grid.Column="1"
-                                            LargeStep="5"
-                                            Maximum="40"
-                                            Minimum="-20"
-                                            ShowBorder="False"
-                                            SmallStep="1"
-                                            Value="{Binding InitialGrowthRate, Mode=TwoWay}" />
-                                        <TextBlock
-                                            Grid.Column="2"
-                                            Margin="5,0,0,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Text="{Binding ElementName=Trackbaredit, Path=Maximum}" />
+                                        <TextBlock Grid.Column="0"
+                                                   Margin="0,0,5,0"
+                                                   HorizontalAlignment="Right"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding ElementName=Trackbaredit, Path=Minimum}" />
+                                        <dxe:TrackBarEdit x:Name="Trackbaredit"
+                                                          Grid.Column="1"
+                                                          LargeStep="5"
+                                                          Maximum="40"
+                                                          Minimum="-20"
+                                                          ShowBorder="False"
+                                                          SmallStep="1"
+                                                          Value="{Binding InitialGrowthRate, Mode=TwoWay}" />
+                                        <TextBlock Grid.Column="2"
+                                                   Margin="5,0,0,0"
+                                                   HorizontalAlignment="Left"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding ElementName=Trackbaredit, Path=Maximum}" />
                                     </Grid>
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        HorizontalAlignment="Center"
-                                        Text="{Binding ElementName=Trackbaredit, Path=Value, StringFormat={}{0:0.0}}" />
+                                    <TextBlock Grid.Row="1"
+                                               HorizontalAlignment="Center"
+                                               Text="{Binding ElementName=Trackbaredit, Path=Value, StringFormat={}{0:0.0}}" />
                                 </Grid>
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem
-                                AddColonToLabel="True"
-                                Label="WACC"
-                                LabelVerticalAlignment="Top">
-                                <Grid
-                                    Margin="30,0"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="WACC"
+                                             LabelVerticalAlignment="Top">
+                                <Grid Margin="30,0"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
                                         <RowDefinition />
@@ -347,42 +352,36 @@
                                             <ColumnDefinition />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock
-                                            Grid.Column="0"
-                                            Margin="0,0,5,0"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center"
-                                            Text="{Binding ElementName=TrackbareditWacc, Path=Minimum}" />
-                                        <dxe:TrackBarEdit
-                                            x:Name="TrackbareditWacc"
-                                            Grid.Column="1"
-                                            LargeStep="2"
-                                            Maximum="30"
-                                            Minimum="0"
-                                            ShowBorder="False"
-                                            SmallStep="0.25"
-                                            Value="{Binding WACCModified, Mode=TwoWay}" />
-                                        <TextBlock
-                                            Grid.Column="2"
-                                            Margin="5,0,0,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Text="{Binding ElementName=TrackbareditWacc, Path=Maximum}" />
+                                        <TextBlock Grid.Column="0"
+                                                   Margin="0,0,5,0"
+                                                   HorizontalAlignment="Right"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding ElementName=TrackbareditWacc, Path=Minimum}" />
+                                        <dxe:TrackBarEdit x:Name="TrackbareditWacc"
+                                                          Grid.Column="1"
+                                                          LargeStep="2"
+                                                          Maximum="30"
+                                                          Minimum="0"
+                                                          ShowBorder="False"
+                                                          SmallStep="0.25"
+                                                          Value="{Binding WACCModified, Mode=TwoWay}" />
+                                        <TextBlock Grid.Column="2"
+                                                   Margin="5,0,0,0"
+                                                   HorizontalAlignment="Left"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding ElementName=TrackbareditWacc, Path=Maximum}" />
                                     </Grid>
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        HorizontalAlignment="Center"
-                                        Text="{Binding ElementName=TrackbareditWacc, Path=Value, StringFormat={}{0:0.0}}" />
+                                    <TextBlock Grid.Row="1"
+                                               HorizontalAlignment="Center"
+                                               Text="{Binding ElementName=TrackbareditWacc, Path=Value, StringFormat={}{0:0.0}}" />
                                 </Grid>
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem
-                                AddColonToLabel="True"
-                                Label="Years Till Terminal"
-                                LabelVerticalAlignment="Top">
-                                <Grid
-                                    Margin="30,0"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch">
+                            <dxlc:LayoutItem AddColonToLabel="True"
+                                             Label="Years Till Terminal"
+                                             LabelVerticalAlignment="Top">
+                                <Grid Margin="30,0"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
                                         <RowDefinition />
@@ -393,55 +392,48 @@
                                             <ColumnDefinition />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock
-                                            Grid.Column="0"
-                                            Margin="0,0,5,0"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center"
-                                            Text="{Binding ElementName=TrackbareditYears, Path=Minimum}" />
-                                        <dxe:TrackBarEdit
-                                            x:Name="TrackbareditYears"
-                                            Grid.Column="1"
-                                            LargeStep="5"
-                                            Maximum="30"
-                                            Minimum="5"
-                                            ShowBorder="False"
-                                            SmallStep="1"
-                                            Value="{Binding YearsTillTerminal, Mode=TwoWay}" />
-                                        <TextBlock
-                                            Grid.Column="2"
-                                            Margin="5,0,0,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Text="{Binding ElementName=TrackbareditYears, Path=Maximum}" />
+                                        <TextBlock Grid.Column="0"
+                                                   Margin="0,0,5,0"
+                                                   HorizontalAlignment="Right"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding ElementName=TrackbareditYears, Path=Minimum}" />
+                                        <dxe:TrackBarEdit x:Name="TrackbareditYears"
+                                                          Grid.Column="1"
+                                                          LargeStep="5"
+                                                          Maximum="30"
+                                                          Minimum="5"
+                                                          ShowBorder="False"
+                                                          SmallStep="1"
+                                                          Value="{Binding YearsTillTerminal, Mode=TwoWay}" />
+                                        <TextBlock Grid.Column="2"
+                                                   Margin="5,0,0,0"
+                                                   HorizontalAlignment="Left"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding ElementName=TrackbareditYears, Path=Maximum}" />
                                     </Grid>
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        HorizontalAlignment="Center"
-                                        Text="{Binding ElementName=TrackbareditYears, Path=Value, StringFormat={}{0:0}}" />
+                                    <TextBlock Grid.Row="1"
+                                               HorizontalAlignment="Center"
+                                               Text="{Binding ElementName=TrackbareditYears, Path=Value, StringFormat={}{0:0}}" />
                                 </Grid>
                             </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
                     </dxlc:LayoutGroup>
 
-                    <dxlc:LayoutGroup
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        dxlc:LayoutControl.AllowHorizontalSizing="True">
-                        <dxc:ChartControl
-                            AnimationMode="Disabled"
-                            Background="{x:Null}"
-                            BorderThickness="0"
-                            CrosshairEnabled="True"
-                            DataSource="{Binding Path=StockData}"
-                            SelectionMode="None">
+                    <dxlc:LayoutGroup HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      dxlc:LayoutControl.AllowHorizontalSizing="True">
+                        <dxc:ChartControl AnimationMode="Disabled"
+                                          Background="{x:Null}"
+                                          BorderThickness="0"
+                                          CrosshairEnabled="True"
+                                          DataSource="{Binding Path=StockData}"
+                                          SelectionMode="None">
                             <dxc:ChartControl.CrosshairOptions>
-                                <dxc:CrosshairOptions
-                                    ArgumentLineBrush="#3fff"
-                                    HighlightPoints="False"
-                                    ShowValueLine="True"
-                                    SnapMode="NearestArgument"
-                                    ValueLineBrush="#3fff" />
+                                <dxc:CrosshairOptions ArgumentLineBrush="#3fff"
+                                                      HighlightPoints="False"
+                                                      ShowValueLine="True"
+                                                      SnapMode="NearestArgument"
+                                                      ValueLineBrush="#3fff" />
                             </dxc:ChartControl.CrosshairOptions>
                             <dxc:ChartControl.Palette>
                                 <dxc:BlueGreenPalette />
@@ -452,10 +444,9 @@
                                         <dxc:Pane DomainBrush="Transparent" />
                                     </dxc:XYDiagram2D.DefaultPane>
                                     <dxc:XYDiagram2D.AxisY>
-                                        <dxc:AxisY2D
-                                            GridLinesVisible="False"
-                                            Interlaced="False"
-                                            MinorCount="4">
+                                        <dxc:AxisY2D GridLinesVisible="False"
+                                                     Interlaced="False"
+                                                     MinorCount="4">
                                             <dxc:AxisY2D.Label>
                                                 <dxc:AxisLabel FontSize="10" />
                                             </dxc:AxisY2D.Label>
@@ -472,14 +463,13 @@
                                         </dxc:AxisX2D>
                                     </dxc:XYDiagram2D.AxisX>
                                     <dxc:XYDiagram2D.Series>
-                                        <dxc:LineSeries2D
-                                            ArgumentDataMember="Date"
-                                            DisplayName="Close"
-                                            LabelsVisibility="False"
-                                            MarkerVisible="False"
-                                            ShowInLegend="True"
-                                            ValueDataMember="Close"
-                                            Visible="True">
+                                        <dxc:LineSeries2D ArgumentDataMember="Date"
+                                                          DisplayName="Close"
+                                                          LabelsVisibility="False"
+                                                          MarkerVisible="False"
+                                                          ShowInLegend="True"
+                                                          ValueDataMember="Close"
+                                                          Visible="True">
                                             <dxc:LineSeries2D.LineStyle>
                                                 <dxc:LineStyle Thickness="2" />
                                             </dxc:LineSeries2D.LineStyle>
@@ -488,109 +478,100 @@
                                 </dxc:XYDiagram2D>
                             </dxc:ChartControl.Diagram>
                             <dxc:ChartControl.Legend>
-                                <dxc:Legend HorizontalPosition="Left" VerticalPosition="Top" />
+                                <dxc:Legend HorizontalPosition="Left"
+                                            VerticalPosition="Top" />
                             </dxc:ChartControl.Legend>
                         </dxc:ChartControl>
                     </dxlc:LayoutGroup>
 
                 </dxlc:LayoutGroup>
 
-                <dxlc:LayoutGroup
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    ItemSpace="5"
-                    Orientation="Horizontal">
-                    <dxlc:LayoutGroup
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        dxlc:LayoutControl.AllowHorizontalSizing="True">
-                        <dxg:GridControl
-                            x:Name="FinancialGrid"
-                            AllowLiveDataShaping="True"
-                            FontFamily="Roboto Condensed"
-                            FontSize="13px"
-                            ItemsSource="{Binding Path=AllRatios}">
+                <dxlc:LayoutGroup HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  ItemSpace="5"
+                                  Orientation="Horizontal">
+                    <dxlc:LayoutGroup HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      dxlc:LayoutControl.AllowHorizontalSizing="True">
+                        <dxg:GridControl x:Name="FinancialGrid"
+                                         AllowLiveDataShaping="True"
+                                         FontFamily="Roboto Condensed"
+                                         FontSize="13px"
+                                         ItemsSource="{Binding Path=AllRatios}">
                             <dxg:GridControl.View>
-                                <dxg:TableView
-                                    AllowConditionalFormattingMenu="True"
-                                    AllowGrouping="False"
-                                    AllowPerPixelScrolling="False"
-                                    NavigationStyle="Row"
-                                    RowMinHeight="26"
-                                    ShowGroupPanel="False"
-                                    ShowSearchPanelMode="Always">
+                                <dxg:TableView AllowConditionalFormattingMenu="True"
+                                               AllowGrouping="False"
+                                               AllowPerPixelScrolling="False"
+                                               NavigationStyle="Row"
+                                               RowMinHeight="26"
+                                               ShowGroupPanel="False"
+                                               ShowSearchPanelMode="Always">
                                     <dxg:TableView.RowStyle>
                                         <Style TargetType="{x:Type dxg:RowControl}">
                                             <Setter Property="Height" Value="20" />
                                         </Style>
                                     </dxg:TableView.RowStyle>
                                     <dxg:TableView.FormatConditions>
-                                        <dxg:FormatCondition
-                                            Expression="[RegressionCoef]&lt;0"
-                                            FieldName="RegressionCoef"
-                                            PredefinedFormatName="RedText" />
-                                        <dxg:FormatCondition
-                                            Expression="[RegressionCoef]&gt;=0"
-                                            FieldName="RegressionCoef"
-                                            PredefinedFormatName="GreenText" />
-                                        <dxg:IconSetFormatCondition FieldName="RegressionCoef" PredefinedFormatName="PositiveNegativeTrianglesIconSet" />
+                                        <dxg:FormatCondition Expression="[RegressionCoef]&lt;0"
+                                                             FieldName="RegressionCoef"
+                                                             PredefinedFormatName="RedText" />
+                                        <dxg:FormatCondition Expression="[RegressionCoef]&gt;=0"
+                                                             FieldName="RegressionCoef"
+                                                             PredefinedFormatName="GreenText" />
+                                        <dxg:IconSetFormatCondition FieldName="RegressionCoef"
+                                                                    PredefinedFormatName="PositiveNegativeTrianglesIconSet" />
                                     </dxg:TableView.FormatConditions>
                                 </dxg:TableView>
                             </dxg:GridControl.View>
                             <dxg:GridControl.Columns>
-                                <dxg:GridColumn
-                                    Width="130"
-                                    FieldName="Section"
-                                    FixedWidth="True"
-                                    Header="Type"
-                                    ReadOnly="True" />
-                                <dxg:GridColumn
-                                    Width="*"
-                                    FieldName="Name"
-                                    Header="Name"
-                                    ReadOnly="True" />
-                                <dxg:GridColumn
-                                    Width="100"
-                                    FieldName="Latest"
-                                    FixedWidth="True"
-                                    Header="Latest"
-                                    ReadOnly="True">
+                                <dxg:GridColumn Width="130"
+                                                FieldName="Section"
+                                                FixedWidth="True"
+                                                Header="Type"
+                                                ReadOnly="True" />
+                                <dxg:GridColumn Width="*"
+                                                FieldName="Name"
+                                                Header="Name"
+                                                ReadOnly="True" />
+                                <dxg:GridColumn Width="100"
+                                                FieldName="Latest"
+                                                FixedWidth="True"
+                                                Header="Latest"
+                                                ReadOnly="True">
                                     <dxg:GridColumn.EditSettings>
-                                        <dxe:TextEditSettings DisplayFormat="{}{0:0.00}" NullText="-" />
+                                        <dxe:TextEditSettings DisplayFormat="{}{0:0.00}"
+                                                              NullText="-" />
                                     </dxg:GridColumn.EditSettings>
                                 </dxg:GridColumn>
-                                <dxg:GridColumn
-                                    Width="150"
-                                    FieldName="RegressionCoef"
-                                    FixedWidth="True"
-                                    Header="Recent Trend"
-                                    ReadOnly="True">
+                                <dxg:GridColumn Width="150"
+                                                FieldName="RegressionCoef"
+                                                FixedWidth="True"
+                                                Header="Recent Trend"
+                                                ReadOnly="True">
                                     <dxg:GridColumn.EditSettings>
-                                        <dxe:TextEditSettings DisplayFormat="0.0000" NullText="-" />
+                                        <dxe:TextEditSettings DisplayFormat="0.0000"
+                                                              NullText="-" />
                                     </dxg:GridColumn.EditSettings>
                                 </dxg:GridColumn>
                             </dxg:GridControl.Columns>
                         </dxg:GridControl>
                     </dxlc:LayoutGroup>
-                    <dxlc:LayoutGroup
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        dxlc:LayoutControl.AllowHorizontalSizing="True">
-                        <dxc:ChartControl
-                            AnimationMode="Disabled"
-                            Background="{x:Null}"
-                            BorderThickness="0"
-                            CrosshairEnabled="True"
-                            CustomDrawSeriesPoint="OnCustomDrawRatiosPoints"
-                            DataSource="{Binding Path=SelectedItem.Data, ElementName=FinancialGrid}"
-                            SelectionMode="None">
+                    <dxlc:LayoutGroup HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      dxlc:LayoutControl.AllowHorizontalSizing="True">
+                        <dxc:ChartControl AnimationMode="Disabled"
+                                          Background="{x:Null}"
+                                          BorderThickness="0"
+                                          CrosshairEnabled="True"
+                                          CustomDrawSeriesPoint="OnCustomDrawRatiosPoints"
+                                          DataSource="{Binding Path=SelectedItem.Data, ElementName=FinancialGrid}"
+                                          SelectionMode="None">
                             <dxc:ChartControl.CrosshairOptions>
-                                <dxc:CrosshairOptions
-                                    ArgumentLineBrush="#3fff"
-                                    HighlightPoints="False"
-                                    ShowValueLine="True"
-                                    SnapMode="NearestArgument"
-                                    ValueLineBrush="#3fff" />
+                                <dxc:CrosshairOptions ArgumentLineBrush="#3fff"
+                                                      HighlightPoints="False"
+                                                      ShowValueLine="True"
+                                                      SnapMode="NearestArgument"
+                                                      ValueLineBrush="#3fff" />
                             </dxc:ChartControl.CrosshairOptions>
                             <dxc:ChartControl.Palette>
                                 <dxc:DXChartsPalette />
@@ -601,7 +582,8 @@
                                         <dxc:Pane DomainBrush="Transparent" />
                                     </dxc:XYDiagram2D.DefaultPane>
                                     <dxc:XYDiagram2D.AxisY>
-                                        <dxc:AxisY2D GridLinesVisible="False" Interlaced="False">
+                                        <dxc:AxisY2D GridLinesVisible="False"
+                                                     Interlaced="False">
                                             <dxc:AxisY2D.Label>
                                                 <dxc:AxisLabel FontSize="10" />
                                             </dxc:AxisY2D.Label>
@@ -618,15 +600,14 @@
                                         </dxc:AxisX2D>
                                     </dxc:XYDiagram2D.AxisX>
                                     <dxc:XYDiagram2D.Series>
-                                        <dxc:SplineSeries2D
-                                            ArgumentDataMember="Item1"
-                                            DisplayName="{Binding Path=SelectedItem.Name, ElementName=FinancialGrid}"
-                                            LabelsVisibility="False"
-                                            LineTension="1.0"
-                                            MarkerSize="7"
-                                            MarkerVisible="True"
-                                            ValueDataMember="Item2"
-                                            Visible="True">
+                                        <dxc:SplineSeries2D ArgumentDataMember="Item1"
+                                                            DisplayName="{Binding Path=SelectedItem.Name, ElementName=FinancialGrid}"
+                                                            LabelsVisibility="False"
+                                                            LineTension="1.0"
+                                                            MarkerSize="7"
+                                                            MarkerVisible="True"
+                                                            ValueDataMember="Item2"
+                                                            Visible="True">
                                             <dxc:SplineSeries2D.LineStyle>
                                                 <dxc:LineStyle Thickness="4" />
                                             </dxc:SplineSeries2D.LineStyle>
@@ -635,7 +616,8 @@
                                 </dxc:XYDiagram2D>
                             </dxc:ChartControl.Diagram>
                             <dxc:ChartControl.Legend>
-                                <dxc:Legend HorizontalPosition="Left" VerticalPosition="Top" />
+                                <dxc:Legend HorizontalPosition="Left"
+                                            VerticalPosition="Top" />
                             </dxc:ChartControl.Legend>
                         </dxc:ChartControl>
                     </dxlc:LayoutGroup>

@@ -7,6 +7,7 @@
     using DevExpress.Xpf.Charts;
     using DevExpress.Xpf.Grid;
 
+    // ReSharper disable once StyleCop.SA1601
     public partial class DashboardView
     {
         public DashboardView()
@@ -17,12 +18,10 @@
 
         private void OnCustomDrawRatiosPoints(object sender, CustomDrawSeriesPointEventArgs e)
         {
-            DateTime date;
-            if (!DateTime.TryParseExact(e.SeriesPoint.Argument, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+            if (!DateTime.TryParseExact(e.SeriesPoint.Argument, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             {
                 e.DrawOptions.Color = Colors.DarkGoldenrod;
             }
         }
-
     }
 }

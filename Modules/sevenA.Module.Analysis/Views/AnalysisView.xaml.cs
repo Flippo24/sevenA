@@ -6,6 +6,7 @@
 
     using DevExpress.Xpf.Charts;
 
+    // ReSharper disable once StyleCop.SA1601
     public partial class AnalysisView
     {
         public AnalysisView()
@@ -15,8 +16,7 @@
 
         private void OnCustomDrawRatiosPoints(object sender, CustomDrawSeriesPointEventArgs e)
         {
-            DateTime date;
-            if (!DateTime.TryParseExact(e.SeriesPoint.Argument, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+            if (!DateTime.TryParseExact(e.SeriesPoint.Argument, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             {
                 e.DrawOptions.Color = Colors.DarkGoldenrod;
             }

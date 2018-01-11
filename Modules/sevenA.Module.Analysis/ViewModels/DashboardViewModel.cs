@@ -313,7 +313,7 @@ namespace sevenA.Module.Analysis.ViewModels
             private set
             {
                 this.SetProperty(() => this.MaxAverageCashFlow, value);
-                RaisePropertiesChanged(() => FreeCashFlowSmallStep, () => FreeCashFlowBigStep);
+                this.RaisePropertiesChanged(() => this.FreeCashFlowSmallStep, () => this.FreeCashFlowBigStep);
             }
         }
 
@@ -329,13 +329,13 @@ namespace sevenA.Module.Analysis.ViewModels
             private set
             {
                 this.SetProperty(() => this.MinAverageCashFlow, value);
-                RaisePropertiesChanged(() => FreeCashFlowSmallStep, () => FreeCashFlowBigStep);
+                this.RaisePropertiesChanged(() => this.FreeCashFlowSmallStep, () => this.FreeCashFlowBigStep);
             }
         }
 
-        public double FreeCashFlowSmallStep => Math.Abs(MaxAverageCashFlow - MinAverageCashFlow) / 20;
+        public double FreeCashFlowSmallStep => Math.Abs(this.MaxAverageCashFlow - this.MinAverageCashFlow) / 20;
 
-        public double FreeCashFlowBigStep => Math.Abs(MaxAverageCashFlow - MinAverageCashFlow) / 5;
+        public double FreeCashFlowBigStep => Math.Abs(this.MaxAverageCashFlow - this.MinAverageCashFlow) / 5;
 
         public double NetMargin
         {
@@ -686,7 +686,9 @@ namespace sevenA.Module.Analysis.ViewModels
 
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 0);
 
-                DateTime.TryParseExact(this.RatiosFinancials.First().Data.First().Item1, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime startDate);
+                // ReSharper disable once InlineOutVariableDeclaration
+                DateTime startDate;
+                DateTime.TryParseExact(this.RatiosFinancials.First().Data.First().Item1, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
 
                 if (startDate == default(DateTime))
                 {
@@ -753,7 +755,7 @@ namespace sevenA.Module.Analysis.ViewModels
                         ? this.IncomeStatement.First(x => StringContains(x.Name, "Interest Expense"))
                               .Data.Where(x => !x.Item1.Equals("TTM"))
                               .ToList()
-                        : GetDefaultData();
+                        : this.GetDefaultData();
 
                 var earningPerShareData =
                     this.RatiosFinancials.First(x => StringContains(x.Name, "Earnings Per Share"))
@@ -773,12 +775,12 @@ namespace sevenA.Module.Analysis.ViewModels
                                         ? this.BalanceSheet.First(x => StringContains(x.Name, shortTermDebtText))
                                               .Data.Where(x => !x.Item1.Equals("TTM"))
                                               .ToList()
-                                        : GetDefaultData();
+                                        : this.GetDefaultData();
 
                 var longTermDebt = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, "Long-term debt")) != null
                         ? this.BalanceSheet.First(x => StringContains(x.Name, "Long-term debt")).Data
                             .Where(x => !x.Item1.Equals("TTM")).ToList()
-                        : GetDefaultData();
+                        : this.GetDefaultData();
 
                 var taxRate =
                     this.RatiosProfitability.First(x => StringContains(x.Name, "Tax Rate"))
@@ -863,19 +865,12 @@ namespace sevenA.Module.Analysis.ViewModels
                             (double?)this.DividendYield,
                             dividends[i].Item3);
 
-                        double? dividendGrowthRate = (1.0 - payout[i].Item2.GetValueOrDefault() / 100.0)
-                                                     * roe[i].Item2.GetValueOrDefault();
+                        double? dividendGrowthRate = (1.0 - (payout[i].Item2.GetValueOrDefault() / 100.0)) * roe[i].Item2.GetValueOrDefault();
 
                         coe.Data[i] = Tuple.Create(roe[i].Item1, this.DividendYield + dividendGrowthRate, roe[i].Item3);
                         cod.Data[i] = Tuple.Create(
                             longTermDebt[i].Item1,
-                            this.FilterInfinityNaN(
-                                i > 0
-                                    ? interestExpenses[i].Item2.GetValueOrDefault()
-                                      / (longTermDebt[i].Item2.GetValueOrDefault()
-                                         + shortTermDebt[i].Item2.GetValueOrDefault())
-                                      * (1.0 - taxRate[i].Item2 / 100.0) * 100.0
-                                    : 0.0),
+                            this.FilterInfinityNaN(i > 0 ? interestExpenses[i].Item2.GetValueOrDefault() / (longTermDebt[i].Item2.GetValueOrDefault() + shortTermDebt[i].Item2.GetValueOrDefault()) * (1.0 - (taxRate[i].Item2 / 100.0)) * 100.0 : 0.0),
                             longTermDebt[i].Item3);
 
                         var ratio1 = equity
@@ -885,8 +880,7 @@ namespace sevenA.Module.Analysis.ViewModels
                                       + shortTermDebt[i].Item2.GetValueOrDefault())
                                      / (equity + longTermDebt[i].Item2.GetValueOrDefault()
                                         + shortTermDebt[i].Item2.GetValueOrDefault());
-                        var waccValue = ratio1 * coe.Data[i].Item2.GetValueOrDefault()
-                                        + ratio2 * cod.Data[i].Item2.GetValueOrDefault() * (1.0 - taxRate[i].Item2.GetValueOrDefault() / 100.0);
+                        var waccValue = (ratio1 * coe.Data[i].Item2.GetValueOrDefault()) + (ratio2 * cod.Data[i].Item2.GetValueOrDefault() * (1.0 - (taxRate[i].Item2.GetValueOrDefault() / 100.0)));
                         wacc.Data[i] = Tuple.Create(
                             longTermDebt[i].Item1,
                             this.FilterInfinityNaN(waccValue),
