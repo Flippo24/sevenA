@@ -111,6 +111,12 @@
     <Compile Include="Services\MorningStarDataService.cs" />
     <Compile Include="Services\YahooFinanceDataService.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
+    <Compile Include="Views\SelectedFinancialsChartView.xaml.cs">
+      <DependentUpon>SelectedFinancialsChartView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PriceChartView.xaml.cs">
+      <DependentUpon>PriceChartView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FinancialsGridView.xaml.cs">
       <DependentUpon>FinancialsGridView.xaml</DependentUpon>
     </Compile>
@@ -134,6 +140,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Resources\Shared.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SelectedFinancialsChartView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PriceChartView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

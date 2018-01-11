@@ -4,7 +4,6 @@
              xmlns:behaviours="clr-namespace:sevenA.Core.Behaviours;assembly=sevenA.Core"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
-             xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts"
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
@@ -134,136 +133,9 @@
                                       ItemSpace="5"
                                       Orientation="Vertical">
 
-                        <dxlc:LayoutGroup x:Name="PriceChart"
-                                          HorizontalAlignment="Stretch"
-                                          VerticalAlignment="Stretch">
-                            <dxc:ChartControl AnimationMode="Disabled"
-                                              Background="{x:Null}"
-                                              BorderThickness="0"
-                                              CrosshairEnabled="True"
-                                              DataSource="{Binding Path=StockData}"
-                                              SelectionMode="None">
-                                <dxc:ChartControl.CrosshairOptions>
-                                    <dxc:CrosshairOptions ArgumentLineBrush="#3fff"
-                                                          HighlightPoints="False"
-                                                          ShowValueLine="True"
-                                                          SnapMode="NearestArgument"
-                                                          ValueLineBrush="#3fff" />
-                                </dxc:ChartControl.CrosshairOptions>
-                                <dxc:ChartControl.Palette>
-                                    <dxc:BlueGreenPalette />
-                                </dxc:ChartControl.Palette>
-                                <dxc:ChartControl.Diagram>
-                                    <dxc:XYDiagram2D>
-                                        <dxc:XYDiagram2D.DefaultPane>
-                                            <dxc:Pane DomainBrush="Transparent" />
-                                        </dxc:XYDiagram2D.DefaultPane>
-                                        <dxc:XYDiagram2D.AxisY>
-                                            <dxc:AxisY2D GridLinesVisible="False"
-                                                         Interlaced="False"
-                                                         MinorCount="4">
-                                                <dxc:AxisY2D.Label>
-                                                    <dxc:AxisLabel FontSize="10" />
-                                                </dxc:AxisY2D.Label>
-                                                <dxc:AxisY2D.WholeRange>
-                                                    <dxc:Range dxc:AxisY2D.AlwaysShowZeroLevel="False" />
-                                                </dxc:AxisY2D.WholeRange>
-                                            </dxc:AxisY2D>
-                                        </dxc:XYDiagram2D.AxisY>
-                                        <dxc:XYDiagram2D.AxisX>
-                                            <dxc:AxisX2D GridLinesVisible="False">
-                                                <dxc:AxisX2D.Label>
-                                                    <dxc:AxisLabel FontSize="10" />
-                                                </dxc:AxisX2D.Label>
-                                            </dxc:AxisX2D>
-                                        </dxc:XYDiagram2D.AxisX>
-                                        <dxc:XYDiagram2D.Series>
-                                            <dxc:LineSeries2D ArgumentDataMember="Date"
-                                                              DisplayName="Close"
-                                                              LabelsVisibility="False"
-                                                              MarkerVisible="False"
-                                                              ShowInLegend="True"
-                                                              ValueDataMember="Close"
-                                                              Visible="True">
-                                                <dxc:LineSeries2D.LineStyle>
-                                                    <dxc:LineStyle Thickness="2" />
-                                                </dxc:LineSeries2D.LineStyle>
-                                            </dxc:LineSeries2D>
-                                        </dxc:XYDiagram2D.Series>
-                                    </dxc:XYDiagram2D>
-                                </dxc:ChartControl.Diagram>
-                                <dxc:ChartControl.Legend>
-                                    <dxc:Legend HorizontalPosition="Left"
-                                                VerticalPosition="Top" />
-                                </dxc:ChartControl.Legend>
-                            </dxc:ChartControl>
-                        </dxlc:LayoutGroup>
+                        <views:PriceChartView />
 
-                        <dxlc:LayoutGroup x:Name="SelectedFinancialsChart"
-                                          HorizontalAlignment="Stretch"
-                                          VerticalAlignment="Stretch">
-                            <dxc:ChartControl AnimationMode="Disabled"
-                                              Background="{x:Null}"
-                                              BorderThickness="0"
-                                              CrosshairEnabled="True"
-                                              CustomDrawSeriesPoint="OnCustomDrawRatiosPoints"
-                                              DataSource="{Binding Path=SelectedItem.Data, ElementName=FinancialGrid}"
-                                              SelectionMode="None">
-                                <dxc:ChartControl.CrosshairOptions>
-                                    <dxc:CrosshairOptions ArgumentLineBrush="#3fff"
-                                                          HighlightPoints="False"
-                                                          ShowValueLine="True"
-                                                          SnapMode="NearestArgument"
-                                                          ValueLineBrush="#3fff" />
-                                </dxc:ChartControl.CrosshairOptions>
-                                <dxc:ChartControl.Palette>
-                                    <dxc:DXChartsPalette />
-                                </dxc:ChartControl.Palette>
-                                <dxc:ChartControl.Diagram>
-                                    <dxc:XYDiagram2D>
-                                        <dxc:XYDiagram2D.DefaultPane>
-                                            <dxc:Pane DomainBrush="Transparent" />
-                                        </dxc:XYDiagram2D.DefaultPane>
-                                        <dxc:XYDiagram2D.AxisY>
-                                            <dxc:AxisY2D GridLinesVisible="False"
-                                                         Interlaced="False">
-                                                <dxc:AxisY2D.Label>
-                                                    <dxc:AxisLabel FontSize="10" />
-                                                </dxc:AxisY2D.Label>
-                                                <dxc:AxisY2D.WholeRange>
-                                                    <dxc:Range dxc:AxisY2D.AlwaysShowZeroLevel="False" />
-                                                </dxc:AxisY2D.WholeRange>
-                                            </dxc:AxisY2D>
-                                        </dxc:XYDiagram2D.AxisY>
-                                        <dxc:XYDiagram2D.AxisX>
-                                            <dxc:AxisX2D GridLinesVisible="False">
-                                                <dxc:AxisX2D.Label>
-                                                    <dxc:AxisLabel FontSize="10" />
-                                                </dxc:AxisX2D.Label>
-                                            </dxc:AxisX2D>
-                                        </dxc:XYDiagram2D.AxisX>
-                                        <dxc:XYDiagram2D.Series>
-                                            <dxc:SplineSeries2D ArgumentDataMember="Item1"
-                                                                DisplayName="{Binding Path=SelectedItem.Name, ElementName=FinancialGrid}"
-                                                                LabelsVisibility="False"
-                                                                LineTension="1.0"
-                                                                MarkerSize="7"
-                                                                MarkerVisible="True"
-                                                                ValueDataMember="Item2"
-                                                                Visible="True">
-                                                <dxc:SplineSeries2D.LineStyle>
-                                                    <dxc:LineStyle Thickness="4" />
-                                                </dxc:SplineSeries2D.LineStyle>
-                                            </dxc:SplineSeries2D>
-                                        </dxc:XYDiagram2D.Series>
-                                    </dxc:XYDiagram2D>
-                                </dxc:ChartControl.Diagram>
-                                <dxc:ChartControl.Legend>
-                                    <dxc:Legend HorizontalPosition="Left"
-                                                VerticalPosition="Top" />
-                                </dxc:ChartControl.Legend>
-                            </dxc:ChartControl>
-                        </dxlc:LayoutGroup>
+                        <views:SelectedFinancialsChartView />
 
                     </dxlc:LayoutGroup>
 
