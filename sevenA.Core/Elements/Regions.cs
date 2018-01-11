@@ -2,6 +2,6 @@
 {
     public static class Regions
     {
-        public static string Main = "Main";
+        public static readonly string Main = "Main";
     }
 }

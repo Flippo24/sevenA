@@ -1,8 +1,8 @@
-﻿using System;
-using System.Windows;
-
-namespace sevenA.Core.Extensions
+﻿namespace sevenA.Core.Extensions
 {
+    using System;
+    using System.Windows;
+
     public static class FocusExtension
     {
         public static readonly DependencyProperty IsFocusedProperty =

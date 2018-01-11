@@ -684,7 +684,7 @@ namespace sevenA.Module.Analysis.ViewModels
                 this.AllRatios.AddRange(financials);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingFinancials, 100);
 
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 0);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingHistorical, 0);
 
                 // ReSharper disable once InlineOutVariableDeclaration
                 DateTime startDate;
@@ -698,13 +698,13 @@ namespace sevenA.Module.Analysis.ViewModels
                 var prices = await this._yahooFinanceDataService.GetHistoricalDataAsync(
                                  this._yahooFinanceDataService.GetYahooFinanceSymbol(this.Symbol),
                                  startDate);
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 70);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingHistorical, 70);
                 this.StockData = new ObservableCollection<StockData>(prices);
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 100);
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleLatest, 0);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingHistorical, 100);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingLatest, 0);
                 this.LatestPrice = prices.LastOrDefault();
 
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleLatest, 100);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingLatest, 100);
 
                 this.PrepareCurrentIndicators();
                 this.AddComposedIndicators();
@@ -923,7 +923,7 @@ namespace sevenA.Module.Analysis.ViewModels
 
             var freeCashFlow = this.CashFlowStatement.First(x => StringContains(x.Name, "Free cash")).Data.OrderByDescending(x => x.Item1).ToArray();
 
-            this._averageCashFlow = Stats.SimpleAverage(freeCashFlow.Select(x => x.Item2.GetValueOrDefault()), 3);
+            this._averageCashFlow = Stats.SimpleAverage(freeCashFlow.Select(x => x.Item2.GetValueOrDefault()).ToArray(), 3);
             this.RaisePropertyChanged(() => this.AverageCashFlow);
             this.MinAverageCashFlow = freeCashFlow.Select(x => x.Item2.GetValueOrDefault()).Min();
             if (this.MinAverageCashFlow == this._averageCashFlow)

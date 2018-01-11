@@ -2,17 +2,17 @@
 {
     public class ApplicationHelper
     {
-        private static ApplicationHelper _instance;
+        public readonly double RiskFreeRateSg = 2.09d;
 
-        private ApplicationHelper()
+        public readonly double RiskFreeRatePt = 3.15d;
+
+        public readonly double RiskFreeRate = 0.6d;
+
+        static ApplicationHelper()
         {
-            _instance = this;
+            Instance = new ApplicationHelper();
         }
 
-        public static ApplicationHelper Instance => _instance ?? new ApplicationHelper();
-
-        public readonly double RiskFreeRateSG = 2.09;
-        public readonly double RiskFreeRatePT = 3.15;
-        public readonly double RiskFreeRate = 0.6;
+        public static ApplicationHelper Instance { get; }
     }
 }

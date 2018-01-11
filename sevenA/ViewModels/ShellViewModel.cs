@@ -1,8 +1,8 @@
-﻿using DevExpress.Mvvm;
-using DevExpress.Mvvm.DataAnnotations;
-
-namespace sevenA.Views
+﻿namespace sevenA.ViewModels
 {
+    using DevExpress.Mvvm;
+    using DevExpress.Mvvm.DataAnnotations;
+
     [POCOViewModel]
     public class ShellViewModel : ViewModelBase
     {
@@ -11,7 +11,7 @@ namespace sevenA.Views
         [Command]
         public void OnViewLoaded()
         {
-            NavigationService.Navigate("DashboardView", null, this);
+            this.NavigationService.Navigate("DashboardView", null, this);
         }
     }
 }

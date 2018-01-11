@@ -84,7 +84,7 @@
     <Compile Include="AppHelper.cs" />
     <Compile Include="Models\MarketPoint.cs" />
     <Compile Include="Models\Stock.cs" />
-    <Compile Include="Views\ShellViewModel.cs" />
+    <Compile Include="ViewModels\ShellViewModel.cs" />
     <Page Include="Resources\Shared.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -135,10 +135,6 @@
       <Project>{33cd9f28-039d-4145-affb-96180fcaf89a}</Project>
       <Name>sevenA.Module.Analysis</Name>
     </ProjectReference>
-    <ProjectReference Include="..\sevenA.Controls\sevenA.Controls.csproj">
-      <Project>{83afa424-c6fd-4cb6-b1c3-fd1dcb3eefb3}</Project>
-      <Name>sevenA.Controls</Name>
-    </ProjectReference>
     <ProjectReference Include="..\sevenA.Core\sevenA.Core.csproj">
       <Project>{C3E20753-3B41-4779-A22F-6544FC7BDD57}</Project>
       <Name>sevenA.Core</Name>
@@ -155,9 +151,7 @@
     <Resource Include="Resources\Icons\Error-32.png" />
     <Resource Include="Resources\Icons\Ok-32.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\Icons\Scatter Plot-96.png" />
   </ItemGroup>

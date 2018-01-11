@@ -100,8 +100,8 @@
                         .Select(x => Tuple.Create(x.Item1.ToOADate(), x.Item2)).ToList();
 
                 var linearFitCoeffs = Stats.LinearFit(
-                    selectedData.Select(x => x.Item1),
-                    selectedData.Select(x => x.Item2));
+                    selectedData.Select(x => x.Item1).ToArray(),
+                    selectedData.Select(x => x.Item2).ToArray());
 
                 this._regressionCoef = linearFitCoeffs?.B;
 
@@ -111,8 +111,8 @@
                         .Select(x => Tuple.Create(x.Item1.ToOADate(), x.Item2)).ToList();
 
                 var linearFitCoeffsLongTerm = Stats.LinearFit(
-                    selectedDataLongTerm.Select(x => x.Item1),
-                    selectedDataLongTerm.Select(x => x.Item2));
+                    selectedDataLongTerm.Select(x => x.Item1).ToArray(),
+                    selectedDataLongTerm.Select(x => x.Item2).ToArray());
 
                 var date0 = selectedDataLongTerm.First().Item1;
                 var date1 = selectedDataLongTerm.Last().Item1;

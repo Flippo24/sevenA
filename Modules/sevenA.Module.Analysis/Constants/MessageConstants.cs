@@ -6,9 +6,9 @@
 
         public static readonly string DownloadingFinancials = "Downloading Financials data ...";
 
-        public static readonly string DownloadingGoogleHistorical = "Downloading Google Historical data ...";
+        public static readonly string DownloadingHistorical = "Downloading Historical quotes ...";
 
-        public static readonly string DownloadingGoogleLatest = "Downloading Google latest data ...";
+        public static readonly string DownloadingLatest = "Downloading Latest quote ...";
 
         public static readonly string Analysing = "Analysing data ...";
     }

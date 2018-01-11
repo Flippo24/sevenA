@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using System.Windows;
-using Prism.Mvvm;
-
-namespace sevenA.Models
+﻿namespace sevenA.Models
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Threading.Tasks;
+    using System.Windows;
+
+    using DevExpress.Mvvm;
+
     public class Stock : BindableBase
     {
-        private string _name;
-        private string _symbol;
-        private double _lastPrice;
-        private long _lastVolume;
-        private double _high52;
-        private double _low52;
-        private bool _isDownloading;
-        private bool? _isDownloadSuccess;
-
         public Stock()
         {
             this.MarketData = new ObservableCollection<MarketPoint>();
@@ -27,58 +19,60 @@ namespace sevenA.Models
 
         public string Name
         {
-            get => this._name;
-            set => this.SetProperty(ref this._name, value);
+            get => this.GetProperty(() => this.Name);
+            set => this.SetProperty(() => this.Name, value);
         }
 
         public string Symbol
         {
-            get => this._symbol;
-            set => this.SetProperty(ref this._symbol, value);
+            get => this.GetProperty(() => this.Symbol);
+            set => this.SetProperty(() => this.Symbol, value);
         }
 
         public double LastPrice
         {
-            get => this._lastPrice;
-            set => this.SetProperty(ref this._lastPrice, value);
+            get => this.GetProperty(() => this.LastPrice);
+            set => this.SetProperty(() => this.LastPrice, value);
         }
 
         public long LastVolume
         {
-            get => this._lastVolume;
-            set => this.SetProperty(ref this._lastVolume, value);
+            get => this.GetProperty(() => this.LastVolume);
+            set => this.SetProperty(() => this.LastVolume, value);
         }
 
         public double High52
         {
-            get => this._high52;
-            set => this.SetProperty(ref this._high52, value);
+            get => this.GetProperty(() => this.High52);
+            set => this.SetProperty(() => this.High52, value);
         }
 
         public double Low52
         {
-            get => this._low52;
-            set => this.SetProperty(ref this._low52, value);
+            get => this.GetProperty(() => this.Low52);
+            set => this.SetProperty(() => this.Low52, value);
         }
 
         public ObservableCollection<MarketPoint> MarketData { get; set; }
 
         public bool IsDownloading
         {
-            get => this._isDownloading;
-            private set => this.SetProperty(ref this._isDownloading, value);
+            get => this.GetProperty(() => this.IsDownloading);
+            set => this.SetProperty(() => this.IsDownloading, value);
         }
 
         public bool? IsDownloadSuccess
         {
-            get => this._isDownloadSuccess;
-            set => this.SetProperty(ref this._isDownloadSuccess, value);
+            get => this.GetProperty(() => this.IsDownloadSuccess);
+            set => this.SetProperty(() => this.IsDownloadSuccess, value);
         }
 
         public void Download()
         {
             if (string.IsNullOrEmpty(this.Symbol))
+            {
                 return;
+            }
 
             this.IsDownloading = true;
 
@@ -140,7 +134,7 @@ namespace sevenA.Models
 
                     Application.Current.Dispatcher.Invoke(() =>
                         {
-                            this.Name = split[0].Replace("\"", "");
+                            this.Name = split[0].Replace("\"", string.Empty);
                             this.LastPrice = double.Parse(split[1]);
                             this.LastVolume = long.Parse(split[2]);
                             this.High52 = double.Parse(split[3]);
@@ -167,6 +161,7 @@ namespace sevenA.Models
                         {
                             this.MarketData.Add(new MarketPoint(line));
                         }
+
                         this.MarketData = new ObservableCollection<MarketPoint>(this.MarketData.OrderBy(x => x.Date));
                         return true;
                     }
@@ -176,6 +171,5 @@ namespace sevenA.Models
                     }
                 });
         }
-
     }
 }

@@ -30,7 +30,7 @@
             var keyValuePairs = selectedData as IList<KeyValuePair<DateTime, double?>> ?? selectedData.ToList();
             var weights = Enumerable.Range(1, keyValuePairs.Count).Select(i => (double)i);
 
-            return dict.Any() ? Stats.WeightedAverage(keyValuePairs.Select(x => x.Value.GetValueOrDefault()), weights) : (double?)null;
+            return dict.Any() ? Stats.WeightedAverage(keyValuePairs.Select(x => x.Value.GetValueOrDefault()).ToArray(), weights.ToArray()) : (double?)null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

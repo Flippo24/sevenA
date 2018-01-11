@@ -33,8 +33,8 @@
             try
             {
                 var linearFitCoeffs = Stats.LinearFit(
-                    selectedData.Select(x => x.Item1),
-                    selectedData.Select(x => x.Item2));
+                    selectedData.Select(x => x.Item1).ToArray(),
+                    selectedData.Select(x => x.Item2).ToArray());
                 var predictions = Stats.LinearFitPredict(DateTime.FromOADate(selectedData.Last().Item1).AddYears(1).ToOADate(), linearFitCoeffs);
 
                 return $"{predictions?.Predicted:0.00}   [{predictions?.Lower1Sigma:0.00}; {predictions?.Upper1Sigma:0.00}]";
