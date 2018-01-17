@@ -24,7 +24,8 @@
                          AllowLiveDataShaping="True"
                          FontFamily="Roboto Condensed"
                          FontSize="13px"
-                         ItemsSource="{Binding Path=AllRatios}">
+                         ItemsSource="{Binding Path=AllRatios}"
+                         SelectedItem="{Binding SelectedFinancialRatio}">
             <dxg:GridControl.View>
                 <dxg:TableView AllowConditionalFormattingMenu="True"
                                AllowGrouping="False"

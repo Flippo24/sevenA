@@ -24,7 +24,7 @@
                           BorderThickness="0"
                           CrosshairEnabled="True"
                           CustomDrawSeriesPoint="OnCustomDrawRatiosPoints"
-                          DataSource="{Binding Path=SelectedItem.Data, ElementName=FinancialGrid}"
+                          DataSource="{Binding SelectedFinancialRatio.Data}"
                           SelectionMode="None">
             <dxc:ChartControl.CrosshairOptions>
                 <dxc:CrosshairOptions ArgumentLineBrush="#3fff"

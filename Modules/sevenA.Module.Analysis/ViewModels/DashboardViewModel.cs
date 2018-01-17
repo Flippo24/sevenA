@@ -605,6 +605,8 @@ namespace sevenA.Module.Analysis.ViewModels
             }
         }
 
+        public virtual FinancialRatio SelectedFinancialRatio { get; set; }
+
         [Command]
         public void AddFavorite()
         {
