@@ -2,6 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:behaviours="clr-namespace:sevenA.Core.Behaviours;assembly=sevenA.Core"
+             xmlns:converters="clr-namespace:sevenA.Module.Analysis.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
@@ -19,6 +20,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Resources/Shared.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <converters:EnumMatchToBooleanConverter x:Key="EnumMatchToBooleanConverter" />
+
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -33,10 +37,27 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0"
+                    Margin="0,0,25,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
-            <TextBox Width="250"
+            <RadioButton VerticalAlignment="Center"
+                         Content="SG"
+                         IsChecked="{Binding Country, Converter={converters:EnumMatchToBooleanConverter}, ConverterParameter=Singapore}"
+                         ToolTip="Singapore" />
+            <RadioButton Margin="15,0,0,0"
+                         VerticalAlignment="Center"
+                         Content="PT"
+                         IsChecked="{Binding Country, Converter={converters:EnumMatchToBooleanConverter}, ConverterParameter=Portugal}"
+                         ToolTip="Portugal" />
+            <RadioButton Margin="15,0,0,0"
+                         VerticalAlignment="Center"
+                         Content="Other"
+                         IsChecked="{Binding Country, Converter={converters:EnumMatchToBooleanConverter}, ConverterParameter=Other}"
+                         ToolTip="Other MorningStar symbol" />
+
+            <TextBox Width="120"
+                     Margin="20,0,0,0"
                      CaretBrush="LightGray"
                      CharacterCasing="Upper"
                      Text="{Binding Symbol, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
@@ -69,7 +90,6 @@
                     </DataTemplate>
                 </Button.ContentTemplate>
             </Button>
-
         </StackPanel>
 
         <TextBox Grid.Row="0"

@@ -95,9 +95,11 @@
   <ItemGroup>
     <Compile Include="AnalysisModule.cs" />
     <Compile Include="Constants\MessageConstants.cs" />
+    <Compile Include="Converters\EnumMatchToBooleanConverter.cs" />
     <Compile Include="Converters\LinearPredictionListValueConverter.cs" />
     <Compile Include="Converters\AverageListValueConverter.cs" />
     <Compile Include="Converters\LatestListValueConverter.cs" />
+    <Compile Include="Enums\CountryEnum.cs" />
     <Compile Include="Enums\FinancialRatioSectionEnum.cs" />
     <Compile Include="Models\StockData.cs" />
     <Compile Include="Models\FinancialRatio.cs" />

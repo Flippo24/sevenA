@@ -69,6 +69,12 @@ namespace sevenA.Module.Analysis.ViewModels
             this.YearsTillTerminal = 10;
         }
 
+        public CountryEnum Country
+        {
+            get => this.GetProperty(() => this.Country);
+            set => this.SetProperty(() => this.Country, value);
+        }
+
         public ObservableCollection<FinancialRatio> AllRatios
         {
             get
@@ -615,9 +621,9 @@ namespace sevenA.Module.Analysis.ViewModels
                 return;
             }
 
-            if (!this.Favorites.Contains(this.Symbol))
+            if (!this.Favorites.Contains(this.GetSymbol(this.Symbol)))
             {
-                this.Favorites.Add(this.Symbol);
+                this.Favorites.Add(this.GetSymbol(this.Symbol));
                 this.MessageBoxService.ShowMessage(
                     $"{this.StockName} added to favorites",
                     "Favorites",
@@ -644,7 +650,7 @@ namespace sevenA.Module.Analysis.ViewModels
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingRatios, 0);
 
                 var results = await
-                    this._morningStarDataService.GetKeyRatiosAsync(this._cancellationTokenSource.Token, this.Symbol);
+                    this._morningStarDataService.GetKeyRatiosAsync(this._cancellationTokenSource.Token, this.GetSymbol(this.Symbol));
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingRatios, 60);
                 this.AllRatios = new ObservableCollection<FinancialRatio>(results.ToList());
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingRatios, 70);
@@ -672,7 +678,7 @@ namespace sevenA.Module.Analysis.ViewModels
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingFinancials, 0);
                 var financials =
                     await
-                    this._morningStarDataService.GetFinancialsAsync(this._cancellationTokenSource.Token, this.Symbol);
+                    this._morningStarDataService.GetFinancialsAsync(this._cancellationTokenSource.Token, this.GetSymbol(this.Symbol));
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingFinancials, 70);
                 this.IncomeStatement =
                     new ObservableCollection<FinancialRatio>(
@@ -698,7 +704,7 @@ namespace sevenA.Module.Analysis.ViewModels
                 }
 
                 var prices = await this._yahooFinanceDataService.GetHistoricalDataAsync(
-                                 this._yahooFinanceDataService.GetYahooFinanceSymbol(this.Symbol),
+                                 this._yahooFinanceDataService.GetYahooFinanceSymbol(this.GetSymbol(this.Symbol)),
                                  startDate);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingHistorical, 70);
                 this.StockData = new ObservableCollection<StockData>(prices);
@@ -726,6 +732,11 @@ namespace sevenA.Module.Analysis.ViewModels
         private static bool StringContains(string obj, string substring)
         {
             return obj.IndexOf(substring, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private string GetSymbol(string symbol)
+        {
+            return CountryConverter.GetPrefix(this.Country) + symbol;
         }
 
         private void AddComposedIndicators()
