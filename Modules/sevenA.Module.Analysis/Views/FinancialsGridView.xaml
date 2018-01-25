@@ -4,6 +4,7 @@
                   xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
                   xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
                   xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                  xmlns:views="clr-namespace:sevenA.Module.Analysis.Views"
                   x:Name="FinancialsGrid"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
@@ -82,6 +83,6 @@
         </dxg:GridControl>
     </dxlc:LayoutGroup>
 
-    <dxlc:LayoutGroup Header="Valuation" />
+    <views:ValuationsView />
 
 </dxlc:LayoutGroup>

@@ -77,15 +77,8 @@ namespace sevenA.Module.Analysis.ViewModels
 
         public ObservableCollection<FinancialRatio> AllRatios
         {
-            get
-            {
-                return this.GetProperty(() => this.AllRatios);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.AllRatios, value);
-            }
+            get => this.GetProperty(() => this.AllRatios);
+            set => this.SetProperty(() => this.AllRatios, value);
         }
 
         public double AverageCashFlow
@@ -106,179 +99,86 @@ namespace sevenA.Module.Analysis.ViewModels
 
         public ObservableCollection<FinancialRatio> BalanceSheet
         {
-            get
-            {
-                return this.GetProperty(() => this.BalanceSheet);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.BalanceSheet, value);
-            }
+            get => this.GetProperty(() => this.BalanceSheet);
+            set => this.SetProperty(() => this.BalanceSheet, value);
         }
 
         public double BookValue
         {
-            get
-            {
-                return this.GetProperty(() => this.BookValue);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.BookValue, value);
-            }
+            get => this.GetProperty(() => this.BookValue);
+            set => this.SetProperty(() => this.BookValue, value);
         }
 
         public double MarketCap
         {
-            get { return this.GetProperty(() => this.MarketCap); }
-
-            set { this.SetProperty(() => this.MarketCap, value); }
+            get => this.GetProperty(() => this.MarketCap);
+            set => this.SetProperty(() => this.MarketCap, value);
         }
 
         public ObservableCollection<FinancialRatio> CashFlowStatement
         {
-            get
-            {
-                return this.GetProperty(() => this.CashFlowStatement);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.CashFlowStatement, value);
-            }
+            get => this.GetProperty(() => this.CashFlowStatement);
+            set => this.SetProperty(() => this.CashFlowStatement, value);
         }
 
         public double COD
         {
-            get
-            {
-                return this.GetProperty(() => this.COD);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.COD, value);
-            }
+            get => this.GetProperty(() => this.COD);
+            set => this.SetProperty(() => this.COD, value);
         }
 
-        // ReSharper disable once InconsistentNaming
         public double COE
         {
-            get
-            {
-                return this.GetProperty(() => this.COE);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.COE, value);
-            }
+            get => this.GetProperty(() => this.COE);
+            set => this.SetProperty(() => this.COE, value);
         }
 
         public double CurrentGrowth
         {
-            get
-            {
-                return this.GetProperty(() => this.CurrentGrowth);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.CurrentGrowth, value);
-            }
+            get => this.GetProperty(() => this.CurrentGrowth);
+            set => this.SetProperty(() => this.CurrentGrowth, value);
         }
 
         public double DividendYield
         {
-            get
-            {
-                return this.GetProperty(() => this.DividendYield);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.DividendYield, value);
-            }
+            get => this.GetProperty(() => this.DividendYield);
+            set => this.SetProperty(() => this.DividendYield, value);
         }
 
         public double EPS
         {
-            get
-            {
-                return this.GetProperty(() => this.EPS);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.EPS, value);
-            }
+            get => this.GetProperty(() => this.EPS);
+            set => this.SetProperty(() => this.EPS, value);
         }
 
         public double FastGrowth
         {
-            get
-            {
-                return this.GetProperty(() => this.FastGrowth);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.FastGrowth, value);
-            }
+            get => this.GetProperty(() => this.FastGrowth);
+            set => this.SetProperty(() => this.FastGrowth, value);
         }
 
         public ObservableCollection<string> Favorites
         {
-            get
-            {
-                return this.GetProperty(() => this.Favorites);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.Favorites, value);
-            }
+            get => this.GetProperty(() => this.Favorites);
+            set => this.SetProperty(() => this.Favorites, value);
         }
 
         public double FreeCashFlowPS
         {
-            get
-            {
-                return this.GetProperty(() => this.FreeCashFlowPS);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.FreeCashFlowPS, value);
-            }
+            get => this.GetProperty(() => this.FreeCashFlowPS);
+            set => this.SetProperty(() => this.FreeCashFlowPS, value);
         }
 
         public double GrossMargin
         {
-            get
-            {
-                return this.GetProperty(() => this.GrossMargin);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.GrossMargin, value);
-            }
+            get => this.GetProperty(() => this.GrossMargin);
+            set => this.SetProperty(() => this.GrossMargin, value);
         }
 
         public ObservableCollection<FinancialRatio> IncomeStatement
         {
-            get
-            {
-                return this.GetProperty(() => this.IncomeStatement);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.IncomeStatement, value);
-            }
+            get => this.GetProperty(() => this.IncomeStatement);
+            set => this.SetProperty(() => this.IncomeStatement, value);
         }
 
         public double InitialGrowthRate
@@ -298,23 +198,13 @@ namespace sevenA.Module.Analysis.ViewModels
 
         public StockData LatestPrice
         {
-            get
-            {
-                return this.GetProperty(() => this.LatestPrice);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.LatestPrice, value);
-            }
+            get => this.GetProperty(() => this.LatestPrice);
+            set => this.SetProperty(() => this.LatestPrice, value);
         }
 
         public double MaxAverageCashFlow
         {
-            get
-            {
-                return this.GetProperty(() => this.MaxAverageCashFlow);
-            }
+            get => this.GetProperty(() => this.MaxAverageCashFlow);
 
             private set
             {
@@ -327,10 +217,7 @@ namespace sevenA.Module.Analysis.ViewModels
 
         public double MinAverageCashFlow
         {
-            get
-            {
-                return this.GetProperty(() => this.MinAverageCashFlow);
-            }
+            get => this.GetProperty(() => this.MinAverageCashFlow);
 
             private set
             {
@@ -345,225 +232,106 @@ namespace sevenA.Module.Analysis.ViewModels
 
         public double NetMargin
         {
-            get
-            {
-                return this.GetProperty(() => this.NetMargin);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.NetMargin, value);
-            }
+            get => this.GetProperty(() => this.NetMargin);
+            set => this.SetProperty(() => this.NetMargin, value);
         }
 
         public double OperatingMargin
         {
-            get
-            {
-                return this.GetProperty(() => this.OperatingMargin);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.OperatingMargin, value);
-            }
+            get => this.GetProperty(() => this.OperatingMargin);
+            set => this.SetProperty(() => this.OperatingMargin, value);
         }
 
         public double PE
         {
-            get
-            {
-                return this.GetProperty(() => this.PE);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.PE, value);
-            }
+            get => this.GetProperty(() => this.PE);
+            set => this.SetProperty(() => this.PE, value);
         }
 
         public ProgressLoader ProgressLoader { get; }
 
         public ObservableCollection<FinancialRatio> RatiosCashFlow
         {
-            get
-            {
-                return this.GetProperty(() => this.RatiosCashFlow);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.RatiosCashFlow, value);
-            }
+            get => this.GetProperty(() => this.RatiosCashFlow);
+            set => this.SetProperty(() => this.RatiosCashFlow, value);
         }
 
         public ObservableCollection<FinancialRatio> RatiosEfficiency
         {
-            get
-            {
-                return this.GetProperty(() => this.RatiosEfficiency);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.RatiosEfficiency, value);
-            }
+            get => this.GetProperty(() => this.RatiosEfficiency);
+            set => this.SetProperty(() => this.RatiosEfficiency, value);
         }
 
         public ObservableCollection<FinancialRatio> RatiosFinancials
         {
-            get
-            {
-                return this.GetProperty(() => this.RatiosFinancials);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.RatiosFinancials, value);
-            }
+            get => this.GetProperty(() => this.RatiosFinancials);
+            set => this.SetProperty(() => this.RatiosFinancials, value);
         }
 
         public ObservableCollection<FinancialRatio> RatiosHealth
         {
-            get
-            {
-                return this.GetProperty(() => this.RatiosHealth);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.RatiosHealth, value);
-            }
+            get => this.GetProperty(() => this.RatiosHealth);
+            set => this.SetProperty(() => this.RatiosHealth, value);
         }
 
         public ObservableCollection<FinancialRatio> RatiosLiquidity
         {
-            get
-            {
-                return this.GetProperty(() => this.RatiosLiquidity);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.RatiosLiquidity, value);
-            }
+            get => this.GetProperty(() => this.RatiosLiquidity);
+            set => this.SetProperty(() => this.RatiosLiquidity, value);
         }
 
         public ObservableCollection<FinancialRatio> RatiosProfitability
         {
-            get
-            {
-                return this.GetProperty(() => this.RatiosProfitability);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.RatiosProfitability, value);
-            }
+            get => this.GetProperty(() => this.RatiosProfitability);
+            set => this.SetProperty(() => this.RatiosProfitability, value);
         }
 
         public double ROA
         {
-            get
-            {
-                return this.GetProperty(() => this.ROA);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.ROA, value);
-            }
+            get => this.GetProperty(() => this.ROA);
+            set => this.SetProperty(() => this.ROA, value);
         }
 
         public double ROE
         {
-            get
-            {
-                return this.GetProperty(() => this.ROE);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.ROE, value);
-            }
+            get => this.GetProperty(() => this.ROE);
+            set => this.SetProperty(() => this.ROE, value);
         }
 
         public double ROIC
         {
-            get
-            {
-                return this.GetProperty(() => this.ROIC);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.ROIC, value);
-            }
+            get => this.GetProperty(() => this.ROIC);
+            set => this.SetProperty(() => this.ROIC, value);
         }
 
         public double SlowGrowth
         {
-            get
-            {
-                return this.GetProperty(() => this.SlowGrowth);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.SlowGrowth, value);
-            }
+            get => this.GetProperty(() => this.SlowGrowth);
+            set => this.SetProperty(() => this.SlowGrowth, value);
         }
 
         public ObservableCollection<StockData> StockData
         {
-            get
-            {
-                return this.GetProperty(() => this.StockData);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.StockData, value);
-            }
+            get => this.GetProperty(() => this.StockData);
+            set => this.SetProperty(() => this.StockData, value);
         }
 
         public string StockName
         {
-            get
-            {
-                return this.GetProperty(() => this.StockName);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.StockName, value);
-            }
+            get => this.GetProperty(() => this.StockName);
+            set => this.SetProperty(() => this.StockName, value);
         }
 
         public string Symbol
         {
-            get
-            {
-                return this.GetProperty(() => this.Symbol);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.Symbol, value);
-            }
+            get => this.GetProperty(() => this.Symbol);
+            set => this.SetProperty(() => this.Symbol, value);
         }
 
         public double? WACC
         {
-            get
-            {
-                return this.GetProperty(() => this.WACC);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.WACC, value);
-            }
+            get => this.GetProperty(() => this.WACC);
+            set => this.SetProperty(() => this.WACC, value);
         }
 
         public double WACCModified
@@ -583,23 +351,13 @@ namespace sevenA.Module.Analysis.ViewModels
 
         public double WorkingCapitalPS
         {
-            get
-            {
-                return this.GetProperty(() => this.WorkingCapitalPS);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.WorkingCapitalPS, value);
-            }
+            get => this.GetProperty(() => this.WorkingCapitalPS);
+            set => this.SetProperty(() => this.WorkingCapitalPS, value);
         }
 
         public int YearsTillTerminal
         {
-            get
-            {
-                return this.GetProperty(() => this.YearsTillTerminal);
-            }
+            get => this.GetProperty(() => this.YearsTillTerminal);
 
             set
             {
@@ -616,10 +374,7 @@ namespace sevenA.Module.Analysis.ViewModels
         [Command]
         public void AddFavorite()
         {
-            if (string.IsNullOrEmpty(this.Symbol))
-            {
-                return;
-            }
+            if (string.IsNullOrEmpty(this.Symbol)) return;
 
             if (!this.Favorites.Contains(this.GetSymbol(this.Symbol)))
             {
