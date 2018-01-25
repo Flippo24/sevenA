@@ -1,33 +1,38 @@
-﻿using DevExpress.Mvvm;
-
-namespace sevenA.Core.Elements
+﻿namespace sevenA.Core.Elements
 {
+    using DevExpress.Mvvm;
+
+    using JetBrains.Annotations;
+
     public class ProgressLoader : BindableBase
     {
+        [UsedImplicitly]
         public bool IsLoading
         {
-            get { return GetProperty(() => IsLoading); }
-            set { SetProperty(() => IsLoading, value); }
+            get { return this.GetProperty(() => this.IsLoading); }
+            set { this.SetProperty(() => this.IsLoading, value); }
         }
 
+        [UsedImplicitly]
         public string Text
         {
-            get { return GetProperty(() => Text); }
-            set { SetProperty(() => Text, value); }
+            get { return this.GetProperty(() => this.Text); }
+            set { this.SetProperty(() => this.Text, value); }
         }
 
+        [UsedImplicitly]
         public int Progress
         {
-            get { return GetProperty(() => Progress); }
-            set { SetProperty(() => Progress, value); }
+            get { return this.GetProperty(() => this.Progress); }
+            set { this.SetProperty(() => this.Progress, value); }
         }
 
         public void UpdateProgress(string text, int progress)
         {
-            if (IsLoading != true) IsLoading = true;
+            if (this.IsLoading != true) this.IsLoading = true;
 
-            Text = text;
-            Progress = progress;
+            this.Text = text;
+            this.Progress = progress;
         }
     }
 }

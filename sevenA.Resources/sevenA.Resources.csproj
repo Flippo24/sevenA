@@ -47,9 +47,6 @@
     <Resource Include="Icons\Home-WF.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\Portfolio.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icons\Help.png" />
     <Resource Include="Icons\Reload.png" />
   </ItemGroup>

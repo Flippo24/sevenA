@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace sevenA.Module.Analysis.ViewModels
+﻿namespace sevenA.Module.Analysis.ViewModels
 {
     using System;
     using System.Collections.Generic;
@@ -9,35 +7,43 @@ namespace sevenA.Module.Analysis.ViewModels
     using System.Linq;
     using System.Threading;
 
+    using Constants;
+
+    using Core.Elements;
+    using Core.Stats;
+
     using DevExpress.Mvvm;
     using DevExpress.Mvvm.DataAnnotations;
 
-    using Core.Elements;
-    using Core.Helpers;
-    using Core.Stats;
-    using Constants;
     using Enums;
+
+    using JetBrains.Annotations;
+
     using Models;
+
     using Services;
 
     using SevenA.Module.Analysis.Services;
 
     [POCOViewModel]
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     public class DashboardViewModel : NavigationViewModelBase
     {
+        private const double Delta = 1E-6;
+
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         private readonly MorningStarDataService _morningStarDataService;
 
         private readonly ValuationService _valuationService;
 
-        private readonly GoogleFinanceDataService _googleFinanceDataService;
+        private readonly YahooFinanceDataService _yahooFinanceDataService;
 
         private double _averageCashFlow;
 
         private double _initialGrowthRate;
 
-        private double _nShares;
+        private double _numberOfShares;
 
         private double _totalCash;
 
@@ -46,7 +52,7 @@ namespace sevenA.Module.Analysis.ViewModels
         public DashboardViewModel()
         {
             this._morningStarDataService = MorningStarDataService.Instance;
-            this._googleFinanceDataService = GoogleFinanceDataService.Instance;
+            this._yahooFinanceDataService = YahooFinanceDataService.Instance;
             this._valuationService = ValuationService.Instance;
             this.Favorites = new ObservableCollection<string>();
             this.ProgressLoader = new ProgressLoader();
@@ -64,19 +70,21 @@ namespace sevenA.Module.Analysis.ViewModels
             this.YearsTillTerminal = 10;
         }
 
-        public ObservableCollection<FinancialRatio> AllRatios
+        [UsedImplicitly]
+        public CountryEnum Country
         {
-            get
-            {
-                return this.GetProperty(() => this.AllRatios);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.AllRatios, value);
-            }
+            get => this.GetProperty(() => this.Country);
+            set => this.SetProperty(() => this.Country, value);
         }
 
+        [UsedImplicitly]
+        public ObservableCollection<FinancialRatio> AllRatios
+        {
+            get => this.GetProperty(() => this.AllRatios);
+            set => this.SetProperty(() => this.AllRatios, value);
+        }
+
+        [UsedImplicitly]
         public double AverageCashFlow
         {
             get => this._averageCashFlow;
@@ -86,190 +94,110 @@ namespace sevenA.Module.Analysis.ViewModels
                 this._averageCashFlow = value;
                 this.RaisePropertyChanged(() => this.AverageCashFlow);
 
-                if (this.AllRatios.Any() && Math.Abs(value - default(double)) > 1E-6)
-                {
+                if (this.AllRatios.Any() && Math.Abs(value - default(double)) > Delta)
                     this.CalculateValutionTask();
-                }
             }
         }
 
+        [UsedImplicitly]
         public ObservableCollection<FinancialRatio> BalanceSheet
         {
-            get
-            {
-                return this.GetProperty(() => this.BalanceSheet);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.BalanceSheet, value);
-            }
+            get => this.GetProperty(() => this.BalanceSheet);
+            set => this.SetProperty(() => this.BalanceSheet, value);
         }
 
+        [UsedImplicitly]
         public double BookValue
         {
-            get
-            {
-                return this.GetProperty(() => this.BookValue);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.BookValue, value);
-            }
+            get => this.GetProperty(() => this.BookValue);
+            set => this.SetProperty(() => this.BookValue, value);
         }
 
+        [UsedImplicitly]
         public double MarketCap
         {
-            get { return this.GetProperty(() => this.MarketCap); }
-
-            set { this.SetProperty(() => this.MarketCap, value); }
+            get => this.GetProperty(() => this.MarketCap);
+            set => this.SetProperty(() => this.MarketCap, value);
         }
 
+        [UsedImplicitly]
         public ObservableCollection<FinancialRatio> CashFlowStatement
         {
-            get
-            {
-                return this.GetProperty(() => this.CashFlowStatement);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.CashFlowStatement, value);
-            }
+            get => this.GetProperty(() => this.CashFlowStatement);
+            set => this.SetProperty(() => this.CashFlowStatement, value);
         }
 
+        [UsedImplicitly]
         public double COD
         {
-            get
-            {
-                return this.GetProperty(() => this.COD);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.COD, value);
-            }
+            get => this.GetProperty(() => this.COD);
+            set => this.SetProperty(() => this.COD, value);
         }
 
-        // ReSharper disable once InconsistentNaming
+        [UsedImplicitly]
         public double COE
         {
-            get
-            {
-                return this.GetProperty(() => this.COE);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.COE, value);
-            }
+            get => this.GetProperty(() => this.COE);
+            set => this.SetProperty(() => this.COE, value);
         }
 
+        [UsedImplicitly]
         public double CurrentGrowth
         {
-            get
-            {
-                return this.GetProperty(() => this.CurrentGrowth);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.CurrentGrowth, value);
-            }
+            get => this.GetProperty(() => this.CurrentGrowth);
+            set => this.SetProperty(() => this.CurrentGrowth, value);
         }
 
+        [UsedImplicitly]
         public double DividendYield
         {
-            get
-            {
-                return this.GetProperty(() => this.DividendYield);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.DividendYield, value);
-            }
+            get => this.GetProperty(() => this.DividendYield);
+            set => this.SetProperty(() => this.DividendYield, value);
         }
 
+        [UsedImplicitly]
         public double EPS
         {
-            get
-            {
-                return this.GetProperty(() => this.EPS);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.EPS, value);
-            }
+            get => this.GetProperty(() => this.EPS);
+            set => this.SetProperty(() => this.EPS, value);
         }
 
+        [UsedImplicitly]
         public double FastGrowth
         {
-            get
-            {
-                return this.GetProperty(() => this.FastGrowth);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.FastGrowth, value);
-            }
+            get => this.GetProperty(() => this.FastGrowth);
+            set => this.SetProperty(() => this.FastGrowth, value);
         }
 
+        [UsedImplicitly]
         public ObservableCollection<string> Favorites
         {
-            get
-            {
-                return this.GetProperty(() => this.Favorites);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.Favorites, value);
-            }
+            get => this.GetProperty(() => this.Favorites);
+            set => this.SetProperty(() => this.Favorites, value);
         }
 
+        [UsedImplicitly]
         public double FreeCashFlowPS
         {
-            get
-            {
-                return this.GetProperty(() => this.FreeCashFlowPS);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.FreeCashFlowPS, value);
-            }
+            get => this.GetProperty(() => this.FreeCashFlowPS);
+            set => this.SetProperty(() => this.FreeCashFlowPS, value);
         }
 
+        [UsedImplicitly]
         public double GrossMargin
         {
-            get
-            {
-                return this.GetProperty(() => this.GrossMargin);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.GrossMargin, value);
-            }
+            get => this.GetProperty(() => this.GrossMargin);
+            set => this.SetProperty(() => this.GrossMargin, value);
         }
 
+        [UsedImplicitly]
         public ObservableCollection<FinancialRatio> IncomeStatement
         {
-            get
-            {
-                return this.GetProperty(() => this.IncomeStatement);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.IncomeStatement, value);
-            }
+            get => this.GetProperty(() => this.IncomeStatement);
+            set => this.SetProperty(() => this.IncomeStatement, value);
         }
 
+        [UsedImplicitly]
         public double InitialGrowthRate
         {
             get => this._initialGrowthRate;
@@ -278,283 +206,174 @@ namespace sevenA.Module.Analysis.ViewModels
             {
                 this._initialGrowthRate = value;
                 this.RaisePropertyChanged(() => this.InitialGrowthRate);
-                if (this.AllRatios.Any() && Math.Abs(value - default(double)) > 1E-6)
-                {
+                if (this.AllRatios.Any() && Math.Abs(value - default(double)) > Delta)
                     this.CalculateValutionTask();
-                }
             }
         }
 
+        [UsedImplicitly]
         public StockData LatestPrice
         {
-            get
-            {
-                return this.GetProperty(() => this.LatestPrice);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.LatestPrice, value);
-            }
+            get => this.GetProperty(() => this.LatestPrice);
+            set => this.SetProperty(() => this.LatestPrice, value);
         }
 
+        [UsedImplicitly]
         public double MaxAverageCashFlow
         {
-            get
-            {
-                return this.GetProperty(() => this.MaxAverageCashFlow);
-            }
+            get => this.GetProperty(() => this.MaxAverageCashFlow);
 
             private set
             {
                 this.SetProperty(() => this.MaxAverageCashFlow, value);
-                RaisePropertiesChanged(() => FreeCashFlowSmallStep, () => FreeCashFlowBigStep);
+                this.RaisePropertiesChanged(() => this.FreeCashFlowSmallStep, () => this.FreeCashFlowBigStep);
             }
         }
 
+        [UsedImplicitly]
         public IMessageBoxService MessageBoxService => this.GetService<IMessageBoxService>();
 
+        [UsedImplicitly]
         public double MinAverageCashFlow
         {
-            get
-            {
-                return this.GetProperty(() => this.MinAverageCashFlow);
-            }
+            get => this.GetProperty(() => this.MinAverageCashFlow);
 
             private set
             {
                 this.SetProperty(() => this.MinAverageCashFlow, value);
-                RaisePropertiesChanged(() => FreeCashFlowSmallStep, () => FreeCashFlowBigStep);
+                this.RaisePropertiesChanged(() => this.FreeCashFlowSmallStep, () => this.FreeCashFlowBigStep);
             }
         }
 
-        public double FreeCashFlowSmallStep => Math.Abs(MaxAverageCashFlow - MinAverageCashFlow) / 20;
+        [UsedImplicitly]
+        public double FreeCashFlowSmallStep => Math.Abs(this.MaxAverageCashFlow - this.MinAverageCashFlow) / 20;
 
-        public double FreeCashFlowBigStep => Math.Abs(MaxAverageCashFlow - MinAverageCashFlow) / 5;
+        [UsedImplicitly]
+        public double FreeCashFlowBigStep => Math.Abs(this.MaxAverageCashFlow - this.MinAverageCashFlow) / 5;
 
+        [UsedImplicitly]
         public double NetMargin
         {
-            get
-            {
-                return this.GetProperty(() => this.NetMargin);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.NetMargin, value);
-            }
+            get => this.GetProperty(() => this.NetMargin);
+            set => this.SetProperty(() => this.NetMargin, value);
         }
 
+        [UsedImplicitly]
         public double OperatingMargin
         {
-            get
-            {
-                return this.GetProperty(() => this.OperatingMargin);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.OperatingMargin, value);
-            }
+            get => this.GetProperty(() => this.OperatingMargin);
+            set => this.SetProperty(() => this.OperatingMargin, value);
         }
 
+        [UsedImplicitly]
         public double PE
         {
-            get
-            {
-                return this.GetProperty(() => this.PE);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.PE, value);
-            }
+            get => this.GetProperty(() => this.PE);
+            set => this.SetProperty(() => this.PE, value);
         }
 
+        [UsedImplicitly]
         public ProgressLoader ProgressLoader { get; }
 
+        [UsedImplicitly]
         public ObservableCollection<FinancialRatio> RatiosCashFlow
         {
-            get
-            {
-                return this.GetProperty(() => this.RatiosCashFlow);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.RatiosCashFlow, value);
-            }
+            get => this.GetProperty(() => this.RatiosCashFlow);
+            set => this.SetProperty(() => this.RatiosCashFlow, value);
         }
 
+        [UsedImplicitly]
         public ObservableCollection<FinancialRatio> RatiosEfficiency
         {
-            get
-            {
-                return this.GetProperty(() => this.RatiosEfficiency);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.RatiosEfficiency, value);
-            }
+            get => this.GetProperty(() => this.RatiosEfficiency);
+            set => this.SetProperty(() => this.RatiosEfficiency, value);
         }
 
+        [UsedImplicitly]
         public ObservableCollection<FinancialRatio> RatiosFinancials
         {
-            get
-            {
-                return this.GetProperty(() => this.RatiosFinancials);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.RatiosFinancials, value);
-            }
+            get => this.GetProperty(() => this.RatiosFinancials);
+            set => this.SetProperty(() => this.RatiosFinancials, value);
         }
 
+        [UsedImplicitly]
         public ObservableCollection<FinancialRatio> RatiosHealth
         {
-            get
-            {
-                return this.GetProperty(() => this.RatiosHealth);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.RatiosHealth, value);
-            }
+            get => this.GetProperty(() => this.RatiosHealth);
+            set => this.SetProperty(() => this.RatiosHealth, value);
         }
 
+        [UsedImplicitly]
         public ObservableCollection<FinancialRatio> RatiosLiquidity
         {
-            get
-            {
-                return this.GetProperty(() => this.RatiosLiquidity);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.RatiosLiquidity, value);
-            }
+            get => this.GetProperty(() => this.RatiosLiquidity);
+            set => this.SetProperty(() => this.RatiosLiquidity, value);
         }
 
+        [UsedImplicitly]
         public ObservableCollection<FinancialRatio> RatiosProfitability
         {
-            get
-            {
-                return this.GetProperty(() => this.RatiosProfitability);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.RatiosProfitability, value);
-            }
+            get => this.GetProperty(() => this.RatiosProfitability);
+            set => this.SetProperty(() => this.RatiosProfitability, value);
         }
 
+        [UsedImplicitly]
         public double ROA
         {
-            get
-            {
-                return this.GetProperty(() => this.ROA);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.ROA, value);
-            }
+            get => this.GetProperty(() => this.ROA);
+            set => this.SetProperty(() => this.ROA, value);
         }
 
+        [UsedImplicitly]
         public double ROE
         {
-            get
-            {
-                return this.GetProperty(() => this.ROE);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.ROE, value);
-            }
+            get => this.GetProperty(() => this.ROE);
+            set => this.SetProperty(() => this.ROE, value);
         }
 
+        [UsedImplicitly]
         public double ROIC
         {
-            get
-            {
-                return this.GetProperty(() => this.ROIC);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.ROIC, value);
-            }
+            get => this.GetProperty(() => this.ROIC);
+            set => this.SetProperty(() => this.ROIC, value);
         }
 
+        [UsedImplicitly]
         public double SlowGrowth
         {
-            get
-            {
-                return this.GetProperty(() => this.SlowGrowth);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.SlowGrowth, value);
-            }
+            get => this.GetProperty(() => this.SlowGrowth);
+            set => this.SetProperty(() => this.SlowGrowth, value);
         }
 
+        [UsedImplicitly]
         public ObservableCollection<StockData> StockData
         {
-            get
-            {
-                return this.GetProperty(() => this.StockData);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.StockData, value);
-            }
+            get => this.GetProperty(() => this.StockData);
+            set => this.SetProperty(() => this.StockData, value);
         }
 
+        [UsedImplicitly]
         public string StockName
         {
-            get
-            {
-                return this.GetProperty(() => this.StockName);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.StockName, value);
-            }
+            get => this.GetProperty(() => this.StockName);
+            set => this.SetProperty(() => this.StockName, value);
         }
 
+        [UsedImplicitly]
         public string Symbol
         {
-            get
-            {
-                return this.GetProperty(() => this.Symbol);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.Symbol, value);
-            }
+            get => this.GetProperty(() => this.Symbol);
+            set => this.SetProperty(() => this.Symbol, value);
         }
 
+        [UsedImplicitly]
         public double? WACC
         {
-            get
-            {
-                return this.GetProperty(() => this.WACC);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.WACC, value);
-            }
+            get => this.GetProperty(() => this.WACC);
+            set => this.SetProperty(() => this.WACC, value);
         }
 
+        [UsedImplicitly]
         public double WACCModified
         {
             get => this._waccModified;
@@ -563,51 +382,42 @@ namespace sevenA.Module.Analysis.ViewModels
             {
                 this._waccModified = value;
                 this.RaisePropertyChanged(() => this.WACCModified);
-                if (this.AllRatios.Any() && Math.Abs(value - default(double)) > 1E-6)
-                {
+                if (this.AllRatios.Any() && Math.Abs(value - default(double)) > Delta)
                     this.CalculateValutionTask();
-                }
             }
         }
 
+        [UsedImplicitly]
         public double WorkingCapitalPS
         {
-            get
-            {
-                return this.GetProperty(() => this.WorkingCapitalPS);
-            }
-
-            set
-            {
-                this.SetProperty(() => this.WorkingCapitalPS, value);
-            }
+            get => this.GetProperty(() => this.WorkingCapitalPS);
+            set => this.SetProperty(() => this.WorkingCapitalPS, value);
         }
 
+        [UsedImplicitly]
         public int YearsTillTerminal
         {
-            get
-            {
-                return this.GetProperty(() => this.YearsTillTerminal);
-            }
+            get => this.GetProperty(() => this.YearsTillTerminal);
 
             set
             {
-                if (this.SetProperty(() => this.YearsTillTerminal, value) && this.AllRatios.Any()
-                    && value != default(int))
-                {
+                if (this.SetProperty(() => this.YearsTillTerminal, value) && this.AllRatios.Any() && value != default(int))
                     this.CalculateValutionTask();
-                }
             }
         }
 
+        [UsedImplicitly]
+        public virtual FinancialRatio SelectedFinancialRatio { get; set; }
+
         [Command]
+        [UsedImplicitly]
         public void AddFavorite()
         {
             if (string.IsNullOrEmpty(this.Symbol)) return;
 
-            if (!this.Favorites.Contains(this.Symbol))
+            if (!this.Favorites.Contains(this.GetSymbol(this.Symbol)))
             {
-                this.Favorites.Add(this.Symbol);
+                this.Favorites.Add(this.GetSymbol(this.Symbol));
                 this.MessageBoxService.ShowMessage(
                     $"{this.StockName} added to favorites",
                     "Favorites",
@@ -615,16 +425,15 @@ namespace sevenA.Module.Analysis.ViewModels
                     MessageIcon.Information);
             }
             else
-            {
                 this.MessageBoxService.ShowMessage(
                     $"{this.StockName} is already in favorites",
                     "Favorites",
                     MessageButton.OK,
                     MessageIcon.Exclamation);
-            }
         }
 
         [Command]
+        [UsedImplicitly]
         public async void Search()
         {
             try
@@ -633,11 +442,12 @@ namespace sevenA.Module.Analysis.ViewModels
 
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingRatios, 0);
 
-                var results = await
-                    this._morningStarDataService.GetKeyRatiosAsync(this._cancellationTokenSource.Token, this.Symbol);
+                var results = await this._morningStarDataService.GetKeyRatiosAsync(this._cancellationTokenSource.Token, this.GetSymbol(this.Symbol));
+
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingRatios, 60);
                 this.AllRatios = new ObservableCollection<FinancialRatio>(results.ToList());
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingRatios, 70);
+
                 this.RatiosFinancials =
                     new ObservableCollection<FinancialRatio>(
                         results.Where(x => x.Section == FinancialRatioSectionEnum.Financials).ToList());
@@ -662,7 +472,7 @@ namespace sevenA.Module.Analysis.ViewModels
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingFinancials, 0);
                 var financials =
                     await
-                    this._morningStarDataService.GetFinancialsAsync(this._cancellationTokenSource.Token, this.Symbol);
+                    this._morningStarDataService.GetFinancialsAsync(this._cancellationTokenSource.Token, this.GetSymbol(this.Symbol));
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingFinancials, 70);
                 this.IncomeStatement =
                     new ObservableCollection<FinancialRatio>(
@@ -676,41 +486,22 @@ namespace sevenA.Module.Analysis.ViewModels
                 this.AllRatios.AddRange(financials);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingFinancials, 100);
 
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 0);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingHistorical, 0);
 
+                DateTime.TryParseExact(this.RatiosFinancials.First().Data.First().Item1, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out var startDate);
 
-                DateTime.TryParseExact(
-                    this.RatiosFinancials.First().Data.First().Item1,
-                    "yyyy-MM",
-                    CultureInfo.InvariantCulture,
-                    DateTimeStyles.None,
-                    out DateTime startDate);
+                if (startDate == default(DateTime)) startDate = DateTime.Now.AddYears(-10);
 
-                if (startDate == default(DateTime))
-                {
-                    startDate = DateTime.Now.AddYears(-10);
-                }
-
-                var prices =
-                    await
-                    this._googleFinanceDataService.GetHistoricalDataAsync(
-                        this._cancellationTokenSource.Token,
-                        this._googleFinanceDataService.GetGoogleFinanceSymbol(this.Symbol),
-                        startDate);
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 70);
+                var prices = await this._yahooFinanceDataService.GetHistoricalDataAsync(
+                                 this._yahooFinanceDataService.GetYahooFinanceSymbol(this.GetSymbol(this.Symbol)),
+                                 startDate);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingHistorical, 70);
                 this.StockData = new ObservableCollection<StockData>(prices);
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleHistorical, 100);
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleLatest, 0);
-                this.LatestPrice = await
-                    this._googleFinanceDataService.GetLatestAsync(
-                        this._cancellationTokenSource.Token,
-                        this._googleFinanceDataService.GetGoogleFinanceSymbol(this.Symbol));
-                if (this.LatestPrice.Close == 0)
-                {
-                    this.LatestPrice = prices.FirstOrDefault();
-                }
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingHistorical, 100);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingLatest, 0);
+                this.LatestPrice = prices.LastOrDefault();
 
-                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingGoogleLatest, 100);
+                this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingLatest, 100);
 
                 this.PrepareCurrentIndicators();
                 this.AddComposedIndicators();
@@ -730,6 +521,11 @@ namespace sevenA.Module.Analysis.ViewModels
         private static bool StringContains(string obj, string substring)
         {
             return obj.IndexOf(substring, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private string GetSymbol(string symbol)
+        {
+            return CountryConverter.GetPrefix(this.Country) + symbol;
         }
 
         private void AddComposedIndicators()
@@ -761,13 +557,13 @@ namespace sevenA.Module.Analysis.ViewModels
                         ? this.IncomeStatement.First(x => StringContains(x.Name, "Interest Expense"))
                               .Data.Where(x => !x.Item1.Equals("TTM"))
                               .ToList()
-                        : GetDefaultData();
+                        : this.GetDefaultData();
 
-                var peData =
+                var earningPerShareData =
                     this.RatiosFinancials.First(x => StringContains(x.Name, "Earnings Per Share"))
                         .Data.Where(x => !x.Item1.Equals("TTM"))
                         .ToList();
-                var bvData =
+                var bookValueData =
                     this.RatiosFinancials.First(x => StringContains(x.Name, "Book Value"))
                         .Data.Where(x => !x.Item1.Equals("TTM"))
                         .ToList();
@@ -781,12 +577,12 @@ namespace sevenA.Module.Analysis.ViewModels
                                         ? this.BalanceSheet.First(x => StringContains(x.Name, shortTermDebtText))
                                               .Data.Where(x => !x.Item1.Equals("TTM"))
                                               .ToList()
-                                        : GetDefaultData();
+                                        : this.GetDefaultData();
 
                 var longTermDebt = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, "Long-term debt")) != null
                         ? this.BalanceSheet.First(x => StringContains(x.Name, "Long-term debt")).Data
                             .Where(x => !x.Item1.Equals("TTM")).ToList()
-                        : GetDefaultData();
+                        : this.GetDefaultData();
 
                 var taxRate =
                     this.RatiosProfitability.First(x => StringContains(x.Name, "Tax Rate"))
@@ -845,11 +641,7 @@ namespace sevenA.Module.Analysis.ViewModels
 
                 this.ProgressLoader.UpdateProgress(MessageConstants.Analysing, 60);
 
-                if (!this.StockData.Any())
-                {
-                    return;
-                }
-
+                if (!this.StockData.Any()) return;
 
                 for (int i = 0; i < dividends.Count; i++)
                 {
@@ -872,19 +664,12 @@ namespace sevenA.Module.Analysis.ViewModels
                             (double?)this.DividendYield,
                             dividends[i].Item3);
 
-                        double? dividendGrowthRate = (1.0 - payout[i].Item2.GetValueOrDefault() / 100.0)
-                                                     * roe[i].Item2.GetValueOrDefault();
+                        double? dividendGrowthRate = (1.0 - (payout[i].Item2.GetValueOrDefault() / 100.0)) * roe[i].Item2.GetValueOrDefault();
 
                         coe.Data[i] = Tuple.Create(roe[i].Item1, this.DividendYield + dividendGrowthRate, roe[i].Item3);
                         cod.Data[i] = Tuple.Create(
                             longTermDebt[i].Item1,
-                            this.FilterInfinityNaN(
-                                i > 0
-                                    ? interestExpenses[i].Item2.GetValueOrDefault()
-                                      / (longTermDebt[i].Item2.GetValueOrDefault()
-                                         + shortTermDebt[i].Item2.GetValueOrDefault())
-                                      * (1.0 - taxRate[i].Item2 / 100.0) * 100.0
-                                    : 0.0),
+                            this.FilterInfinityNaN(i > 0 ? interestExpenses[i].Item2.GetValueOrDefault() / (longTermDebt[i].Item2.GetValueOrDefault() + shortTermDebt[i].Item2.GetValueOrDefault()) * (1.0 - (taxRate[i].Item2 / 100.0)) * 100.0 : 0.0),
                             longTermDebt[i].Item3);
 
                         var ratio1 = equity
@@ -894,22 +679,16 @@ namespace sevenA.Module.Analysis.ViewModels
                                       + shortTermDebt[i].Item2.GetValueOrDefault())
                                      / (equity + longTermDebt[i].Item2.GetValueOrDefault()
                                         + shortTermDebt[i].Item2.GetValueOrDefault());
-                        var waccValue = ratio1 * coe.Data[i].Item2.GetValueOrDefault()
-                                        + ratio2 * cod.Data[i].Item2.GetValueOrDefault()
-                                        * (1.0 - taxRate[i].Item2.GetValueOrDefault() / 100.0);
+                        var waccValue = (ratio1 * coe.Data[i].Item2.GetValueOrDefault()) + (ratio2 * cod.Data[i].Item2.GetValueOrDefault() * (1.0 - (taxRate[i].Item2.GetValueOrDefault() / 100.0)));
                         wacc.Data[i] = Tuple.Create(
                             longTermDebt[i].Item1,
                             this.FilterInfinityNaN(waccValue),
                             longTermDebt[i].Item3);
 
-                        var peValue = price / peData[i].Item2.GetValueOrDefault();
-                        pe.Data[i] = Tuple.Create(shares[i].Item1, this.FilterInfinityNaN(peValue), shares[i].Item3);
-                        var pbvValue = price / bvData[i].Item2.GetValueOrDefault();
+                        var priceEarningValue = price / earningPerShareData[i].Item2.GetValueOrDefault();
+                        pe.Data[i] = Tuple.Create(shares[i].Item1, this.FilterInfinityNaN(priceEarningValue), shares[i].Item3);
+                        var pbvValue = price / bookValueData[i].Item2.GetValueOrDefault();
                         pbv.Data[i] = Tuple.Create(shares[i].Item1, this.FilterInfinityNaN(pbvValue), shares[i].Item3);
-
-                        //reinvestment.Data[i] = Tuple.Create(
-                        //    shares[i].Item1, 
-                        //    this.FilterInfinityNaN(Math.Abs(capex[i].Item3.GetValueOrDefault()) - depreciation[i].Item3), shares[i].Item3);
                     }
                     catch (Exception)
                     {
@@ -941,35 +720,29 @@ namespace sevenA.Module.Analysis.ViewModels
         {
             this.ProgressLoader.UpdateProgress(MessageConstants.Analysing, 80);
 
-            var freeCashFlow =
-                this.CashFlowStatement.First(x => StringContains(x.Name, "Free cash"))
-                    .Data.OrderByDescending(x => x.Item1);
+            var freeCashFlow = this.CashFlowStatement.First(x => StringContains(x.Name, "Free cash")).Data.OrderByDescending(x => x.Item1).ToArray();
 
-            this._averageCashFlow = Stats.SimpleAverage(freeCashFlow.Select(x => x.Item2.GetValueOrDefault()), 3);
+            this._averageCashFlow = Stats.SimpleAverage(freeCashFlow.Select(x => x.Item2.GetValueOrDefault()).ToArray(), 3);
             this.RaisePropertyChanged(() => this.AverageCashFlow);
             this.MinAverageCashFlow = freeCashFlow.Select(x => x.Item2.GetValueOrDefault()).Min();
-            if (this.MinAverageCashFlow == this._averageCashFlow)
-            {
+            if (Math.Abs(this.MinAverageCashFlow - this._averageCashFlow) < Delta)
                 this.MinAverageCashFlow = this.AverageCashFlow > 0 ? this.AverageCashFlow * 0.1 : -100;
-            }
 
             this.MaxAverageCashFlow = freeCashFlow.Select(x => x.Item2.GetValueOrDefault()).Max();
-            if (this.MaxAverageCashFlow == this._averageCashFlow)
-            {
+            if (Math.Abs(this.MaxAverageCashFlow - this._averageCashFlow) < Delta)
                 this.MinAverageCashFlow = this.AverageCashFlow > 0 ? this.AverageCashFlow * 3 : 100;
-            }
 
             this._initialGrowthRate = 0d;
 
             this._waccModified = this.WACC.GetValueOrDefault();
             this.RaisePropertyChanged(() => this.WACCModified);
 
-            this._nShares =
+            this._numberOfShares =
                 this.RatiosFinancials.First(x => StringContains(x.Name, "Shares"))
                     .Data.Last(x => !x.Item1.Equals("TTM"))
                     .Item2.GetValueOrDefault();
 
-            this.MarketCap = this.LatestPrice.Close * _nShares;
+            this.MarketCap = this.LatestPrice.Close * this._numberOfShares;
 
             var totalCashText = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, "Total Cash")) != null
                 ? "Total Cash"
@@ -988,28 +761,28 @@ namespace sevenA.Module.Analysis.ViewModels
         private void CalculateValutionTask()
         {
             this.SlowGrowth = this._valuationService.GetDcfTwoStages(
-                this._nShares,
+                this._numberOfShares,
                 this.AverageCashFlow,
                 this.InitialGrowthRate - 5.0,
                 this.YearsTillTerminal,
-                ApplicationHelper.Instance.RiskFreeRate + 2.0,
-                this.WACCModified) + this._totalCash / this._nShares;
+                2,
+                this.WACCModified) + (this._totalCash / this._numberOfShares);
 
             this.CurrentGrowth = this._valuationService.GetDcfTwoStages(
-                this._nShares,
+                this._numberOfShares,
                 this.AverageCashFlow,
                 this.InitialGrowthRate,
                 this.YearsTillTerminal,
-                ApplicationHelper.Instance.RiskFreeRate + 2.0,
-                this.WACCModified) + this._totalCash / this._nShares;
+                2,
+                this.WACCModified) + (this._totalCash / this._numberOfShares);
 
             this.FastGrowth = this._valuationService.GetDcfTwoStages(
-                this._nShares,
+                this._numberOfShares,
                 this.AverageCashFlow,
                 this.InitialGrowthRate + 5.0,
                 this.YearsTillTerminal,
-                ApplicationHelper.Instance.RiskFreeRate + 2.0,
-                this.WACCModified) + this._totalCash / this._nShares;
+                2,
+                this.WACCModified) + (this._totalCash / this._numberOfShares);
         }
 
         private void Clear()
@@ -1051,7 +824,7 @@ namespace sevenA.Module.Analysis.ViewModels
             this.FastGrowth = 0;
             this.AverageCashFlow = 0;
 
-            this._nShares = 0;
+            this._numberOfShares = 0;
             this._totalCash = 0;
         }
 
@@ -1064,12 +837,7 @@ namespace sevenA.Module.Analysis.ViewModels
 
         private bool IsValidDateTimeString(string dateTime)
         {
-            return DateTime.TryParseExact(
-                dateTime,
-                "yyyy-MM",
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.None,
-                out DateTime date);
+            return DateTime.TryParseExact(dateTime, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime _);
         }
 
         private void PrepareCurrentIndicators()

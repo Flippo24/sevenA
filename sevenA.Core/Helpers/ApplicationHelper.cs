@@ -1,18 +1,34 @@
 ﻿namespace sevenA.Core.Helpers
 {
+    using System;
+    using System.IO;
+
     public class ApplicationHelper
     {
-        private static ApplicationHelper _instance;
-
-        private ApplicationHelper()
+        static ApplicationHelper()
         {
-            _instance = this;
+            Instance = new ApplicationHelper();
+
+            CompanyName = "twentySix";
+            Title = "sevenA";
         }
 
-        public static ApplicationHelper Instance => _instance ?? new ApplicationHelper();
+        public static ApplicationHelper Instance { get; }
 
-        public readonly double RiskFreeRateSG = 2.09;
-        public readonly double RiskFreeRatePT = 3.15;
-        public readonly double RiskFreeRate = 0.6;
+        public static string Title { get; }
+
+        public static string CompanyName { get; }
+
+        public static string GetAppDataFolder()
+        {
+            var appFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), CompanyName, Title);
+
+            if (!Directory.Exists(appFolder))
+            {
+                Directory.CreateDirectory(appFolder);
+            }
+
+            return appFolder;
+        }
     }
 }

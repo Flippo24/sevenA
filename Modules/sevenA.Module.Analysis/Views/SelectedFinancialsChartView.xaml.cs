@@ -5,18 +5,20 @@
     using System.Windows.Media;
 
     using DevExpress.Xpf.Charts;
+    using DevExpress.Xpf.Grid;
 
-    public partial class AnalysisView
+    // ReSharper disable once StyleCop.SA1601
+    public partial class SelectedFinancialsChartView
     {
-        public AnalysisView()
+        public SelectedFinancialsChartView()
         {
             this.InitializeComponent();
+            DataControlBase.AllowInfiniteGridSize = true;
         }
 
         private void OnCustomDrawRatiosPoints(object sender, CustomDrawSeriesPointEventArgs e)
         {
-            DateTime date;
-            if (!DateTime.TryParseExact(e.SeriesPoint.Argument, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+            if (!DateTime.TryParseExact(e.SeriesPoint.Argument, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             {
                 e.DrawOptions.Color = Colors.DarkGoldenrod;
             }

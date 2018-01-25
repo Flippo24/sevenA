@@ -3,9 +3,9 @@
     using DevExpress.Xpf.Grid;
 
     // ReSharper disable once StyleCop.SA1601
-    public partial class DashboardView
+    public partial class PriceChartView
     {
-        public DashboardView()
+        public PriceChartView()
         {
             this.InitializeComponent();
             DataControlBase.AllowInfiniteGridSize = true;

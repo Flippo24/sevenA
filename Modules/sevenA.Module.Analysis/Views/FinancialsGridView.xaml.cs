@@ -3,9 +3,9 @@
     using DevExpress.Xpf.Grid;
 
     // ReSharper disable once StyleCop.SA1601
-    public partial class DashboardView
+    public partial class FinancialsGridView
     {
-        public DashboardView()
+        public FinancialsGridView()
         {
             this.InitializeComponent();
             DataControlBase.AllowInfiniteGridSize = true;
