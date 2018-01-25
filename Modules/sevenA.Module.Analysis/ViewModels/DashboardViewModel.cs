@@ -688,7 +688,7 @@ namespace sevenA.Module.Analysis.ViewModels
         private void CalculateValuations()
         {
             this.ProgressLoader.UpdateProgress(MessageConstants.Analysing, 80);
-
+            
             var freeCashFlow = this.CashFlowStatement.First(x => StringContains(x.Name, "Free cash")).Data.OrderByDescending(x => x.Item1).ToArray();
 
             this._averageCashFlow = Stats.SimpleAverage(freeCashFlow.Select(x => x.Item2.GetValueOrDefault()).ToArray(), 3);

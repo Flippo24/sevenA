@@ -2,6 +2,10 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+
+    using sevenA.Module.Analysis.Enums;
+    using sevenA.Module.Analysis.Models.DTOs;
 
     public class ValuationService
     {
@@ -11,6 +15,13 @@
         }
 
         public static ValuationService Instance { get; }
+
+        public static double GetRiskFreeRate(CountryEnum country)
+        {
+            var allRates = PersistenceService.Instance.GetAllRiskFreeRates().Result;
+
+            return (allRates.SingleOrDefault(r => r.Country == (int)country) ?? new RiskFreeRateDTO { Rate = 0d }).Rate;
+        }
 
         // ReSharper disable once StyleCop.SA1305
         public double GetStableGrowthValuation(double nShares, double cashFlow0, double terminalGrowth, double wacc)
