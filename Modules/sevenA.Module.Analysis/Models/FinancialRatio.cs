@@ -11,10 +11,10 @@
 
     using Enums;
 
+    using JetBrains.Annotations;
+
     public class FinancialRatio : BindableBase
     {
-        private double? _deltaLongTerm;
-
         private double? _regressionCoef;
 
         public List<Tuple<string, double?, double?>> Data
@@ -31,15 +31,6 @@
                     this.SetRegressionCoef();
                 }
             }
-        }
-
-        public double? DeltaLongTerm
-        {
-            get => this._deltaLongTerm.HasValue && !double.IsNaN(this._deltaLongTerm.Value)
-                ? this._deltaLongTerm
-                : null;
-
-            set => this._deltaLongTerm = value;
         }
 
         public double? Latest
@@ -64,6 +55,7 @@
 
         public string Name { get; set; }
 
+        [UsedImplicitly]
         public double? RegressionCoef
         {
             get => this._regressionCoef.HasValue && !double.IsNaN(this._regressionCoef.Value)
@@ -104,30 +96,10 @@
                     selectedData.Select(x => x.Item2).ToArray());
 
                 this._regressionCoef = linearFitCoeffs?.B;
-
-                // long term
-                var selectedDataLongTerm =
-                    convertedData.Where(x => x.Item1 >= convertedData.Last().Item1.AddYears(-6))
-                        .Select(x => Tuple.Create(x.Item1.ToOADate(), x.Item2)).ToList();
-
-                var linearFitCoeffsLongTerm = Stats.LinearFit(
-                    selectedDataLongTerm.Select(x => x.Item1).ToArray(),
-                    selectedDataLongTerm.Select(x => x.Item2).ToArray());
-
-                var date0 = selectedDataLongTerm.First().Item1;
-                var date1 = selectedDataLongTerm.Last().Item1;
-
-                // ReSharper disable once StyleCop.SA1305
-                double nYears = (DateTime.FromOADate(date1) - DateTime.FromOADate(date0)).TotalDays / 365.0;
-
-                this._deltaLongTerm = linearFitCoeffsLongTerm?.B * (date1 - date0)
-                                      / (linearFitCoeffsLongTerm?.A + linearFitCoeffsLongTerm?.B * date0) * 100.0
-                                      / nYears;
             }
             catch
             {
                 this._regressionCoef = null;
-                this._deltaLongTerm = null;
             }
         }
     }

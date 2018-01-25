@@ -4,8 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using sevenA.Core.Helpers;
-
     public static class Stats
     {
         public static LinearFitCoefficients? LinearFit(double[] datax, double[] datay)
@@ -65,7 +63,7 @@
             var subSet = data.Take(numberPoints).ToArray();
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            return subSet.Last() != 0 ? (subSet.First() - subSet.Last()) / subSet.Last() * 100.0 / numberPoints : ApplicationHelper.Instance.RiskFreeRate;
+            return subSet.Last() != 0 ? (subSet.First() - subSet.Last()) / subSet.Last() * 100.0 / numberPoints : 0;
         }
 
         public static double GetMedianPercentageChange(double[] data, int delta)

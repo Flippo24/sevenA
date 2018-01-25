@@ -2,6 +2,7 @@
 {
     public class RiskFreeRateDTO
     {
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public int Country { get; set; }
 
         public double Rate { get; set; }

@@ -38,7 +38,9 @@
                             list.AddRange(dtos);
                         }
                         catch
-                        { }
+                        {
+                            // ignored
+                        }
                     }
 
                     return list;
