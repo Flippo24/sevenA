@@ -5,7 +5,8 @@
                   xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
-                  Header="Valuation">
+                  Header="Valuation"
+                  Orientation="Vertical">
     <dxlc:LayoutGroup.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -16,8 +17,34 @@
 
     <dxlc:LayoutItem Label="Risk free rate">
         <dxe:TextEdit Width="150"
-                      EditValue="{Binding RiskFreeRate}"
+                      EditValue="{Binding RiskFreeRate, UpdateSourceTrigger=LostFocus}"
+                      Mask="P3"
                       MaskType="Numeric" />
     </dxlc:LayoutItem>
 
+    <dxlc:LayoutGroup>
+        <dxlc:LayoutGroup.Resources>
+            <Style TargetType="dxe:TextEdit">
+                <Setter Property="IsReadOnly" Value="True" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Margin" Value="10,0,0,0" />
+                <Setter Property="ShowBorder" Value="False" />
+                <Setter Property="Foreground" Value="DarkGoldenrod" />
+            </Style>
+        </dxlc:LayoutGroup.Resources>
+
+        <dxlc:LayoutItem Label="Dividend discount">
+            <dxe:TextEdit EditValue="{Binding Valuation.DD}"
+                          Mask="C2"
+                          MaskType="Numeric" />
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Sum of perpetuities">
+            <dxe:TextEdit EditValue="{Binding Valuation.SP}"
+                          Mask="C2"
+                          MaskType="Numeric" />
+        </dxlc:LayoutItem>
+    </dxlc:LayoutGroup>
+
 </dxlc:LayoutGroup>
+

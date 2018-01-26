@@ -1,10 +1,17 @@
 ﻿namespace sevenA.Module.Analysis.Models.DTOs
 {
+    using sevenA.Module.Analysis.Enums;
+
     public class RiskFreeRateDTO
     {
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public int Country { get; set; }
+        public RiskFreeRateDTO(CountryEnum country, double rate)
+        {
+            this.Rate = rate;
+            this.Country = (int)country;
+        }
 
-        public double Rate { get; set; }
+        public int Country { get; }
+
+        public double Rate { get; }
     }
 }

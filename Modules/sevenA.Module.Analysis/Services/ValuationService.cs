@@ -5,6 +5,7 @@
     using System.Linq;
 
     using sevenA.Module.Analysis.Enums;
+    using sevenA.Module.Analysis.Models;
     using sevenA.Module.Analysis.Models.DTOs;
 
     public class ValuationService
@@ -16,10 +17,25 @@
 
         public static ValuationService Instance { get; }
 
-        public static double GetRiskFreeRate(CountryEnum country)
+        public double GetRiskFreeRate(CountryEnum country)
         {
             var allRates = PersistenceService.Instance.GetAllRiskFreeRates().Result;
-            return (allRates.SingleOrDefault(r => r.Country == (int)country) ?? new RiskFreeRateDTO { Rate = 0d }).Rate;
+            return (allRates.SingleOrDefault(r => r.Country == (int)country) ?? new RiskFreeRateDTO(CountryEnum.Other, 0d)).Rate;
+        }
+
+        public void SaveRiskFreeRate(CountryEnum country, double rate)
+        {
+            PersistenceService.Instance.SaveRiskFreeRate(new RiskFreeRateDTO(country, rate)).Wait();
+        }
+
+        public Valuation CalculateValuations(double coe, double dividend, double terminalGrowth)
+        {
+            Valuation result = new Valuation
+                                   {
+                                       DD = dividend / (coe - terminalGrowth)
+                                   };
+
+            return result;
         }
 
         public double GetStableGrowthValuation(double numberShares, double cashFlow0, double terminalGrowth, double wacc)

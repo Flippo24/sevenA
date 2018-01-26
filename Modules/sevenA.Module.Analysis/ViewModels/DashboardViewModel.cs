@@ -23,6 +23,8 @@
 
     using Services;
 
+    using sevenA.Module.Analysis.Models.DTOs;
+
     using SevenA.Module.Analysis.Services;
 
     [POCOViewModel]
@@ -35,8 +37,6 @@
 
         private readonly MorningStarDataService _morningStarDataService;
 
-        private readonly ValuationService _valuationService;
-
         private readonly YahooFinanceDataService _yahooFinanceDataService;
 
         private double _averageCashFlow;
@@ -45,15 +45,14 @@
 
         private double _numberOfShares;
 
-        private double _totalCash;
-
         private double _waccModified;
+
+        private double _totalCash;
 
         public DashboardViewModel()
         {
             this._morningStarDataService = MorningStarDataService.Instance;
             this._yahooFinanceDataService = YahooFinanceDataService.Instance;
-            this._valuationService = ValuationService.Instance;
             this.Favorites = new ObservableCollection<string>();
             this.ProgressLoader = new ProgressLoader();
             this.AllRatios = new ObservableCollection<FinancialRatio>();
@@ -153,6 +152,13 @@
         {
             get => this.GetProperty(() => this.DividendYield);
             set => this.SetProperty(() => this.DividendYield, value);
+        }
+
+        [UsedImplicitly]
+        public double Dividend
+        {
+            get => GetProperty(() => Dividend);
+            set => SetProperty(() => Dividend, value);
         }
 
         [UsedImplicitly]
@@ -409,6 +415,20 @@
         [UsedImplicitly]
         public virtual FinancialRatio SelectedFinancialRatio { get; set; }
 
+        [UsedImplicitly]
+        public virtual double RiskFreeRate
+        {
+            get => GetProperty(() => RiskFreeRate);
+            set => this.SetProperty(() => this.RiskFreeRate, value);
+        }
+
+        [UsedImplicitly]
+        public virtual Valuation Valuation
+        {
+            get => GetProperty(() => Valuation);
+            set => this.SetProperty(() => this.Valuation, value);
+        }
+
         [Command]
         [UsedImplicitly]
         public void AddFavorite()
@@ -506,6 +526,9 @@
                 this.PrepareCurrentIndicators();
                 this.AddComposedIndicators();
 
+                // load risk free rate
+                RiskFreeRate = ValuationService.Instance.GetRiskFreeRate(Country);
+
                 this.CalculateValuations();
             }
             catch
@@ -516,6 +539,12 @@
             {
                 this.ProgressLoader.IsLoading = false;
             }
+        }
+
+        [UsedImplicitly]
+        protected async void SaveRiskFreeRate()
+        {
+            await PersistenceService.Instance.SaveRiskFreeRate(new RiskFreeRateDTO(Country, RiskFreeRate));
         }
 
         private static bool StringContains(string obj, string substring)
@@ -656,6 +685,7 @@
                                         : this.LatestPrice.Close;
 
                         this.DividendYield = dividends[i].Item2.GetValueOrDefault() / price * 100.0;
+                        this.Dividend = dividends[i].Item2.GetValueOrDefault();
 
                         var equity = shares[i].Item2.GetValueOrDefault() * price;
 
@@ -760,29 +790,31 @@
 
         private void CalculateValutionTask()
         {
-            this.SlowGrowth = this._valuationService.GetDcfTwoStages(
-                this._numberOfShares,
-                this.AverageCashFlow,
-                this.InitialGrowthRate - 5.0,
-                this.YearsTillTerminal,
-                2,
-                this.WACCModified) + (this._totalCash / this._numberOfShares);
+            //this.SlowGrowth = this._valuationService.GetDcfTwoStages(
+            //    this._numberOfShares,
+            //    this.AverageCashFlow,
+            //    this.InitialGrowthRate - 5.0,
+            //    this.YearsTillTerminal,
+            //    2,
+            //    this.WACCModified) + (this._totalCash / this._numberOfShares);
 
-            this.CurrentGrowth = this._valuationService.GetDcfTwoStages(
-                this._numberOfShares,
-                this.AverageCashFlow,
-                this.InitialGrowthRate,
-                this.YearsTillTerminal,
-                2,
-                this.WACCModified) + (this._totalCash / this._numberOfShares);
+            //this.CurrentGrowth = this._valuationService.GetDcfTwoStages(
+            //    this._numberOfShares,
+            //    this.AverageCashFlow,
+            //    this.InitialGrowthRate,
+            //    this.YearsTillTerminal,
+            //    2,
+            //    this.WACCModified) + (this._totalCash / this._numberOfShares);
 
-            this.FastGrowth = this._valuationService.GetDcfTwoStages(
-                this._numberOfShares,
-                this.AverageCashFlow,
-                this.InitialGrowthRate + 5.0,
-                this.YearsTillTerminal,
-                2,
-                this.WACCModified) + (this._totalCash / this._numberOfShares);
+            //this.FastGrowth = this._valuationService.GetDcfTwoStages(
+            //    this._numberOfShares,
+            //    this.AverageCashFlow,
+            //    this.InitialGrowthRate + 5.0,
+            //    this.YearsTillTerminal,
+            //    2,
+            //    this.WACCModified) + (this._totalCash / this._numberOfShares);
+
+            this.Valuation = ValuationService.Instance.CalculateValuations(COE, Dividend, RiskFreeRate);
         }
 
         private void Clear()

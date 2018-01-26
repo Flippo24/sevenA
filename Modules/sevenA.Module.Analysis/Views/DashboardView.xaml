@@ -21,8 +21,6 @@
                 <ResourceDictionary Source="../Resources/Shared.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <converters:EnumMatchToBooleanConverter x:Key="EnumMatchToBooleanConverter" />
-
         </ResourceDictionary>
     </UserControl.Resources>
 
