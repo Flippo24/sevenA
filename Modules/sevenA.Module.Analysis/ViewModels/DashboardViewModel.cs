@@ -73,7 +73,11 @@
         public CountryEnum Country
         {
             get => this.GetProperty(() => this.Country);
-            set => this.SetProperty(() => this.Country, value);
+            set
+            {
+                this.SetProperty(() => this.Country, value);
+                RiskFreeRate = ValuationService.Instance.GetRiskFreeRate(Country);
+            }
         }
 
         [UsedImplicitly]
@@ -541,10 +545,24 @@
             }
         }
 
+        [Command]
         [UsedImplicitly]
-        protected async void SaveRiskFreeRate()
+        public void Valuate()
         {
-            await PersistenceService.Instance.SaveRiskFreeRate(new RiskFreeRateDTO(Country, RiskFreeRate));
+            SaveRiskFreeRate();
+            CalculateValutionTask();
+        }
+
+        [UsedImplicitly]
+        public bool CanValuate()
+        {
+            return !ProgressLoader.IsLoading;
+        }
+
+        [UsedImplicitly]
+        protected void SaveRiskFreeRate()
+        {
+            ValuationService.Instance.SaveRiskFreeRate(Country, RiskFreeRate);
         }
 
         private static bool StringContains(string obj, string substring)
@@ -814,7 +832,7 @@
             //    2,
             //    this.WACCModified) + (this._totalCash / this._numberOfShares);
 
-            this.Valuation = ValuationService.Instance.CalculateValuations(COE, Dividend, RiskFreeRate);
+            this.Valuation = ValuationService.Instance.CalculateValuations(Country, COE, Dividend);
         }
 
         private void Clear()

@@ -1,17 +1,32 @@
 ﻿namespace sevenA.Module.Analysis.Models.DTOs
 {
+    using System.ComponentModel.DataAnnotations;
+
+    using JetBrains.Annotations;
+
     using sevenA.Module.Analysis.Enums;
 
     public class RiskFreeRateDTO
     {
         public RiskFreeRateDTO(CountryEnum country, double rate)
         {
-            this.Rate = rate;
-            this.Country = (int)country;
+            Id = (int)country;
+            Rate = rate;
+            Country = (int)country;
         }
 
-        public int Country { get; }
+        [UsedImplicitly]
+        public RiskFreeRateDTO()
+        { }
 
-        public double Rate { get; }
+        [Key]
+        [UsedImplicitly]
+        public int Id { get; set; }
+
+        [UsedImplicitly]
+        public int Country { get; set; }
+
+        [UsedImplicitly]
+        public double Rate { get; set; }
     }
 }

@@ -20,7 +20,7 @@
         public double GetRiskFreeRate(CountryEnum country)
         {
             var allRates = PersistenceService.Instance.GetAllRiskFreeRates().Result;
-            return (allRates.SingleOrDefault(r => r.Country == (int)country) ?? new RiskFreeRateDTO(CountryEnum.Other, 0d)).Rate;
+            return (allRates.SingleOrDefault(r => r.Country == (int)country) ?? new RiskFreeRateDTO(country, 0d)).Rate;
         }
 
         public void SaveRiskFreeRate(CountryEnum country, double rate)
@@ -28,11 +28,13 @@
             PersistenceService.Instance.SaveRiskFreeRate(new RiskFreeRateDTO(country, rate)).Wait();
         }
 
-        public Valuation CalculateValuations(double coe, double dividend, double terminalGrowth)
+        public Valuation CalculateValuations(CountryEnum country, double coe, double dividend)
         {
+            var riskFreeRate = GetRiskFreeRate(country);
+
             Valuation result = new Valuation
                                    {
-                                       DD = dividend / (coe - terminalGrowth)
+                                       DD = dividend / ((coe - riskFreeRate) / 100d)
                                    };
 
             return result;
