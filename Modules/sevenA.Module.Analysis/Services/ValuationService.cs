@@ -19,16 +19,14 @@
         public static double GetRiskFreeRate(CountryEnum country)
         {
             var allRates = PersistenceService.Instance.GetAllRiskFreeRates().Result;
-
             return (allRates.SingleOrDefault(r => r.Country == (int)country) ?? new RiskFreeRateDTO { Rate = 0d }).Rate;
         }
 
-        // ReSharper disable once StyleCop.SA1305
-        public double GetStableGrowthValuation(double nShares, double cashFlow0, double terminalGrowth, double wacc)
+        public double GetStableGrowthValuation(double numberShares, double cashFlow0, double terminalGrowth, double wacc)
         {
             try
             {
-                return cashFlow0 / ((wacc - terminalGrowth) / 100.0) / nShares;
+                return cashFlow0 / ((wacc - terminalGrowth) / 100.0) / numberShares;
             }
             catch
             {
@@ -37,23 +35,21 @@
         }
 
         public double GetDcfTwoStages(
-            // ReSharper disable once StyleCop.SA1305
-            double nShares,
+            double numShares,
             double cashflow0,
             double initialGrowth,
-            // ReSharper disable once StyleCop.SA1305
-            int nYearsTillTerminalGrowth,
+            int numberYearsTillTerminalGrowth,
             double terminalGrowth,
             double discountRate)
         {
             var currentCf = cashflow0;
             var sumCf = currentCf;
-            for (int i = 1; i <= nYearsTillTerminalGrowth; i++)
+            for (int i = 1; i <= numberYearsTillTerminalGrowth; i++)
             {
                 // ReSharper disable once StyleCop.SA1407
-                currentCf *= 1.0 + this.GetLinearInterpolation(initialGrowth, terminalGrowth, 1, nYearsTillTerminalGrowth + 1, i) /
+                currentCf *= 1.0 + this.GetLinearInterpolation(initialGrowth, terminalGrowth, 1, numberYearsTillTerminalGrowth + 1, i) /
                              100.0;
-                sumCf += this.GetPresentValue(currentCf, discountRate, nYearsTillTerminalGrowth);
+                sumCf += this.GetPresentValue(currentCf, discountRate, numberYearsTillTerminalGrowth);
             }
 
             var total = sumCf
@@ -64,9 +60,9 @@
                                 terminalGrowth,
                                 discountRate),
                             discountRate,
-                nYearsTillTerminalGrowth);
+                numberYearsTillTerminalGrowth);
 
-            return total / nShares;
+            return total / numShares;
         }
 
         public double GetPresentValue(double value, double rate, int year)

@@ -46,5 +46,24 @@
                     return list;
                 });
         }
+
+        public Task<bool> SaveRiskFreeRate(RiskFreeRateDTO dto)
+        {
+            return Task.Run(
+                () =>
+                    {
+                        try
+                        {
+                            var table = _db.GetCollection<RiskFreeRateDTO>(DbCollectionStringRiskFreeRate);
+                            table.Upsert(dto);
+
+                            return true;
+                        }
+                        catch
+                        {
+                            return false;
+                        }
+                    });
+        }
     }
 }
