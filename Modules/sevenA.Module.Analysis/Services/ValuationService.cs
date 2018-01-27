@@ -28,32 +28,26 @@
             PersistenceService.Instance.SaveRiskFreeRate(new RiskFreeRateDTO(country, rate)).Wait();
         }
 
-        public Valuation CalculateValuations(CountryEnum country, double coe, double dividend)
+        public Valuation CalculateValuations(CountryEnum country, double coe, double dividend, double earnings)
         {
             var riskFreeRate = GetRiskFreeRate(country) / 100d;
+            var factorRiskFreeRate = 1d + riskFreeRate;
 
             Valuation result = new Valuation
             {
                 DD = new Range
                 {
                     Min = dividend / (coe - riskFreeRate),
-                    Max = dividend * (1d + riskFreeRate) / (coe - riskFreeRate)
+                    Max = dividend * factorRiskFreeRate / (coe - riskFreeRate)
+                },
+                SP = new Range
+                {
+                    Min = ((earnings * riskFreeRate) / (coe * coe)) + (dividend / coe),
+                    Max = ((earnings * factorRiskFreeRate * riskFreeRate) / (coe * coe)) + (dividend * factorRiskFreeRate / coe)
                 }
             };
 
             return result;
-        }
-
-        public double GetStableGrowthValuation(double numberShares, double cashFlow0, double terminalGrowth, double wacc)
-        {
-            try
-            {
-                return cashFlow0 / ((wacc - terminalGrowth) / 100.0) / numberShares;
-            }
-            catch
-            {
-                return 0d;
-            }
         }
 
         public double GetDcfTwoStages(
@@ -87,9 +81,8 @@
             return total / numShares;
         }
 
-        public double GetPresentValue(double value, double rate, int year)
+        private double GetPresentValue(double value, double rate, int year)
         {
-            // ReSharper disable once StyleCop.SA1407
             return value / Math.Pow(1.0 + rate / 100.0, year);
         }
 

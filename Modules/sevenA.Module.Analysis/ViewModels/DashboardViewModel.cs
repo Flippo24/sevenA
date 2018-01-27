@@ -23,8 +23,6 @@
 
     using Services;
 
-    using sevenA.Module.Analysis.Models.DTOs;
-
     using SevenA.Module.Analysis.Services;
 
     [POCOViewModel]
@@ -51,22 +49,24 @@
 
         public DashboardViewModel()
         {
-            this._morningStarDataService = MorningStarDataService.Instance;
-            this._yahooFinanceDataService = YahooFinanceDataService.Instance;
-            this.Favorites = new ObservableCollection<string>();
-            this.ProgressLoader = new ProgressLoader();
-            this.AllRatios = new ObservableCollection<FinancialRatio>();
-            this.RatiosFinancials = new ObservableCollection<FinancialRatio>();
-            this.RatiosCashFlow = new ObservableCollection<FinancialRatio>();
-            this.RatiosEfficiency = new ObservableCollection<FinancialRatio>();
-            this.RatiosHealth = new ObservableCollection<FinancialRatio>();
-            this.RatiosLiquidity = new ObservableCollection<FinancialRatio>();
-            this.RatiosProfitability = new ObservableCollection<FinancialRatio>();
-            this.IncomeStatement = new ObservableCollection<FinancialRatio>();
-            this.BalanceSheet = new ObservableCollection<FinancialRatio>();
-            this.CashFlowStatement = new ObservableCollection<FinancialRatio>();
-            this.StockData = new ObservableCollection<StockData>();
-            this.YearsTillTerminal = 10;
+            _morningStarDataService = MorningStarDataService.Instance;
+            _yahooFinanceDataService = YahooFinanceDataService.Instance;
+            Favorites = new ObservableCollection<string>();
+            ProgressLoader = new ProgressLoader();
+            AllRatios = new ObservableCollection<FinancialRatio>();
+            RatiosFinancials = new ObservableCollection<FinancialRatio>();
+            RatiosCashFlow = new ObservableCollection<FinancialRatio>();
+            RatiosEfficiency = new ObservableCollection<FinancialRatio>();
+            RatiosHealth = new ObservableCollection<FinancialRatio>();
+            RatiosLiquidity = new ObservableCollection<FinancialRatio>();
+            RatiosProfitability = new ObservableCollection<FinancialRatio>();
+            IncomeStatement = new ObservableCollection<FinancialRatio>();
+            BalanceSheet = new ObservableCollection<FinancialRatio>();
+            CashFlowStatement = new ObservableCollection<FinancialRatio>();
+            StockData = new ObservableCollection<StockData>();
+            YearsTillTerminal = 10;
+
+            Country = CountryEnum.Singapore;
         }
 
         [UsedImplicitly]
@@ -832,7 +832,7 @@
             //    2,
             //    this.WACCModified) + (this._totalCash / this._numberOfShares);
 
-            this.Valuation = ValuationService.Instance.CalculateValuations(Country, COE / 100d, Dividend);
+            this.Valuation = ValuationService.Instance.CalculateValuations(Country, COE / 100d, Dividend, EPS);
         }
 
         private void Clear()

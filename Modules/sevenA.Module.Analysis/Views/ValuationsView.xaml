@@ -66,10 +66,18 @@
         </dxlc:LayoutItem>
 
         <dxlc:LayoutItem Label="Sum of perpetuities">
-            <dxe:TextEdit EditValue="{Binding Valuation.SP}"
-                          Mask="C2"
-                          MaskType="Numeric"
-                          MaskUseAsDisplayFormat="True" />
+            <StackPanel Orientation="Horizontal">
+                <dxe:TextEdit EditValue="{Binding Valuation.SP.Min}"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+                <TextBlock Margin="5,0"
+                           Text="--" />
+                <dxe:TextEdit EditValue="{Binding Valuation.SP.Max}"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+            </StackPanel>
         </dxlc:LayoutItem>
     </dxlc:LayoutGroup>
 
