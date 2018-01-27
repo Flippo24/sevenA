@@ -51,10 +51,18 @@
         </dxlc:LayoutGroup.Resources>
 
         <dxlc:LayoutItem Label="Dividend discount">
-            <dxe:TextEdit EditValue="{Binding Valuation.DD}"
-                          Mask="C2"
-                          MaskType="Numeric"
-                          MaskUseAsDisplayFormat="True" />
+            <StackPanel Orientation="Horizontal">
+                <dxe:TextEdit EditValue="{Binding Valuation.DD.Min}"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+                <TextBlock Margin="5,0"
+                           Text="--" />
+                <dxe:TextEdit EditValue="{Binding Valuation.DD.Max}"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+            </StackPanel>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutItem Label="Sum of perpetuities">

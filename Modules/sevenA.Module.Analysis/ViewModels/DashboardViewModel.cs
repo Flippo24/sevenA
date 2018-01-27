@@ -832,7 +832,7 @@
             //    2,
             //    this.WACCModified) + (this._totalCash / this._numberOfShares);
 
-            this.Valuation = ValuationService.Instance.CalculateValuations(Country, COE, Dividend);
+            this.Valuation = ValuationService.Instance.CalculateValuations(Country, COE / 100d, Dividend);
         }
 
         private void Clear()

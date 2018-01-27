@@ -30,12 +30,16 @@
 
         public Valuation CalculateValuations(CountryEnum country, double coe, double dividend)
         {
-            var riskFreeRate = GetRiskFreeRate(country);
+            var riskFreeRate = GetRiskFreeRate(country) / 100d;
 
             Valuation result = new Valuation
-                                   {
-                                       DD = dividend / ((coe - riskFreeRate) / 100d)
-                                   };
+            {
+                DD = new Range
+                {
+                    Min = dividend / (coe - riskFreeRate),
+                    Max = dividend * (1d + riskFreeRate) / (coe - riskFreeRate)
+                }
+            };
 
             return result;
         }
