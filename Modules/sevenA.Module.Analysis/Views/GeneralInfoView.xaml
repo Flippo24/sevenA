@@ -7,10 +7,10 @@
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
                   ItemLabelsAlignment="Local"
-                  ItemSpace="1"
+                  ItemSpace="4"
                   Orientation="Vertical"
                   TextElement.FontFamily="Roboto Condensed"
-                  TextElement.FontSize="12">
+                  TextElement.FontSize="14">
     <dxlc:LayoutGroup.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -95,24 +95,6 @@
         <dxlc:LayoutItem AddColonToLabel="True"
                          Label="ROIC">
             <dxe:TextEdit EditValue="{Binding ROIC}" />
-        </dxlc:LayoutItem>
-    </dxlc:LayoutGroup>
-    <dxlc:LayoutGroup ItemSpace="10"
-                      Orientation="Horizontal">
-        <dxlc:LayoutItem AddColonToLabel="True"
-                         Label="COD">
-            <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
-                          EditValue="{Binding COD}" />
-        </dxlc:LayoutItem>
-        <dxlc:LayoutItem AddColonToLabel="True"
-                         Label="COE">
-            <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
-                          EditValue="{Binding COE}" />
-        </dxlc:LayoutItem>
-        <dxlc:LayoutItem AddColonToLabel="True"
-                         Label="WACC">
-            <dxe:TextEdit DisplayFormatString="{}{0:0.00}"
-                          EditValue="{Binding WACC}" />
         </dxlc:LayoutItem>
     </dxlc:LayoutGroup>
 </dxlc:LayoutGroup>

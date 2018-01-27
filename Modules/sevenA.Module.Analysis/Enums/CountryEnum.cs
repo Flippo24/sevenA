@@ -2,11 +2,11 @@
 {
     public enum CountryEnum
     {
-        Other,
+        Singapore = 1,
 
-        Singapore,
+        Portugal = 2,
 
-        Portugal
+        Other = 4,
     }
 
     internal static class CountryConverter

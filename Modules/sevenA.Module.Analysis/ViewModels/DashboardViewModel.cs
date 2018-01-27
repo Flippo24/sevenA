@@ -10,7 +10,6 @@
     using Constants;
 
     using Core.Elements;
-    using Core.Stats;
 
     using DevExpress.Mvvm;
     using DevExpress.Mvvm.DataAnnotations;
@@ -29,52 +28,47 @@
     // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     public class DashboardViewModel : NavigationViewModelBase
     {
-        private const double Delta = 1E-6;
-
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         private readonly MorningStarDataService _morningStarDataService;
 
-        private readonly ValuationService _valuationService;
-
         private readonly YahooFinanceDataService _yahooFinanceDataService;
-
-        private double _averageCashFlow;
-
-        private double _initialGrowthRate;
 
         private double _numberOfShares;
 
-        private double _totalCash;
+        private double _equity;
 
-        private double _waccModified;
+        private double _netIncome;
 
         public DashboardViewModel()
         {
-            this._morningStarDataService = MorningStarDataService.Instance;
-            this._yahooFinanceDataService = YahooFinanceDataService.Instance;
-            this._valuationService = ValuationService.Instance;
-            this.Favorites = new ObservableCollection<string>();
-            this.ProgressLoader = new ProgressLoader();
-            this.AllRatios = new ObservableCollection<FinancialRatio>();
-            this.RatiosFinancials = new ObservableCollection<FinancialRatio>();
-            this.RatiosCashFlow = new ObservableCollection<FinancialRatio>();
-            this.RatiosEfficiency = new ObservableCollection<FinancialRatio>();
-            this.RatiosHealth = new ObservableCollection<FinancialRatio>();
-            this.RatiosLiquidity = new ObservableCollection<FinancialRatio>();
-            this.RatiosProfitability = new ObservableCollection<FinancialRatio>();
-            this.IncomeStatement = new ObservableCollection<FinancialRatio>();
-            this.BalanceSheet = new ObservableCollection<FinancialRatio>();
-            this.CashFlowStatement = new ObservableCollection<FinancialRatio>();
-            this.StockData = new ObservableCollection<StockData>();
-            this.YearsTillTerminal = 10;
+            _morningStarDataService = MorningStarDataService.Instance;
+            _yahooFinanceDataService = YahooFinanceDataService.Instance;
+            ProgressLoader = new ProgressLoader();
+            AllRatios = new ObservableCollection<FinancialRatio>();
+            RatiosFinancials = new ObservableCollection<FinancialRatio>();
+            RatiosCashFlow = new ObservableCollection<FinancialRatio>();
+            RatiosEfficiency = new ObservableCollection<FinancialRatio>();
+            RatiosHealth = new ObservableCollection<FinancialRatio>();
+            RatiosLiquidity = new ObservableCollection<FinancialRatio>();
+            RatiosProfitability = new ObservableCollection<FinancialRatio>();
+            IncomeStatement = new ObservableCollection<FinancialRatio>();
+            BalanceSheet = new ObservableCollection<FinancialRatio>();
+            CashFlowStatement = new ObservableCollection<FinancialRatio>();
+            StockData = new ObservableCollection<StockData>();
+
+            Country = CountryEnum.Singapore;
         }
 
         [UsedImplicitly]
         public CountryEnum Country
         {
             get => this.GetProperty(() => this.Country);
-            set => this.SetProperty(() => this.Country, value);
+            set
+            {
+                this.SetProperty(() => this.Country, value);
+                RiskFreeRate = ValuationService.GetRiskFreeRate(Country);
+            }
         }
 
         [UsedImplicitly]
@@ -82,21 +76,6 @@
         {
             get => this.GetProperty(() => this.AllRatios);
             set => this.SetProperty(() => this.AllRatios, value);
-        }
-
-        [UsedImplicitly]
-        public double AverageCashFlow
-        {
-            get => this._averageCashFlow;
-
-            set
-            {
-                this._averageCashFlow = value;
-                this.RaisePropertyChanged(() => this.AverageCashFlow);
-
-                if (this.AllRatios.Any() && Math.Abs(value - default(double)) > Delta)
-                    this.CalculateValutionTask();
-            }
         }
 
         [UsedImplicitly]
@@ -142,13 +121,6 @@
         }
 
         [UsedImplicitly]
-        public double CurrentGrowth
-        {
-            get => this.GetProperty(() => this.CurrentGrowth);
-            set => this.SetProperty(() => this.CurrentGrowth, value);
-        }
-
-        [UsedImplicitly]
         public double DividendYield
         {
             get => this.GetProperty(() => this.DividendYield);
@@ -156,24 +128,17 @@
         }
 
         [UsedImplicitly]
+        public double Dividend
+        {
+            get => GetProperty(() => Dividend);
+            set => SetProperty(() => Dividend, value);
+        }
+
+        [UsedImplicitly]
         public double EPS
         {
             get => this.GetProperty(() => this.EPS);
             set => this.SetProperty(() => this.EPS, value);
-        }
-
-        [UsedImplicitly]
-        public double FastGrowth
-        {
-            get => this.GetProperty(() => this.FastGrowth);
-            set => this.SetProperty(() => this.FastGrowth, value);
-        }
-
-        [UsedImplicitly]
-        public ObservableCollection<string> Favorites
-        {
-            get => this.GetProperty(() => this.Favorites);
-            set => this.SetProperty(() => this.Favorites, value);
         }
 
         [UsedImplicitly]
@@ -198,20 +163,6 @@
         }
 
         [UsedImplicitly]
-        public double InitialGrowthRate
-        {
-            get => this._initialGrowthRate;
-
-            set
-            {
-                this._initialGrowthRate = value;
-                this.RaisePropertyChanged(() => this.InitialGrowthRate);
-                if (this.AllRatios.Any() && Math.Abs(value - default(double)) > Delta)
-                    this.CalculateValutionTask();
-            }
-        }
-
-        [UsedImplicitly]
         public StockData LatestPrice
         {
             get => this.GetProperty(() => this.LatestPrice);
@@ -219,37 +170,7 @@
         }
 
         [UsedImplicitly]
-        public double MaxAverageCashFlow
-        {
-            get => this.GetProperty(() => this.MaxAverageCashFlow);
-
-            private set
-            {
-                this.SetProperty(() => this.MaxAverageCashFlow, value);
-                this.RaisePropertiesChanged(() => this.FreeCashFlowSmallStep, () => this.FreeCashFlowBigStep);
-            }
-        }
-
-        [UsedImplicitly]
         public IMessageBoxService MessageBoxService => this.GetService<IMessageBoxService>();
-
-        [UsedImplicitly]
-        public double MinAverageCashFlow
-        {
-            get => this.GetProperty(() => this.MinAverageCashFlow);
-
-            private set
-            {
-                this.SetProperty(() => this.MinAverageCashFlow, value);
-                this.RaisePropertiesChanged(() => this.FreeCashFlowSmallStep, () => this.FreeCashFlowBigStep);
-            }
-        }
-
-        [UsedImplicitly]
-        public double FreeCashFlowSmallStep => Math.Abs(this.MaxAverageCashFlow - this.MinAverageCashFlow) / 20;
-
-        [UsedImplicitly]
-        public double FreeCashFlowBigStep => Math.Abs(this.MaxAverageCashFlow - this.MinAverageCashFlow) / 5;
 
         [UsedImplicitly]
         public double NetMargin
@@ -339,13 +260,6 @@
         }
 
         [UsedImplicitly]
-        public double SlowGrowth
-        {
-            get => this.GetProperty(() => this.SlowGrowth);
-            set => this.SetProperty(() => this.SlowGrowth, value);
-        }
-
-        [UsedImplicitly]
         public ObservableCollection<StockData> StockData
         {
             get => this.GetProperty(() => this.StockData);
@@ -374,20 +288,6 @@
         }
 
         [UsedImplicitly]
-        public double WACCModified
-        {
-            get => this._waccModified;
-
-            set
-            {
-                this._waccModified = value;
-                this.RaisePropertyChanged(() => this.WACCModified);
-                if (this.AllRatios.Any() && Math.Abs(value - default(double)) > Delta)
-                    this.CalculateValutionTask();
-            }
-        }
-
-        [UsedImplicitly]
         public double WorkingCapitalPS
         {
             get => this.GetProperty(() => this.WorkingCapitalPS);
@@ -395,41 +295,20 @@
         }
 
         [UsedImplicitly]
-        public int YearsTillTerminal
-        {
-            get => this.GetProperty(() => this.YearsTillTerminal);
+        public virtual FinancialRatio SelectedFinancialRatio { get; set; }
 
-            set
-            {
-                if (this.SetProperty(() => this.YearsTillTerminal, value) && this.AllRatios.Any() && value != default(int))
-                    this.CalculateValutionTask();
-            }
+        [UsedImplicitly]
+        public virtual double RiskFreeRate
+        {
+            get => GetProperty(() => RiskFreeRate);
+            set => this.SetProperty(() => this.RiskFreeRate, value);
         }
 
         [UsedImplicitly]
-        public virtual FinancialRatio SelectedFinancialRatio { get; set; }
-
-        [Command]
-        [UsedImplicitly]
-        public void AddFavorite()
+        public virtual Valuation Valuation
         {
-            if (string.IsNullOrEmpty(this.Symbol)) return;
-
-            if (!this.Favorites.Contains(this.GetSymbol(this.Symbol)))
-            {
-                this.Favorites.Add(this.GetSymbol(this.Symbol));
-                this.MessageBoxService.ShowMessage(
-                    $"{this.StockName} added to favorites",
-                    "Favorites",
-                    MessageButton.OK,
-                    MessageIcon.Information);
-            }
-            else
-                this.MessageBoxService.ShowMessage(
-                    $"{this.StockName} is already in favorites",
-                    "Favorites",
-                    MessageButton.OK,
-                    MessageIcon.Exclamation);
+            get => GetProperty(() => Valuation);
+            set => this.SetProperty(() => this.Valuation, value);
         }
 
         [Command]
@@ -506,6 +385,9 @@
                 this.PrepareCurrentIndicators();
                 this.AddComposedIndicators();
 
+                // load risk free rate
+                RiskFreeRate = ValuationService.GetRiskFreeRate(Country);
+
                 this.CalculateValuations();
             }
             catch
@@ -516,6 +398,26 @@
             {
                 this.ProgressLoader.IsLoading = false;
             }
+        }
+
+        [Command]
+        [UsedImplicitly]
+        public void Valuate()
+        {
+            SaveRiskFreeRate();
+            CalculateValutionTask();
+        }
+
+        [UsedImplicitly]
+        public bool CanValuate()
+        {
+            return !ProgressLoader.IsLoading;
+        }
+
+        [UsedImplicitly]
+        protected void SaveRiskFreeRate()
+        {
+            ValuationService.SaveRiskFreeRate(Country, RiskFreeRate);
         }
 
         private static bool StringContains(string obj, string substring)
@@ -656,8 +558,9 @@
                                         : this.LatestPrice.Close;
 
                         this.DividendYield = dividends[i].Item2.GetValueOrDefault() / price * 100.0;
+                        this.Dividend = dividends[i].Item2.GetValueOrDefault();
 
-                        var equity = shares[i].Item2.GetValueOrDefault() * price;
+                        _equity = shares[i].Item2.GetValueOrDefault() * price;
 
                         divYield.Data[i] = Tuple.Create(
                             dividends[i].Item1,
@@ -672,12 +575,12 @@
                             this.FilterInfinityNaN(i > 0 ? interestExpenses[i].Item2.GetValueOrDefault() / (longTermDebt[i].Item2.GetValueOrDefault() + shortTermDebt[i].Item2.GetValueOrDefault()) * (1.0 - (taxRate[i].Item2 / 100.0)) * 100.0 : 0.0),
                             longTermDebt[i].Item3);
 
-                        var ratio1 = equity
-                                     / (equity + longTermDebt[i].Item2.GetValueOrDefault()
+                        var ratio1 = _equity
+                                     / (_equity + longTermDebt[i].Item2.GetValueOrDefault()
                                         + shortTermDebt[i].Item2.GetValueOrDefault());
                         var ratio2 = (longTermDebt[i].Item2.GetValueOrDefault()
                                       + shortTermDebt[i].Item2.GetValueOrDefault())
-                                     / (equity + longTermDebt[i].Item2.GetValueOrDefault()
+                                     / (_equity + longTermDebt[i].Item2.GetValueOrDefault()
                                         + shortTermDebt[i].Item2.GetValueOrDefault());
                         var waccValue = (ratio1 * coe.Data[i].Item2.GetValueOrDefault()) + (ratio2 * cod.Data[i].Item2.GetValueOrDefault() * (1.0 - (taxRate[i].Item2.GetValueOrDefault() / 100.0)));
                         wacc.Data[i] = Tuple.Create(
@@ -720,23 +623,6 @@
         {
             this.ProgressLoader.UpdateProgress(MessageConstants.Analysing, 80);
 
-            var freeCashFlow = this.CashFlowStatement.First(x => StringContains(x.Name, "Free cash")).Data.OrderByDescending(x => x.Item1).ToArray();
-
-            this._averageCashFlow = Stats.SimpleAverage(freeCashFlow.Select(x => x.Item2.GetValueOrDefault()).ToArray(), 3);
-            this.RaisePropertyChanged(() => this.AverageCashFlow);
-            this.MinAverageCashFlow = freeCashFlow.Select(x => x.Item2.GetValueOrDefault()).Min();
-            if (Math.Abs(this.MinAverageCashFlow - this._averageCashFlow) < Delta)
-                this.MinAverageCashFlow = this.AverageCashFlow > 0 ? this.AverageCashFlow * 0.1 : -100;
-
-            this.MaxAverageCashFlow = freeCashFlow.Select(x => x.Item2.GetValueOrDefault()).Max();
-            if (Math.Abs(this.MaxAverageCashFlow - this._averageCashFlow) < Delta)
-                this.MinAverageCashFlow = this.AverageCashFlow > 0 ? this.AverageCashFlow * 3 : 100;
-
-            this._initialGrowthRate = 0d;
-
-            this._waccModified = this.WACC.GetValueOrDefault();
-            this.RaisePropertyChanged(() => this.WACCModified);
-
             this._numberOfShares =
                 this.RatiosFinancials.First(x => StringContains(x.Name, "Shares"))
                     .Data.Last(x => !x.Item1.Equals("TTM"))
@@ -744,14 +630,7 @@
 
             this.MarketCap = this.LatestPrice.Close * this._numberOfShares;
 
-            var totalCashText = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, "Total Cash")) != null
-                ? "Total Cash"
-                : "Cash and cash equivalents";
-
-            this._totalCash =
-                this.BalanceSheet.First(x => StringContains(x.Name, totalCashText))
-                    .Data.Last(x => !x.Item1.Equals("TTM"))
-                    .Item2.GetValueOrDefault();
+            _netIncome = AllRatios.First(x => x.Name.Contains("Net income")).Data.Last(x => !x.Item1.Equals("TTM")).Item2.GetValueOrDefault();
 
             this.CalculateValutionTask();
 
@@ -760,72 +639,47 @@
 
         private void CalculateValutionTask()
         {
-            this.SlowGrowth = this._valuationService.GetDcfTwoStages(
-                this._numberOfShares,
-                this.AverageCashFlow,
-                this.InitialGrowthRate - 5.0,
-                this.YearsTillTerminal,
-                2,
-                this.WACCModified) + (this._totalCash / this._numberOfShares);
-
-            this.CurrentGrowth = this._valuationService.GetDcfTwoStages(
-                this._numberOfShares,
-                this.AverageCashFlow,
-                this.InitialGrowthRate,
-                this.YearsTillTerminal,
-                2,
-                this.WACCModified) + (this._totalCash / this._numberOfShares);
-
-            this.FastGrowth = this._valuationService.GetDcfTwoStages(
-                this._numberOfShares,
-                this.AverageCashFlow,
-                this.InitialGrowthRate + 5.0,
-                this.YearsTillTerminal,
-                2,
-                this.WACCModified) + (this._totalCash / this._numberOfShares);
+            this.Valuation = ValuationService.CalculateValuations(Country, COE / 100d, Dividend, EPS, _equity, this._netIncome, this._numberOfShares);
         }
 
         private void Clear()
         {
-            this.AllRatios.Clear();
-            this.RatiosFinancials.Clear();
-            this.RatiosCashFlow.Clear();
-            this.RatiosEfficiency.Clear();
-            this.RatiosHealth.Clear();
-            this.RatiosLiquidity.Clear();
-            this.RatiosProfitability.Clear();
-            this.IncomeStatement.Clear();
-            this.BalanceSheet.Clear();
-            this.CashFlowStatement.Clear();
-            this.StockData.Clear();
+            AllRatios.Clear();
+            RatiosFinancials.Clear();
+            RatiosCashFlow.Clear();
+            RatiosEfficiency.Clear();
+            RatiosHealth.Clear();
+            RatiosLiquidity.Clear();
+            RatiosProfitability.Clear();
+            IncomeStatement.Clear();
+            BalanceSheet.Clear();
+            CashFlowStatement.Clear();
+            StockData.Clear();
 
-            this.StockName = string.Empty;
-            this.LatestPrice = null;
-            this.MarketCap = 0;
-            this.PE = 0;
-            this.EPS = 0;
-            this.DividendYield = 0;
-            this.BookValue = 0;
-            this.FreeCashFlowPS = 0;
-            this.WorkingCapitalPS = 0;
-            this.GrossMargin = 0;
-            this.OperatingMargin = 0;
-            this.NetMargin = 0;
-            this.ROA = 0;
-            this.ROE = 0;
-            this.ROIC = 0;
-            this.COE = 0;
-            this.COD = 0;
-            this.WACC = 0;
-            this.WACCModified = 0;
+            StockName = string.Empty;
+            LatestPrice = null;
+            MarketCap = 0;
+            PE = 0;
+            EPS = 0;
+            DividendYield = 0;
+            BookValue = 0;
+            FreeCashFlowPS = 0;
+            WorkingCapitalPS = 0;
+            GrossMargin = 0;
+            OperatingMargin = 0;
+            NetMargin = 0;
+            ROA = 0;
+            ROE = 0;
+            ROIC = 0;
+            COE = 0;
+            COD = 0;
+            WACC = 0;
 
-            this.SlowGrowth = 0;
-            this.CurrentGrowth = 0;
-            this.FastGrowth = 0;
-            this.AverageCashFlow = 0;
+            _numberOfShares = 0;
+            _equity = 0;
+            _netIncome = 0;
 
-            this._numberOfShares = 0;
-            this._totalCash = 0;
+            this.RaisePropertyChanged(() => Valuation);
         }
 
         private double? FilterInfinityNaN(double? value)
@@ -891,6 +745,7 @@
                 this.RatiosProfitability.First(x => x.Name.Contains("Return on Invested Capital"))
                     .Data.Last(x => !x.Item1.Equals("TTM"))
                     .Item2.GetValueOrDefault();
+
             this.ProgressLoader.UpdateProgress(MessageConstants.Analysing, 50);
         }
 
