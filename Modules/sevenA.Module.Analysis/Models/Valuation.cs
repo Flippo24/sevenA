@@ -19,5 +19,11 @@
 
         [UsedImplicitly]
         public Range SP { get; set; }
+
+        [UsedImplicitly]
+        public Range Graham { get; set; }
+
+        [UsedImplicitly]
+        public Range Dfc { get; set; }
     }
 }

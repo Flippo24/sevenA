@@ -7,10 +7,10 @@
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
                   ItemLabelsAlignment="Local"
-                  ItemSpace="1"
+                  ItemSpace="4"
                   Orientation="Vertical"
                   TextElement.FontFamily="Roboto Condensed"
-                  TextElement.FontSize="13">
+                  TextElement.FontSize="14">
     <dxlc:LayoutGroup.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

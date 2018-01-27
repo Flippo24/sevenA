@@ -8,7 +8,7 @@
                   VerticalAlignment="Stretch"
                   Header="Valuation"
                   ItemLabelsAlignment="Default"
-                  ItemSpace="20"
+                  ItemSpace="30"
                   Orientation="Vertical"
                   TextElement.FontFamily="Roboto Condensed"
                   TextElement.FontSize="14">
@@ -35,7 +35,8 @@
         </Grid>
     </dxlc:LayoutItem>
 
-    <dxlc:LayoutGroup Orientation="Vertical">
+    <dxlc:LayoutGroup ItemSpace="20"
+                      Orientation="Vertical">
         <dxlc:LayoutGroup.Resources>
             <Style TargetType="dxlc:LayoutItem">
                 <Setter Property="AddColonToLabel" Value="True" />
@@ -79,6 +80,37 @@
                               MaskUseAsDisplayFormat="True" />
             </StackPanel>
         </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Graham number">
+            <StackPanel Orientation="Horizontal">
+                <dxe:TextEdit EditValue="{Binding Valuation.Graham.Min}"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+                <TextBlock Margin="5,0"
+                           Text="--" />
+                <dxe:TextEdit EditValue="{Binding Valuation.Graham.Max}"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+            </StackPanel>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Dfc 2 factors">
+            <StackPanel Orientation="Horizontal">
+                <dxe:TextEdit EditValue="{Binding Valuation.Dfc.Min}"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+                <TextBlock Margin="5,0"
+                           Text="--" />
+                <dxe:TextEdit EditValue="{Binding Valuation.Dfc.Max}"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+            </StackPanel>
+        </dxlc:LayoutItem>
+
     </dxlc:LayoutGroup>
 
 </dxlc:LayoutGroup>
