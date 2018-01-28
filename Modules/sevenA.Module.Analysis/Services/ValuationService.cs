@@ -24,37 +24,75 @@
             CountryEnum country,
             double coe,
             double dividend,
+            double dividendGrowth,
             double earnings,
-            double equity,
+            double bookValue,
+            double averageEarnings,
+            double averagePE,
             double netIncome,
+            double netIncomeGrowth,
             double shares)
         {
             var riskFreeRate = GetRiskFreeRate(country) / 100d;
             var factorRiskFreeRate = 1d + riskFreeRate;
+            netIncomeGrowth /= 100d;
+            var terminalGrowth = netIncomeGrowth;
+
+            if (terminalGrowth < 0)
+            {
+                terminalGrowth = 0d;
+            }
+            else
+            {
+                terminalGrowth /= 2d;
+            }
+
+            if (terminalGrowth < riskFreeRate)
+            {
+                terminalGrowth = riskFreeRate;
+            }
 
             Valuation result = new Valuation
             {
+                EarningsPower = new Range
+                {
+                    Min = earnings / Math.Max(coe, riskFreeRate),
+                    Max = 1.1d * earnings / Math.Max(coe, riskFreeRate)
+                },
                 DD = new Range
                 {
-                    Min = dividend / (coe - riskFreeRate),
-                    Max = dividend * factorRiskFreeRate / (coe - riskFreeRate)
+                    Min = dividend / (coe - dividendGrowth > 0 ? coe - dividendGrowth : riskFreeRate),
+                    Max = dividend * factorRiskFreeRate / (coe - dividendGrowth > 0 ? coe - dividendGrowth : riskFreeRate),
                 },
                 SP = new Range
                 {
                     Min = ((earnings * riskFreeRate) / (coe * coe)) + (dividend / coe),
-                    Max = ((earnings * factorRiskFreeRate * riskFreeRate) / (coe * coe)) + (dividend * factorRiskFreeRate / coe)
+                    Max = ((earnings * factorRiskFreeRate * (1.1d * riskFreeRate)) / (coe * coe)) + (dividend * factorRiskFreeRate / coe)
                 },
                 Graham = new Range
                 {
-                    Min = Math.Sqrt(21 * equity * netIncome / shares) / 100d,
-                    Max = Math.Sqrt(23 * equity * netIncome * factorRiskFreeRate * factorRiskFreeRate / shares) / 100d
+                    Min = Math.Sqrt(22.5d * earnings * bookValue),
+                    Max = Math.Sqrt(22.5d * 1.1d * earnings * bookValue),
+                },
+                PEBased = new Range
+                {
+                    Min = averageEarnings * averagePE,
+                    Max = 1.1d * averageEarnings * averagePE,
                 },
                 Dfc = new Range
                 {
-                    Min = GetDcfTwoStages(shares, netIncome, 0, 20, 0, Math.Max(coe, riskFreeRate)),
-                    Max = GetDcfTwoStages(shares, netIncome, riskFreeRate / 2d, 20, riskFreeRate, Math.Max(coe, riskFreeRate))
-                },
+                    Min = GetDcfTwoStages(shares, netIncome, netIncomeGrowth, 10, terminalGrowth, Math.Max(coe, riskFreeRate)),
+                    Max = GetDcfTwoStages(shares, netIncome * factorRiskFreeRate, netIncomeGrowth, 10, terminalGrowth, Math.Max(coe, riskFreeRate)),
+                }
             };
+
+            result.Weighted = new Range
+            {
+                Min = new[] { result.Dfc.Min, result.EarningsPower.Min, result.DD.Min, result.SP.Min, result.Graham.Min, result.PEBased.Min }.Where(x => x > 0).Average(),
+                Max = new[] { result.Dfc.Max, result.EarningsPower.Max, result.DD.Max, result.SP.Max, result.Graham.Max, result.PEBased.Max }.Where(x => x > 0).Average()
+            };
+
+            result.MarginSafety = new Range { Min = result.Weighted.Min * 0.80d, Max = result.Weighted.Max * 0.80d };
 
             return result;
         }

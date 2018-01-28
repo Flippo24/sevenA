@@ -283,6 +283,22 @@
                 datesString = allLines.ElementAt(30).Split(new[] { "," }, StringSplitOptions.None).Skip(1);
                 result.AddRange(this.ExtractRatios(stockName, allLines, datesString, section, 31, 38));
 
+                // Growth
+                section = FinancialRatioSectionEnum.Growth;
+                datesString = allLines.ElementAt(30).Split(new[] { "," }, StringSplitOptions.None).Skip(1);
+                result.AddRange(this.ExtractRatios(stockName, allLines, datesString, section, 54, 56));
+                result[result.Count - 3].Name = "Net Income 3yr Growth";
+                result[result.Count - 2].Name = "Net Income 5yr Growth";
+                result.Last().Name = "Net Income 10yr Growth";
+
+                // Growth
+                section = FinancialRatioSectionEnum.Growth;
+                datesString = allLines.ElementAt(30).Split(new[] { "," }, StringSplitOptions.None).Skip(1);
+                result.AddRange(this.ExtractRatios(stockName, allLines, datesString, section, 59, 61));
+                result[result.Count - 3].Name = "EPS 3yr Growth";
+                result[result.Count - 2].Name = "EPS 5yr Growth";
+                result.Last().Name = "EPS 10yr Growth";
+
                 // CashFlow
                 section = FinancialRatioSectionEnum.CashFlow;
                 datesString = allLines.ElementAt(64).Split(new[] { "," }, StringSplitOptions.None).Skip(1);
