@@ -51,6 +51,21 @@
             </Style>
         </dxlc:LayoutGroup.Resources>
 
+        <dxlc:LayoutItem Label="Earnings power">
+            <StackPanel Orientation="Horizontal">
+                <dxe:TextEdit EditValue="{Binding Valuation.EarningsPower.Min}"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+                <TextBlock Margin="5,0"
+                           Text="--" />
+                <dxe:TextEdit EditValue="{Binding Valuation.EarningsPower.Max}"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+            </StackPanel>
+        </dxlc:LayoutItem>
+
         <dxlc:LayoutItem Label="Dividend discount">
             <StackPanel Orientation="Horizontal">
                 <dxe:TextEdit EditValue="{Binding Valuation.DD.Min}"
@@ -96,6 +111,21 @@
             </StackPanel>
         </dxlc:LayoutItem>
 
+        <dxlc:LayoutItem Label="PE based">
+            <StackPanel Orientation="Horizontal">
+                <dxe:TextEdit EditValue="{Binding Valuation.PEBased.Min}"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+                <TextBlock Margin="5,0"
+                           Text="--" />
+                <dxe:TextEdit EditValue="{Binding Valuation.PEBased.Max}"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+            </StackPanel>
+        </dxlc:LayoutItem>
+
         <dxlc:LayoutItem Label="Dfc 2 factors">
             <StackPanel Orientation="Horizontal">
                 <dxe:TextEdit EditValue="{Binding Valuation.Dfc.Min}"
@@ -105,6 +135,41 @@
                 <TextBlock Margin="5,0"
                            Text="--" />
                 <dxe:TextEdit EditValue="{Binding Valuation.Dfc.Max}"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+            </StackPanel>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Margin="0,20,0,0"
+                         Label="Weighted">
+            <StackPanel Orientation="Horizontal">
+                <dxe:TextEdit EditValue="{Binding Valuation.Weighted.Min}"
+                              Foreground="LightSkyBlue"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+                <TextBlock Margin="5,0"
+                           Text="--" />
+                <dxe:TextEdit EditValue="{Binding Valuation.Weighted.Max}"
+                              Foreground="LightSkyBlue"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+            </StackPanel>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Margin of safety">
+            <StackPanel Orientation="Horizontal">
+                <dxe:TextEdit EditValue="{Binding Valuation.MarginSafety.Min}"
+                              Foreground="LightSkyBlue"
+                              Mask="C2"
+                              MaskType="Numeric"
+                              MaskUseAsDisplayFormat="True" />
+                <TextBlock Margin="5,0"
+                           Text="--" />
+                <dxe:TextEdit EditValue="{Binding Valuation.MarginSafety.Max}"
+                              Foreground="LightSkyBlue"
                               Mask="C2"
                               MaskType="Numeric"
                               MaskUseAsDisplayFormat="True" />

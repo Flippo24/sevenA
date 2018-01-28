@@ -15,6 +15,9 @@
     public class Valuation
     {
         [UsedImplicitly]
+        public Range EarningsPower { get; set; }
+
+        [UsedImplicitly]
         public Range DD { get; set; }
 
         [UsedImplicitly]
@@ -24,6 +27,15 @@
         public Range Graham { get; set; }
 
         [UsedImplicitly]
+        public Range PEBased { get; set; }
+
+        [UsedImplicitly]
         public Range Dfc { get; set; }
+
+        [UsedImplicitly]
+        public Range Weighted { get; set; }
+
+        [UsedImplicitly]
+        public Range MarginSafety { get; set; }
     }
 }

@@ -30,6 +30,8 @@
                                AllowPerPixelScrolling="False"
                                NavigationStyle="Row"
                                RowMinHeight="26"
+                               SearchPanelCriteriaOperatorType="And"
+                               SearchPanelFindFilter="Contains"
                                ShowGroupPanel="False"
                                ShowSearchPanelMode="Always">
                     <dxg:TableView.RowStyle>

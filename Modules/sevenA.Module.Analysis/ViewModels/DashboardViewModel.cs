@@ -38,7 +38,17 @@
 
         private double _equity;
 
-        private double _netIncome;
+        private double _growth;
+
+        private FinancialRatio _coe;
+
+        private double _averageNetIncome;
+
+        private double _averageEarnings;
+
+        private double _averagePE;
+
+        private double _dividendGrowth;
 
         public DashboardViewModel()
         {
@@ -385,7 +395,6 @@
                 this.PrepareCurrentIndicators();
                 this.AddComposedIndicators();
 
-                // load risk free rate
                 RiskFreeRate = ValuationService.GetRiskFreeRate(Country);
 
                 this.CalculateValuations();
@@ -439,11 +448,6 @@
                         .Data.Where(x => !x.Item1.Equals("TTM"))
                         .ToList();
 
-                var payout =
-                    this.RatiosFinancials.First(x => x.Name.Contains("Payout"))
-                        .Data.Where(x => !x.Item1.Equals("TTM"))
-                        .ToList();
-
                 var shares =
                     this.RatiosFinancials.First(x => x.Name.Contains("Shares"))
                         .Data.Where(x => !x.Item1.Equals("TTM"))
@@ -491,6 +495,17 @@
                         .Data.Where(x => !x.Item1.Equals("TTM"))
                         .ToList();
 
+                var netIncomeGrowth = this.AllRatios.First(x => StringContains(x.Name, "Net Income 10yr Growth"))
+                    .Data.Where(x => !x.Item1.Equals("TTM"))
+                    .ToList();
+
+                if (netIncomeGrowth.All(x => !x.Item2.HasValue))
+                {
+                    netIncomeGrowth = this.AllRatios.First(x => StringContains(x.Name, "Net Income 5yr Growth"))
+                        .Data.Where(x => !x.Item1.Equals("TTM"))
+                        .ToList();
+                }
+
                 FinancialRatio divYield = new FinancialRatio
                 {
                     Section = FinancialRatioSectionEnum.Financials,
@@ -498,12 +513,12 @@
                     StockName = this.RatiosFinancials.First().StockName,
                     Data = dividends.ToList()
                 };
-                FinancialRatio coe = new FinancialRatio
+                this._coe = new FinancialRatio
                 {
                     Section = FinancialRatioSectionEnum.Financials,
                     Name = "Cost Of Equity",
                     StockName = this.RatiosFinancials.First().StockName,
-                    Data = roe.ToList()
+                    Data = roe.ToList() // calculated properly below
                 };
                 FinancialRatio cod = new FinancialRatio
                 {
@@ -540,6 +555,13 @@
                     StockName = this.RatiosFinancials.First().StockName,
                     Data = shares.ToList()
                 };
+                FinancialRatio excessReturns = new FinancialRatio
+                {
+                    Section = FinancialRatioSectionEnum.Financials,
+                    Name = "Excess Returns",
+                    StockName = this.RatiosFinancials.First().StockName,
+                    Data = roe.ToList() // calculated properly below
+                };
 
                 this.ProgressLoader.UpdateProgress(MessageConstants.Analysing, 60);
 
@@ -552,10 +574,15 @@
                         var price = this.IsValidDateTimeString(dividends[i].Item1)
                                         ? this.StockData.FirstOrDefault(
                                             x => x.Date < DateTime.Parse(dividends[i].Item1)) != null
-                                              ? this.StockData.First(x => x.Date < DateTime.Parse(dividends[i].Item1))
+                                              ? this.StockData.First(x => x.Date > DateTime.Parse(dividends[i].Item1).AddMonths(1))
                                                     .Close
                                               : this.StockData.Last().Close
                                         : this.LatestPrice.Close;
+
+                        var priceEarningValue = price / earningPerShareData[i].Item2.GetValueOrDefault();
+                        pe.Data[i] = Tuple.Create(shares[i].Item1, this.FilterInfinityNaN(priceEarningValue), shares[i].Item3);
+                        var pbvValue = price / bookValueData[i].Item2.GetValueOrDefault();
+                        pbv.Data[i] = Tuple.Create(shares[i].Item1, this.FilterInfinityNaN(pbvValue), shares[i].Item3);
 
                         this.DividendYield = dividends[i].Item2.GetValueOrDefault() / price * 100.0;
                         this.Dividend = dividends[i].Item2.GetValueOrDefault();
@@ -567,13 +594,17 @@
                             (double?)this.DividendYield,
                             dividends[i].Item3);
 
-                        double? dividendGrowthRate = (1.0 - (payout[i].Item2.GetValueOrDefault() / 100.0)) * roe[i].Item2.GetValueOrDefault();
+                        var growth = netIncomeGrowth[i].Item2 / 100d;
+                        var coeImplicit = ((1d + growth) / pe.Data[i].Item2) + growth;
 
-                        coe.Data[i] = Tuple.Create(roe[i].Item1, this.DividendYield + dividendGrowthRate, roe[i].Item3);
+                        this._coe.Data[i] = Tuple.Create(roe[i].Item1, coeImplicit * 100d, roe[i].Item3);
+
                         cod.Data[i] = Tuple.Create(
                             longTermDebt[i].Item1,
                             this.FilterInfinityNaN(i > 0 ? interestExpenses[i].Item2.GetValueOrDefault() / (longTermDebt[i].Item2.GetValueOrDefault() + shortTermDebt[i].Item2.GetValueOrDefault()) * (1.0 - (taxRate[i].Item2 / 100.0)) * 100.0 : 0.0),
                             longTermDebt[i].Item3);
+
+                        excessReturns.Data[i] = Tuple.Create(roe[i].Item1, roe[i].Item2 - this._coe.Data[i].Item2, roe[i].Item3);
 
                         var ratio1 = _equity
                                      / (_equity + longTermDebt[i].Item2.GetValueOrDefault()
@@ -582,16 +613,11 @@
                                       + shortTermDebt[i].Item2.GetValueOrDefault())
                                      / (_equity + longTermDebt[i].Item2.GetValueOrDefault()
                                         + shortTermDebt[i].Item2.GetValueOrDefault());
-                        var waccValue = (ratio1 * coe.Data[i].Item2.GetValueOrDefault()) + (ratio2 * cod.Data[i].Item2.GetValueOrDefault() * (1.0 - (taxRate[i].Item2.GetValueOrDefault() / 100.0)));
+                        var waccValue = (ratio1 * this._coe.Data[i].Item2.GetValueOrDefault()) + (ratio2 * cod.Data[i].Item2.GetValueOrDefault() * (1.0 - (taxRate[i].Item2.GetValueOrDefault() / 100.0)));
                         wacc.Data[i] = Tuple.Create(
                             longTermDebt[i].Item1,
                             this.FilterInfinityNaN(waccValue),
                             longTermDebt[i].Item3);
-
-                        var priceEarningValue = price / earningPerShareData[i].Item2.GetValueOrDefault();
-                        pe.Data[i] = Tuple.Create(shares[i].Item1, this.FilterInfinityNaN(priceEarningValue), shares[i].Item3);
-                        var pbvValue = price / bookValueData[i].Item2.GetValueOrDefault();
-                        pbv.Data[i] = Tuple.Create(shares[i].Item1, this.FilterInfinityNaN(pbvValue), shares[i].Item3);
                     }
                     catch (Exception)
                     {
@@ -600,14 +626,15 @@
                 }
 
                 this.AllRatios.Add(divYield);
-                this.AllRatios.Add(coe);
+                this.AllRatios.Add(this._coe);
                 this.AllRatios.Add(cod);
                 this.AllRatios.Add(wacc);
+                this.AllRatios.Add(excessReturns);
                 this.AllRatios.Add(pe);
                 this.AllRatios.Add(pbv);
                 this.AllRatios.Add(reinvestment);
 
-                this.COE = coe.Latest.GetValueOrDefault();
+                this.COE = this._coe.Latest.GetValueOrDefault();
                 this.COD = cod.Latest.GetValueOrDefault();
                 this.WACC = wacc.Data.Last(x => x.Item2.HasValue && x.Item2.Value > 0)?.Item2.GetValueOrDefault();
 
@@ -630,7 +657,23 @@
 
             this.MarketCap = this.LatestPrice.Close * this._numberOfShares;
 
-            _netIncome = AllRatios.First(x => x.Name.Contains("Net income")).Data.Last(x => !x.Item1.Equals("TTM")).Item2.GetValueOrDefault();
+            this._growth = this.AllRatios.First(x => StringContains(x.Name, "EPS 5yr Growth")).Data.Last(x => !x.Item1.Equals("TTM")).Item2.GetValueOrDefault();
+            var cleanNetIncome = this.AllRatios.First(x => x.Name.Contains("Net income")).Data.Where(x => !x.Item1.Equals("TTM") && x.Item2.HasValue).ToList();
+            this._averageNetIncome =
+                (0.6d * cleanNetIncome[cleanNetIncome.Count - 1].Item2
+                 + 0.3d * cleanNetIncome[cleanNetIncome.Count - 2].Item2
+                 + 0.1d * cleanNetIncome[cleanNetIncome.Count - 3].Item2).GetValueOrDefault();
+
+            var cleanEarnings = this.AllRatios.First(x => x.Name.Contains("Earnings Per Share")).Data.Where(x => !x.Item1.Equals("TTM")).ToList();
+            this._averageEarnings = cleanEarnings.Where(x => x.Item2.HasValue).Skip(cleanEarnings.Count - 3).Take(3).Select(x => x.Item2).Average().GetValueOrDefault();
+            var cleanPE = this.AllRatios.First(x => x.Name.Contains("P/E")).Data.Where(x => !x.Item1.Equals("TTM")).ToList();
+            this._averagePE = cleanPE.Where(x => x.Item2.HasValue).Select(x => x.Item2).Average().GetValueOrDefault();
+
+            var cleanDividend = this.RatiosFinancials.First(x => x.Name.Contains("Dividends")).Data.Where(x => !x.Item1.Equals("TTM") && x.Item2.HasValue).ToList();
+            var firstDividend = cleanDividend.FirstOrDefault(x => x.Item2 > 0);
+            var lastDividend = cleanDividend.LastOrDefault(x => x.Item2 > 0);
+            var years = (DateTime.Parse(lastDividend?.Item1) - DateTime.Parse(firstDividend?.Item1)).TotalDays / 365d;
+            this._dividendGrowth = firstDividend == null ? 0 : ((lastDividend?.Item2 - firstDividend.Item2) / firstDividend.Item2).GetValueOrDefault() / years;
 
             this.CalculateValutionTask();
 
@@ -639,7 +682,30 @@
 
         private void CalculateValutionTask()
         {
-            this.Valuation = ValuationService.CalculateValuations(Country, COE / 100d, Dividend, EPS, _equity, this._netIncome, this._numberOfShares);
+            var cleanCOE = this._coe.Data.Where(x => !x.Item1.Equals("TTM") && x.Item2 > 0).ToList();
+
+            double coe = 0;
+            if (cleanCOE.Count >= 3)
+            {
+                coe = (0.6d * cleanCOE[cleanCOE.Count - 1].Item2 + 0.3d * cleanCOE[cleanCOE.Count - 2].Item2 + 0.1d * cleanCOE[cleanCOE.Count - 3].Item2).GetValueOrDefault();
+            }
+            else
+            {
+                coe = cleanCOE.Last().Item2.GetValueOrDefault();
+            }
+
+            this.Valuation = ValuationService.CalculateValuations(
+                    Country,
+                    coe / 100d,
+                    Dividend,
+                    this._dividendGrowth,
+                    EPS,
+                    this.BookValue,
+                    this._averageEarnings,
+                    this._averagePE,
+                    this._averageNetIncome,
+                    this._growth,
+                    this._numberOfShares);
         }
 
         private void Clear()
@@ -677,8 +743,12 @@
 
             _numberOfShares = 0;
             _equity = 0;
-            _netIncome = 0;
+            this._averageNetIncome = 0;
 
+            this.Valuation = null;
+            this.SelectedFinancialRatio = null;
+
+            this.RaisePropertyChanged(() => SelectedFinancialRatio);
             this.RaisePropertyChanged(() => Valuation);
         }
 
