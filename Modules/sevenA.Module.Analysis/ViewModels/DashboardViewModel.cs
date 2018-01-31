@@ -138,6 +138,13 @@
         }
 
         [UsedImplicitly]
+        public double CurrentDividendYield
+        {
+            get => this.GetProperty(() => this.CurrentDividendYield);
+            set => this.SetProperty(() => this.CurrentDividendYield, value);
+        }
+
+        [UsedImplicitly]
         public double Dividend
         {
             get => GetProperty(() => Dividend);
@@ -625,6 +632,9 @@
                     }
                 }
 
+                this.CurrentDividendYield = this.RatiosFinancials.First(x => x.Name.Contains("Dividends"))
+                    .Data.FirstOrDefault(x => x.Item1.Equals("TTM")).Item2.GetValueOrDefault() / LatestPrice.Close;
+
                 this.AllRatios.Add(divYield);
                 this.AllRatios.Add(this._coe);
                 this.AllRatios.Add(cod);
@@ -685,6 +695,7 @@
             var cleanCOE = this._coe.Data.Where(x => !x.Item1.Equals("TTM") && x.Item2 > 0).ToList();
 
             double coe = 0;
+
             if (cleanCOE.Count >= 3)
             {
                 coe = (0.6d * cleanCOE[cleanCOE.Count - 1].Item2 + 0.3d * cleanCOE[cleanCOE.Count - 2].Item2 + 0.1d * cleanCOE[cleanCOE.Count - 3].Item2).GetValueOrDefault();
@@ -728,6 +739,7 @@
             PE = 0;
             EPS = 0;
             DividendYield = 0;
+            this.CurrentDividendYield = 0d;
             BookValue = 0;
             FreeCashFlowPS = 0;
             WorkingCapitalPS = 0;
