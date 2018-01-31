@@ -28,12 +28,21 @@
         </ResourceDictionary>
     </dxlc:LayoutGroup.Resources>
 
-    <dxlc:LayoutItem Margin="0,0,0,10"
-                     AddColonToLabel="True"
-                     Label="Last Price">
-        <dxe:TextEdit EditValue="{Binding LatestPrice.Close}"
-                      FontSize="20" />
-    </dxlc:LayoutItem>
+    <dxlc:LayoutGroup Margin="0,0,0,10"
+                      Orientation="Horizontal">
+        <dxlc:LayoutItem AddColonToLabel="True"
+                         Label="Last Price">
+            <dxe:TextEdit EditValue="{Binding LatestPrice.Close}"
+                          FontSize="20" />
+        </dxlc:LayoutItem>
+        <dxlc:LayoutItem VerticalAlignment="Center"
+                         AddColonToLabel="True"
+                         Label="Dividend Yield">
+            <dxe:TextEdit DisplayFormatString="{}{0:P2}"
+                          EditValue="{Binding CurrentDividendYield}"
+                          FontSize="14" />
+        </dxlc:LayoutItem>
+    </dxlc:LayoutGroup>
     <dxlc:LayoutGroup ItemSpace="10"
                       Orientation="Horizontal">
         <dxlc:LayoutItem AddColonToLabel="True"
