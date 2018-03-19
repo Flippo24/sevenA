@@ -59,7 +59,6 @@
             RatiosFinancials = new ObservableCollection<FinancialRatio>();
             RatiosCashFlow = new ObservableCollection<FinancialRatio>();
             RatiosEfficiency = new ObservableCollection<FinancialRatio>();
-            RatiosHealth = new ObservableCollection<FinancialRatio>();
             RatiosLiquidity = new ObservableCollection<FinancialRatio>();
             RatiosProfitability = new ObservableCollection<FinancialRatio>();
             IncomeStatement = new ObservableCollection<FinancialRatio>();
@@ -235,13 +234,6 @@
         }
 
         [UsedImplicitly]
-        public ObservableCollection<FinancialRatio> RatiosHealth
-        {
-            get => this.GetProperty(() => this.RatiosHealth);
-            set => this.SetProperty(() => this.RatiosHealth, value);
-        }
-
-        [UsedImplicitly]
         public ObservableCollection<FinancialRatio> RatiosLiquidity
         {
             get => this.GetProperty(() => this.RatiosLiquidity);
@@ -353,9 +345,6 @@
                 this.RatiosCashFlow =
                     new ObservableCollection<FinancialRatio>(
                         results.Where(x => x.Section == FinancialRatioSectionEnum.CashFlow).ToList());
-                this.RatiosHealth =
-                    new ObservableCollection<FinancialRatio>(
-                        results.Where(x => x.Section == FinancialRatioSectionEnum.Health).ToList());
                 this.RatiosLiquidity =
                     new ObservableCollection<FinancialRatio>(
                         results.Where(x => x.Section == FinancialRatioSectionEnum.Liquidity).ToList());
@@ -450,68 +439,51 @@
         {
             try
             {
-                var roe =
-                    this.RatiosProfitability.First(x => x.Name.Contains("Return on Equity"))
-                        .Data.Where(x => !x.Item1.Equals("TTM"))
-                        .ToList();
-
-                var shares =
-                    this.RatiosFinancials.First(x => x.Name.Contains("Shares"))
-                        .Data.Where(x => !x.Item1.Equals("TTM"))
-                        .ToList();
-
-                var dividends =
-                    this.RatiosFinancials.First(x => x.Name.Contains("Dividends"))
-                        .Data.Where(x => !x.Item1.Equals("TTM"))
-                        .ToList();
+                var roe = this.RatiosProfitability.First(x => x.Name.Contains("Return on Equity")).Data.ToList();
+                var shares = this.RatiosFinancials.First(x => x.Name.Contains("Shares")).Data.ToList();
+                var dividends = this.RatiosFinancials.First(x => x.Name.Contains("Dividends")).Data.ToList();
 
                 var interestExpenses =
                     this.IncomeStatement.FirstOrDefault(x => StringContains(x.Name, "Interest Expense")) != null
                         ? this.IncomeStatement.First(x => StringContains(x.Name, "Interest Expense"))
-                              .Data.Where(x => !x.Item1.Equals("TTM"))
-                              .ToList()
+                              .Data.ToList()
                         : this.GetDefaultData();
 
-                var earningPerShareData =
-                    this.RatiosFinancials.First(x => StringContains(x.Name, "Earnings Per Share"))
-                        .Data.Where(x => !x.Item1.Equals("TTM"))
-                        .ToList();
-                var bookValueData =
-                    this.RatiosFinancials.First(x => StringContains(x.Name, "Book Value"))
-                        .Data.Where(x => !x.Item1.Equals("TTM"))
-                        .ToList();
+                var earningPerShareData = this.RatiosFinancials.First(x => StringContains(x.Name, "Earnings Per Share")).Data.ToList();
+                var bookValueData = this.RatiosFinancials.First(x => StringContains(x.Name, "Book Value")).Data.ToList();
 
                 var shortTermDebtText = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, "Short-term debt")) != null
                     ? "Short-term debt"
                     : "Short-term borrowing";
 
+                // we need to add TTM
                 var shortTermDebt = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, shortTermDebtText))
                                     != null
                                         ? this.BalanceSheet.First(x => StringContains(x.Name, shortTermDebtText))
-                                              .Data.Where(x => !x.Item1.Equals("TTM"))
-                                              .ToList()
+                                              .Data.ToList()
                                         : this.GetDefaultData();
+                shortTermDebt.Add(Tuple.Create(roe.Last().Item1, shortTermDebt.Last().Item2, shortTermDebt.Last().Item3));
 
                 var longTermDebt = this.BalanceSheet.FirstOrDefault(x => StringContains(x.Name, "Long-term debt")) != null
-                        ? this.BalanceSheet.First(x => StringContains(x.Name, "Long-term debt")).Data
-                            .Where(x => !x.Item1.Equals("TTM")).ToList()
+                        ? this.BalanceSheet.First(x => StringContains(x.Name, "Long-term debt")).Data.ToList()
                         : this.GetDefaultData();
+                longTermDebt.Add(Tuple.Create(roe.Last().Item1, longTermDebt.Last().Item2, longTermDebt.Last().Item3));
 
-                var taxRate =
-                    this.RatiosProfitability.First(x => StringContains(x.Name, "Tax Rate"))
-                        .Data.Where(x => !x.Item1.Equals("TTM"))
-                        .ToList();
+                var taxRate = this.RatiosProfitability.First(x => StringContains(x.Name, "Tax Rate")).Data.ToList();
 
                 var netIncomeGrowth = this.AllRatios.First(x => StringContains(x.Name, "Net Income 10yr Growth"))
-                    .Data.Where(x => !x.Item1.Equals("TTM"))
-                    .ToList();
+                    .Data.ToList();
 
                 if (netIncomeGrowth.All(x => !x.Item2.HasValue))
                 {
                     netIncomeGrowth = this.AllRatios.First(x => StringContains(x.Name, "Net Income 5yr Growth"))
-                        .Data.Where(x => !x.Item1.Equals("TTM"))
-                        .ToList();
+                        .Data.ToList();
                 }
+
+                var freeCashFlow =
+                    this.RatiosFinancials.First(x => StringContains(x.Name, "Free Cash Flow Per Share"))
+                        .Data
+                        .ToList();
 
                 FinancialRatio divYield = new FinancialRatio
                 {
@@ -566,6 +538,13 @@
                 {
                     Section = FinancialRatioSectionEnum.Financials,
                     Name = "Excess Returns",
+                    StockName = this.RatiosFinancials.First().StockName,
+                    Data = roe.ToList() // calculated properly below
+                };
+                FinancialRatio dividendsToFCFE = new FinancialRatio
+                {
+                    Section = FinancialRatioSectionEnum.Financials,
+                    Name = "Dividend/FCFE",
                     StockName = this.RatiosFinancials.First().StockName,
                     Data = roe.ToList() // calculated properly below
                 };
@@ -625,6 +604,11 @@
                             longTermDebt[i].Item1,
                             this.FilterInfinityNaN(waccValue),
                             longTermDebt[i].Item3);
+
+                        dividendsToFCFE.Data[i] = Tuple.Create(
+                            roe[i].Item1,
+                            (Math.Abs(freeCashFlow[i].Item2.GetValueOrDefault()) > double.Epsilon) ? (dividends[i].Item2 / freeCashFlow[i].Item2) * 100d : 0d,
+                            roe[i].Item3);
                     }
                     catch (Exception)
                     {
@@ -643,6 +627,7 @@
                 this.AllRatios.Add(pe);
                 this.AllRatios.Add(pbv);
                 this.AllRatios.Add(reinvestment);
+                this.AllRatios.Add(dividendsToFCFE);
 
                 this.COE = this._coe.Latest.GetValueOrDefault();
                 this.COD = cod.Latest.GetValueOrDefault();
@@ -725,7 +710,6 @@
             RatiosFinancials.Clear();
             RatiosCashFlow.Clear();
             RatiosEfficiency.Clear();
-            RatiosHealth.Clear();
             RatiosLiquidity.Clear();
             RatiosProfitability.Clear();
             IncomeStatement.Clear();
