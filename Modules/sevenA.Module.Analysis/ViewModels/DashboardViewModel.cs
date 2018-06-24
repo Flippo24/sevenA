@@ -687,7 +687,7 @@
             }
             else
             {
-                coe = cleanCOE.Last().Item2.GetValueOrDefault();
+                coe = cleanCOE.Any() ? cleanCOE.Last().Item2.GetValueOrDefault() : 0d;
             }
 
             this.Valuation = ValuationService.CalculateValuations(
