@@ -5,7 +5,9 @@
                   xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                   x:Name="SelectedFinancialsChart"
                   HorizontalAlignment="Stretch"
-                  VerticalAlignment="Stretch">
+                  VerticalAlignment="Stretch"
+                  SnapsToDevicePixels="True"
+                  UseLayoutRounding="True">
     <dxlc:LayoutGroup.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
