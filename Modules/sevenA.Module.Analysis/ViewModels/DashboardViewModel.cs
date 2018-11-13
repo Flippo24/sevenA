@@ -612,7 +612,7 @@
                     }
                     catch (Exception)
                     {
-                        // ignore
+                        // ignore this
                     }
                 }
 
