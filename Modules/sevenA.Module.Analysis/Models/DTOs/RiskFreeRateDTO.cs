@@ -10,14 +10,15 @@
     {
         public RiskFreeRateDTO(CountryEnum country, double rate)
         {
-            Id = (int)country;
-            Rate = rate;
-            Country = (int)country;
+            this.Id = (int)country;
+            this.Rate = rate;
+            this.Country = (int)country;
         }
 
         [UsedImplicitly]
         public RiskFreeRateDTO()
-        { }
+        {
+        }
 
         [Key]
         [UsedImplicitly]

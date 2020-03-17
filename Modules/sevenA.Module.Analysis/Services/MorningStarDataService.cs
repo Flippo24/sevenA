@@ -28,6 +28,8 @@
             return Task.Factory.StartNew(
                 () =>
                     {
+                        var referer = $"http://financials.morningstar.com/income-statement/is.html?t={symbol}";
+
                         var result = new List<FinancialRatio>();
                         try
                         {
@@ -37,6 +39,7 @@
                             string data;
                             using (var webclient = new WebClientExtended())
                             {
+                                webclient.Headers.Add(HttpRequestHeader.Referer, referer);
                                 webclient.Headers.Add(
                                     HttpRequestHeader.Cookie,
                                     "mstar=V6314P49NN4O621LKMM0PMK8NP113LL0M06K2N2M0O388MNK649NO6O29LK97K4O7288P2230NMLN8N0M10P7NLOLP1540M32O8K77MO4N00P5NN0M225O354OK7N9NPOM2PLNM238PP47MN84875M7N1M6051L21302F30B1FB0A5B44129C288A0068D6743;");
@@ -53,6 +56,7 @@
                                 $"http://financials.morningstar.com/ajax/ReportProcess4CSV.html?&t={symbol}&cur=&reportType=bs&period=12&dataType=A&order=asc&columnYear=10&curYearPart=1st5year&rounding=3&view=raw&r=912080&denominatorView=raw&number=3";
                             using (var webclient = new WebClientExtended())
                             {
+                                webclient.Headers.Add(HttpRequestHeader.Referer, referer);
                                 webclient.Headers.Add(
                                     HttpRequestHeader.Cookie,
                                     "mstar=V6314P49NN4O621LKMM0PMK8NP113LL0M06K2N2M0O388MNK649NO6O29LK97K4O7288P2230NMLN8N0M10P7NLOLP1540M32O8K77MO4N00P5NN0M225O354OK7N9NPOM2PLNM238PP47MN84875M7N1M6051L21302F30B1FB0A5B44129C288A0068D6743;");
@@ -69,6 +73,7 @@
                                 $"http://financials.morningstar.com/ajax/ReportProcess4CSV.html?&t={symbol}&cur=&reportType=cf&period=12&dataType=A&order=asc&columnYear=10&curYearPart=1st5year&rounding=3&view=raw&r=912080&denominatorView=raw&number=3";
                             using (var webclient = new WebClientExtended())
                             {
+                                webclient.Headers.Add(HttpRequestHeader.Referer, referer);
                                 webclient.Headers.Add(
                                     HttpRequestHeader.Cookie,
                                     "mstar=V6314P49NN4O621LKMM0PMK8NP113LL0M06K2N2M0O388MNK649NO6O29LK97K4O7288P2230NMLN8N0M10P7NLOLP1540M32O8K77MO4N00P5NN0M225O354OK7N9NPOM2PLNM238PP47MN84875M7N1M6051L21302F30B1FB0A5B44129C288A0068D6743;");
@@ -97,6 +102,7 @@
                 () =>
                     {
                         var url = $"http://financials.morningstar.com/ajax/exportKR2CSV.html?t={symbol}";
+                        var referer = $"http://financials.morningstar.com/income-statement/is.html?t={symbol}";
 
                         var result = new List<FinancialRatio>();
                         try
@@ -104,6 +110,7 @@
                             string data;
                             using (var webclient = new WebClientExtended())
                             {
+                                webclient.Headers.Add(HttpRequestHeader.Referer, referer);
                                 data = webclient.DownloadString(url);
                                 if (string.IsNullOrEmpty(data))
                                 {
