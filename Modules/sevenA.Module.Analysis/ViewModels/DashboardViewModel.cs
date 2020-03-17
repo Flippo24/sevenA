@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
 
     using Constants;
 
@@ -76,7 +77,7 @@
             set
             {
                 this.SetProperty(() => this.Country, value);
-                RiskFreeRate = ValuationService.GetRiskFreeRate(Country);
+                this.RiskFreeRate = ValuationService.GetRiskFreeRate(this.Country);
             }
         }
 
@@ -309,7 +310,7 @@
         [UsedImplicitly]
         public virtual double RiskFreeRate
         {
-            get => GetProperty(() => RiskFreeRate);
+            get => GetProperty(() => this.RiskFreeRate);
             set => this.SetProperty(() => this.RiskFreeRate, value);
         }
 
@@ -330,7 +331,7 @@
 
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingRatios, 0);
 
-                var results = await this._morningStarDataService.GetKeyRatiosAsync(this._cancellationTokenSource.Token, this.GetSymbol(this.Symbol));
+                var results = await this._morningStarDataService.GetKeyRatiosAsync(this._cancellationTokenSource.Token, this.GetSymbol(this.Symbol)).ConfigureAwait(true);
 
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingRatios, 60);
                 this.AllRatios = new ObservableCollection<FinancialRatio>(results.ToList());
@@ -357,7 +358,7 @@
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingFinancials, 0);
                 var financials =
                     await
-                    this._morningStarDataService.GetFinancialsAsync(this._cancellationTokenSource.Token, this.GetSymbol(this.Symbol));
+                    this._morningStarDataService.GetFinancialsAsync(this._cancellationTokenSource.Token, this.GetSymbol(this.Symbol)).ConfigureAwait(true);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingFinancials, 70);
                 this.IncomeStatement =
                     new ObservableCollection<FinancialRatio>(
@@ -375,11 +376,14 @@
 
                 DateTime.TryParseExact(this.RatiosFinancials.First().Data.First().Item1, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out var startDate);
 
-                if (startDate == default(DateTime)) startDate = DateTime.Now.AddYears(-10);
+                if (startDate == default)
+                {
+                    startDate = DateTime.Now.AddYears(-10);
+                }
 
                 var prices = await this._yahooFinanceDataService.GetHistoricalDataAsync(
                                  this._yahooFinanceDataService.GetYahooFinanceSymbol(this.GetSymbol(this.Symbol)),
-                                 startDate);
+                                 startDate).ConfigureAwait(true);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingHistorical, 70);
                 this.StockData = new ObservableCollection<StockData>(prices);
                 this.ProgressLoader.UpdateProgress(MessageConstants.DownloadingHistorical, 100);
@@ -391,7 +395,7 @@
                 this.PrepareCurrentIndicators();
                 this.AddComposedIndicators();
 
-                RiskFreeRate = ValuationService.GetRiskFreeRate(Country);
+                this.RiskFreeRate = ValuationService.GetRiskFreeRate(Country);
 
                 this.CalculateValuations();
             }
@@ -422,7 +426,7 @@
         [UsedImplicitly]
         protected void SaveRiskFreeRate()
         {
-            ValuationService.SaveRiskFreeRate(Country, RiskFreeRate);
+            ValuationService.SaveRiskFreeRate(Country, this.RiskFreeRate);
         }
 
         private static bool StringContains(string obj, string substring)
@@ -492,6 +496,7 @@
                     StockName = this.RatiosFinancials.First().StockName,
                     Data = dividends.ToList()
                 };
+
                 this._coe = new FinancialRatio
                 {
                     Section = FinancialRatioSectionEnum.Financials,
@@ -499,6 +504,7 @@
                     StockName = this.RatiosFinancials.First().StockName,
                     Data = roe.ToList() // calculated properly below
                 };
+
                 FinancialRatio cod = new FinancialRatio
                 {
                     Section = FinancialRatioSectionEnum.Financials,
@@ -506,6 +512,7 @@
                     StockName = this.RatiosFinancials.First().StockName,
                     Data = longTermDebt.ToList()
                 };
+
                 FinancialRatio wacc = new FinancialRatio
                 {
                     Section = FinancialRatioSectionEnum.Financials,
@@ -513,6 +520,7 @@
                     StockName = this.RatiosFinancials.First().StockName,
                     Data = longTermDebt.ToList()
                 };
+
                 FinancialRatio pe = new FinancialRatio
                 {
                     Section = FinancialRatioSectionEnum.Financials,
@@ -520,6 +528,7 @@
                     StockName = this.RatiosFinancials.First().StockName,
                     Data = shares.ToList()
                 };
+
                 FinancialRatio pbv = new FinancialRatio
                 {
                     Section = FinancialRatioSectionEnum.Financials,
@@ -527,6 +536,7 @@
                     StockName = this.RatiosFinancials.First().StockName,
                     Data = shares.ToList()
                 };
+
                 FinancialRatio reinvestment = new FinancialRatio
                 {
                     Section = FinancialRatioSectionEnum.Financials,
@@ -534,6 +544,7 @@
                     StockName = this.RatiosFinancials.First().StockName,
                     Data = shares.ToList()
                 };
+
                 FinancialRatio excessReturns = new FinancialRatio
                 {
                     Section = FinancialRatioSectionEnum.Financials,
@@ -541,6 +552,7 @@
                     StockName = this.RatiosFinancials.First().StockName,
                     Data = roe.ToList() // calculated properly below
                 };
+
                 FinancialRatio dividendsToFCFE = new FinancialRatio
                 {
                     Section = FinancialRatioSectionEnum.Financials,
@@ -551,7 +563,10 @@
 
                 this.ProgressLoader.UpdateProgress(MessageConstants.Analysing, 60);
 
-                if (!this.StockData.Any()) return;
+                if (!this.StockData.Any())
+                {
+                    return;
+                }
 
                 for (int i = 0; i < dividends.Count; i++)
                 {

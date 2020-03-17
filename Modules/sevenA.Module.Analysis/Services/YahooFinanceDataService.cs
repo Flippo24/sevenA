@@ -39,7 +39,7 @@
             string stockSymbol,
             DateTime startDate)
         {
-            var historicalData = await Historical.GetPriceAsync(stockSymbol, startDate, DateTime.Now);
+            var historicalData = await Historical.GetPriceAsync(stockSymbol, startDate, DateTime.Now).ConfigureAwait(false);
 
             return historicalData?.Select(
                     x => new StockData { Date = x.Date, Open = x.Open, Close = x.Close, High = x.High, Low = x.Low })

@@ -11,12 +11,14 @@
     {
         public static double GetRiskFreeRate(CountryEnum country)
         {
+            // ReSharper disable once AsyncConverter.AsyncWait
             var allRates = PersistenceService.Instance.GetAllRiskFreeRates().Result;
             return (allRates.SingleOrDefault(r => r.Country == (int)country) ?? new RiskFreeRateDTO(country, 0d)).Rate;
         }
 
         public static void SaveRiskFreeRate(CountryEnum country, double rate)
         {
+            // ReSharper disable once AsyncConverter.AsyncWait
             PersistenceService.Instance.SaveRiskFreeRate(new RiskFreeRateDTO(country, rate)).Wait();
         }
 

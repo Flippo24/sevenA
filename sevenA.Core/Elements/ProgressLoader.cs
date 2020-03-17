@@ -29,7 +29,10 @@
 
         public void UpdateProgress(string text, int progress)
         {
-            if (this.IsLoading != true) this.IsLoading = true;
+            if (this.IsLoading != true)
+            {
+                this.IsLoading = true;
+            }
 
             this.Text = text;
             this.Progress = progress;
